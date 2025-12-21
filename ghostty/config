@@ -1,0 +1,10 @@
+window-padding-x = 10,10
+window-padding-y = 10,10
+
+font-family = "JetBrains Mono Nerd Font"
+font-size = 12
+cursor-style = block
+shell-integration-features = no-cursor
+
+shell-integration = fish
+
