@@ -8,3 +8,8 @@ shell-integration-features = no-cursor
 
 shell-integration = fish
 
+# --- Ghostty + Tmux integration ---
+keybind = ctrl+tab=text:\x01n
+keybind = ctrl+shift+tab=text:\x01p
+keybind = ctrl+t=text:\x01c
+keybind = ctrl+w=text:\x01&
