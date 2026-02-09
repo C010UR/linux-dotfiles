@@ -9,7 +9,19 @@ shell-integration-features = no-cursor
 shell-integration = fish
 
 # --- Ghostty + Tmux integration ---
-keybind = ctrl+tab=text:\x01n
-keybind = ctrl+shift+tab=text:\x01p
-keybind = ctrl+t=text:\x01c
-keybind = ctrl+w=text:\x01&
+keybind = ctrl+shift+l=text:\x01n
+keybind = ctrl+shift+h=text:\x01p
+keybind = ctrl+shift+t=text:\x01c
+keybind = ctrl+shift+w=text:\x01&
+keybind = ctrl+shift+r=text:\x01,
+
+keybind = ctrl+shift+1=text:\x011
+keybind = ctrl+shift+2=text:\x012
+keybind = ctrl+shift+3=text:\x013
+keybind = ctrl+shift+4=text:\x014
+keybind = ctrl+shift+5=text:\x015
+keybind = ctrl+shift+6=text:\x016
+keybind = ctrl+shift+7=text:\x017
+keybind = ctrl+shift+8=text:\x018
+keybind = ctrl+shift+9=text:\x019
+keybind = ctrl+shift+0=text:\x010
