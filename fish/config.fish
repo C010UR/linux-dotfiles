@@ -1,3 +1,5 @@
+source $__fish_config_dir/conf.d/environment.fish
+
 if status is-interactive
     # Starship custom prompt
     starship init fish | source
@@ -8,4 +10,6 @@ if status is-interactive
 
     # Custom colours
     cat ~/.local/state/caelestia/sequences.txt 2> /dev/null
+
+    a
 end

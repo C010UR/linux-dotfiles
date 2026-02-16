@@ -1,13 +1,8 @@
 if status is-interactive
-    # Better ls
     alias ls='eza --icons --color --group-directories-first -l'
-
-    # Edge browser
     alias edge='flatpak run com.microsoft.Edge --ozone-platform=wayland --ozone-platform-hint=wayland --enable-features=TouchpadOverscrollHistoryNavigation --disable-features=WaylandWpColorManagerV1'
-
     alias a='~/.local/bin/tmux-start'
 
-    # Abbrs
     abbr lg lazygit
     abbr gd 'git diff'
     abbr ga 'git add .'
