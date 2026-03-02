@@ -226,6 +226,13 @@
       "mediaCoverArtSize": 150,
       "mediaVisualiserSize": 80,
       "resourceSize": 200
+    },
+    "performance": {
+      "showBattery": true,
+      "showGpu": false,
+      "showCpu": true,
+      "showMemory": true,
+      "showStorage": true
     }
   },
   "controlCenter": {
