@@ -12,22 +12,6 @@
         "CONTEXT7_API_KEY": "ctx7sk-625410b5-3fb8-46f6-a66b-9e9f5a6cdab8"
       },
       "enabled": true
-    },
-    "sequential-thinking": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ]
-    },
-    "next-devtools": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "next-devtools-mcp@latest"
-      ]
     }
   }
 }
