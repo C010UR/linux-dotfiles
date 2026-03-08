@@ -4,9 +4,11 @@ window-padding-y = 10,10
 font-family = "JetBrains Mono Nerd Font"
 font-size = 12
 cursor-style = block
-shell-integration-features = no-cursor
 
 shell-integration = fish
+command = fish -c ~/.local/bin/tmux-start
+
+theme = tokyonight-night
 
 # --- Ghostty + Tmux integration ---
 keybind = ctrl+shift+l=text:\x01n

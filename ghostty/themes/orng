@@ -1,0 +1,31 @@
+# Core Colors
+background = 0a0a0a
+foreground = eeeeee
+
+# Cursor
+cursor-color = EE7948
+cursor-text = 0a0a0a
+
+# Selection
+selection-background = 282828
+selection-foreground = eeeeee
+
+# Normal colors
+palette = 0=#1e1e1e
+palette = 1=#e06c75
+palette = 2=#56b6c2
+palette = 3=#e5c07b
+palette = 4=#6ba1e6
+palette = 5=#EE7948
+palette = 6=#56b6c2
+palette = 7=#eeeeee
+
+# Bright colors
+palette = 8=#606060
+palette = 9=#e06c75
+palette = 10=#56b6c2
+palette = 11=#e5c07b
+palette = 12=#6ba1e6
+palette = 13=#EC5B2B
+palette = 14=#56b6c2
+palette = 15=#FFF7F1
