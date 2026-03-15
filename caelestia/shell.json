@@ -21,6 +21,8 @@
       }
     },
     "anim": {
+      "mediaGifSpeedAdjustment": 300,
+      "sessionGifSpeed": 0.7,
       "durations": {
         "scale": 0.5
       }
@@ -32,6 +34,7 @@
     }
   },
   "general": {
+    "logo": "",
     "apps": {
       "terminal": [
         "ghostty"
@@ -43,7 +46,7 @@
         "mpv"
       ],
       "explorer": [
-        "thunar"
+        "dolphin"
       ]
     },
     "idle": {
@@ -95,8 +98,22 @@
   },
   "background": {
     "enabled": true,
+    "wallpaperEnabled": true,
     "desktopClock": {
-      "enabled": false
+      "enabled": false,
+      "scale": 1,
+      "position": "bottom-right",
+      "invertColors": false,
+      "background": {
+        "enabled": false,
+        "opacity": 0.7,
+        "blur": true
+      },
+      "shadow": {
+        "enabled": true,
+        "opacity": 0.7,
+        "blur": 0.4
+      }
     },
     "visualiser": {
       "enabled": false,
@@ -150,6 +167,7 @@
       "showMicrophone": false,
       "showKbLayout": false,
       "showNetwork": true,
+      "showWifi": true,
       "showBluetooth": true,
       "showBattery": true,
       "showLockStatus": true
@@ -201,7 +219,8 @@
         "enabled": false,
         "id": "power"
       }
-    ]
+    ],
+    "excludedScreens": []
   },
   "border": {
     "thickness": 0,
@@ -210,8 +229,15 @@
   "dashboard": {
     "enabled": true,
     "showOnHover": true,
-    "mediaUpdateInterval": 500,
     "dragThreshold": 50,
+    "performance": {
+      "showBattery": true,
+      "showGpu": false,
+      "showCpu": true,
+      "showMemory": true,
+      "showStorage": true,
+      "showNetwork": true
+    },
     "sizes": {
       "tabIndicatorHeight": 3,
       "tabIndicatorSpacing": 5,
@@ -226,13 +252,6 @@
       "mediaCoverArtSize": 150,
       "mediaVisualiserSize": 80,
       "resourceSize": 200
-    },
-    "performance": {
-      "showBattery": true,
-      "showGpu": false,
-      "showCpu": true,
-      "showMemory": true,
-      "showStorage": true
     }
   },
   "controlCenter": {
@@ -251,6 +270,9 @@
     "enableDangerousActions": false,
     "dragThreshold": 50,
     "vimKeybinds": true,
+    "favouriteApps": [
+      "org.telegram.desktop"
+    ],
     "hiddenApps": [
       "foot-server",
       "foot",
@@ -289,7 +311,9 @@
       "org.pulseaudio.pavucontrol",
       "winetricks",
       "thunar-settings",
-      "thunar"
+      "thunar",
+      "com.microsoft.Edge",
+      "electron37"
     ],
     "useFuzzy": {
       "apps": true,
@@ -563,6 +587,7 @@
     "gpuType": "",
     "visualiserBars": 45,
     "audioIncrement": 0.1,
+    "brightnessIncrement": 0.1,
     "maxVolume": 1,
     "smartScheme": true,
     "defaultPlayer": "Spotify",

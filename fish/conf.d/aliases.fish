@@ -1,6 +1,5 @@
 if status is-interactive
     alias ls='eza --icons --color --group-directories-first -l'
-    alias edge='flatpak run com.microsoft.Edge --ozone-platform=wayland --ozone-platform-hint=wayland --enable-features=TouchpadOverscrollHistoryNavigation --disable-features=WaylandWpColorManagerV1'
     alias a='~/.local/bin/tmux-start'
 
     abbr lg lazygit
