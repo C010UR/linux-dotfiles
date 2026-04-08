@@ -17,7 +17,10 @@
         },
         "gpt-5.4": {
           "name": "GPT-5.4"
-        }
+        },
+        "gpt-5.4-codex": {
+          "name": "GPT-5.4 Codex"
+        },
       }
     }
   },
@@ -29,6 +32,16 @@
         "CONTEXT7_API_KEY": "ctx7sk-625410b5-3fb8-46f6-a66b-9e9f5a6cdab8"
       },
       "enabled": true
+    },
+    "jira": {
+      "type": "remote",
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "enabled": true
+    },
+    "figma": {
+      "type": "remote",
+      "url": "https://mcp.figma.com/mcp",
+      "enabled": false
     }
   }
 }
