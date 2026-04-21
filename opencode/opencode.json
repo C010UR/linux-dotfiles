@@ -18,9 +18,6 @@
         "gpt-5.4": {
           "name": "GPT-5.4"
         },
-        "gpt-5.4-codex": {
-          "name": "GPT-5.4 Codex"
-        },
       }
     }
   },
@@ -38,10 +35,5 @@
       "url": "https://mcp.atlassian.com/v1/mcp",
       "enabled": true
     },
-    "figma": {
-      "type": "remote",
-      "url": "https://mcp.figma.com/mcp",
-      "enabled": false
-    }
   }
 }
