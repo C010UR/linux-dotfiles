@@ -2,7 +2,7 @@
     "appearance": {
         "anim": {
             "durations": {
-                "scale": 0.4
+                "scale": 0.5
             }
         },
         "font": {
@@ -405,6 +405,46 @@
         "favouriteApps": [
         ],
         "hiddenApps": [
+            "qvidcap",
+            "btop",
+            "org.cachyos.KernelManager",
+            "cachyos-pi",
+            "foot-server",
+            "foot",
+            "org.gnome.Meld",
+            "octopi",
+            "net.davidotek.pupgui2",
+            "qv4l2",
+            "Alacritty",
+            "org.kde.ark",
+            "bssh",
+            "avahi-discover",
+            "bvnc",
+            "code-oss",
+            "cmake-gui",
+            "electron37",
+            "footclient",
+            "lstopo",
+            "micro",
+            "limine-snapper-restore",
+            "nvim",
+            "octopi-notifier",
+            "octopi-repoeditor",
+            "jconsole-java21-openjdk",
+            "jshell-java21-openjdk",
+            "jconsole-java-openjdk",
+            "jshell-java-openjdk",
+            "protontricks",
+            "assistant",
+            "qdbusviewer",
+            "linguist",
+            "designer",
+            "uuctl",
+            "qt5ct",
+            "qt6ct",
+            "org.cachyos.scx-manager",
+            "vim",
+            "org.pulseaudio.pavucontrol"
         ],
         "maxShown": 7,
         "maxWallpapers": 9,
@@ -428,7 +468,7 @@
         "clearThreshold": 0.3,
         "defaultExpireTimeout": 5000,
         "expandThreshold": 20,
-        "expire": false,
+        "expire": true,
         "openExpanded": false
     },
     "osd": {
