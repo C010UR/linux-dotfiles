@@ -168,7 +168,7 @@
         "mediaUpdateInterval": 500,
         "showDashboard": true,
         "showMedia": true,
-        "showOnHover": true,
+        "showOnHover": false,
         "showPerformance": true,
         "showWeather": true
     },

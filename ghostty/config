@@ -6,24 +6,25 @@ font-size = 12
 cursor-style = block
 
 shell-integration = fish
-command = fish -c ~/.local/bin/tmux-start
+command = fish
 
 theme = tokyonight-night
 
-# --- Ghostty + Tmux integration ---
-keybind = ctrl+shift+l=text:\x01n
-keybind = ctrl+shift+h=text:\x01p
-keybind = ctrl+shift+t=text:\x01c
-keybind = ctrl+shift+w=text:\x01&
-keybind = ctrl+shift+r=text:\x01,
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
+window-inherit-working-directory = true
 
-keybind = ctrl+shift+1=text:\x011
-keybind = ctrl+shift+2=text:\x012
-keybind = ctrl+shift+3=text:\x013
-keybind = ctrl+shift+4=text:\x014
-keybind = ctrl+shift+5=text:\x015
-keybind = ctrl+shift+6=text:\x016
-keybind = ctrl+shift+7=text:\x017
-keybind = ctrl+shift+8=text:\x018
-keybind = ctrl+shift+9=text:\x019
-keybind = ctrl+shift+0=text:\x010
+notify-on-command-finish = unfocused
+notify-on-command-finish-after = 10s
+
+shell-integration-features = title,ssh-env,ssh-terminfo
+
+scrollback-limit = 100000000
+
+quick-terminal-position = top
+quick-terminal-size = 35%
+
+keybind = ctrl+t=new_tab
+keybind = ctrl+w=close_tab
+
+keybind = global:ctrl+backquote=toggle_quick_terminal
