@@ -2,9 +2,6 @@ local c = require("hyprland/scheme")
 
 hl.config({
   general = {
-    layout = "dwindle",
-    allow_tearing = false,
-
     gaps_workspaces = 3,
     gaps_in = 2,
     gaps_out = { top = 5, right = 5, bottom = 5, left = 7 },

@@ -23,5 +23,7 @@ hl.config({
 
   cursor = {
     hotspot_padding = 1,
+    theme = require("hyprland.vars").cursorTheme,
+    size = require("hyprland.vars").cursorSize,
   },
 })

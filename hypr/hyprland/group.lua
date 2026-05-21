@@ -10,8 +10,6 @@ hl.config({
     groupbar = {
       font_family = "JetBrains Mono NF",
       font_size = 15,
-      gradients = true,
-      gradient_round_only_edges = false,
       gradient_rounding = 5,
       height = 25,
       indicator_height = 0,

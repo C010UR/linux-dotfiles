@@ -1,4 +1,4 @@
-local v = require("hyprland/vars")
+local v = require("hyprland.vars")
 
 -- ── Shell / Caelestia keybinds ────────────────────────────────────────────────
 
@@ -12,10 +12,8 @@ hl.bind("SUPER + K", hl.dsp.global("caelestia:dashboard"))
 hl.bind("SUPER + L", hl.dsp.global("caelestia:lock"))
 
 -- Restore lock: restart shell then lock
-hl.bind("SUPER + ALT + L", function()
-  hl.exec_cmd("caelestia shell -d")
-  hl.dsp.global("caelestia:lock")
-end, { locked = true })
+hl.bind("SUPER + ALT + L", hl.dsp.exec_cmd("caelestia shell -d"), { locked = true })
+hl.bind("SUPER + ALT + L", hl.dsp.global("caelestia:lock"), { locked = true })
 
 -- Brightness
 hl.bind("XF86MonBrightnessUp", hl.dsp.global("caelestia:brightnessUp"), { locked = true })

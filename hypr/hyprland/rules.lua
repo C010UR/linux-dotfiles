@@ -1,12 +1,5 @@
 -- ── Window rules ─────────────────────────────────────────────────────────────
 
--- Default: full opacity on non-fullscreen windows (overrides any dynamic opacity)
-hl.window_rule({
-  name = "default-opacity",
-  opacity = "1 override",
-  match = { fullscreen = false },
-})
-
 -- Force opaque for apps that use native transparency
 hl.window_rule({
   name = "force-opaque",
