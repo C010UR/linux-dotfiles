@@ -1,6 +1,9 @@
--- Color palette (Material You dark scheme)
--- Auto-generated from scheme/default.conf
+local v = require("hyprland.vars")
+
+-- Color palette
 local M = {}
+
+M.scheme = "current"
 
 -- Palette key colors
 M.primary_paletteKeyColor = "7171ac"
@@ -120,14 +123,35 @@ M.base = "131317"
 M.mantle = "131317"
 M.crust = "121216"
 
--- Helper: wrap a 6-hex-digit color + 2-digit alpha as rgba(xxxxxxyy)
 function M.rgba(color, alpha)
-	return "rgba(" .. color .. alpha .. ")"
+  return "rgba(" .. color .. alpha .. ")"
 end
 
--- Helper: wrap a 6-hex-digit color as rgb(xxxxxx)
 function M.rgb(color)
-	return "rgb(" .. color .. ")"
+  return "rgb(" .. color .. ")"
 end
+
+-- Temporary patch until caelestia starts to ship lua confs
+function M.try_load_conf_scheme(scheme)
+  local path = v.get_config_path() .. "/scheme/" .. scheme .. ".conf"
+  local file = io.open(path)
+
+  if file == nil then
+    return
+  end
+
+  for line in file:lines() do
+    local name, hex =
+      line:match("^%s*%$([%w_]+)%s*=%s*([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9])$")
+
+    if name and hex and M[name] ~= nil then
+      M[name] = hex
+    end
+  end
+
+  file:close()
+end
+
+M.try_load_conf_scheme(M.scheme)
 
 return M

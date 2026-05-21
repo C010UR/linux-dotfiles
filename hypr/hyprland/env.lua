@@ -1,4 +1,4 @@
-local v = require("hyprland/vars")
+local v = require("hyprland.vars")
 
 -- ############# Themes #############
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")

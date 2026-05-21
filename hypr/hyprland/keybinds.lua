@@ -13,8 +13,8 @@ hl.bind("SUPER + L", hl.dsp.global("caelestia:lock"))
 
 -- Restore lock: restart shell then lock
 hl.bind("SUPER + ALT + L", function()
-	hl.exec_cmd("caelestia shell -d")
-	hl.dsp.global("caelestia:lock")
+  hl.exec_cmd("caelestia shell -d")
+  hl.dsp.global("caelestia:lock")
 end, { locked = true })
 
 -- Brightness
@@ -39,18 +39,18 @@ hl.bind("CTRL + SUPER + ALT + R", hl.dsp.exec_cmd("qs -c caelestia kill; caelest
 
 -- Go to workspace 1–10
 for i = 1, 9 do
-	hl.bind("SUPER + " .. i, function()
-		v.ws_goto(i)
-	end)
-	hl.bind("CTRL + SUPER + " .. i, function()
-		v.ws_goto_group(i)
-	end)
+  hl.bind("SUPER + " .. i, function()
+    v.ws_goto(i)
+  end)
+  hl.bind("CTRL + SUPER + " .. i, function()
+    v.ws_goto_group(i)
+  end)
 end
 hl.bind("SUPER + 0", function()
-	v.ws_goto(10)
+  v.ws_goto(10)
 end)
 hl.bind("CTRL + SUPER + 0", function()
-	v.ws_goto_group(10)
+  v.ws_goto_group(10)
 end)
 
 -- Go to workspace ±1
@@ -72,18 +72,18 @@ hl.bind("SUPER + S", hl.dsp.exec_cmd("caelestia toggle specialws"))
 
 -- Move window to workspace 1–10
 for i = 1, 9 do
-	hl.bind("SUPER + ALT + " .. i, function()
-		v.ws_move(i)
-	end)
-	hl.bind("CTRL + SUPER + ALT + " .. i, function()
-		v.ws_move_group(i)
-	end)
+  hl.bind("SUPER + ALT + " .. i, function()
+    v.ws_move(i)
+  end)
+  hl.bind("CTRL + SUPER + ALT + " .. i, function()
+    v.ws_move_group(i)
+  end)
 end
 hl.bind("SUPER + ALT + 0", function()
-	v.ws_move(10)
+  v.ws_move(10)
 end)
 hl.bind("CTRL + SUPER + ALT + 0", function()
-	v.ws_move_group(10)
+  v.ws_move_group(10)
 end)
 
 -- Move window to workspace ±1
@@ -170,14 +170,14 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURC
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
 hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
 hl.bind(
-	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 10%+"),
-	{ locked = true, repeating = true }
+  "XF86AudioRaiseVolume",
+  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 10%+"),
+  { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"),
-	{ locked = true, repeating = true }
+  "XF86AudioLowerVolume",
+  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"),
+  { locked = true, repeating = true }
 )
 hl.bind("XF86TouchpadToggle", v.toggle_touchpad, { locked = true })
 hl.bind("SUPER + F7", v.toggle_touchpad) -- fallback touchpad toggle
@@ -193,7 +193,7 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard"))
 hl.bind("SUPER + ALT + V", hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard -d"))
 hl.bind("SUPER + Period", hl.dsp.exec_cmd("pkill fuzzel || caelestia emoji -p"))
 hl.bind(
-	"CTRL + SHIFT + ALT + V",
-	hl.dsp.exec_cmd([[sleep 0.5s && ydotool type -d 1 "$(cliphist list | head -1 | cliphist decode)"]]),
-	{ locked = true }
+  "CTRL + SHIFT + ALT + V",
+  hl.dsp.exec_cmd([[sleep 0.5s && ydotool type -d 1 "$(cliphist list | head -1 | cliphist decode)"]]),
+  { locked = true }
 ) -- alternate paste

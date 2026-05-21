@@ -17,11 +17,11 @@ hl.animation({ leaf = "windowsMove", speed = 6, bezier = "standard", enabled = t
 -- Workspaces
 hl.animation({ leaf = "workspaces", speed = 5, bezier = "standard", enabled = true })
 hl.animation({
-	leaf = "specialWorkspace",
-	speed = 4,
-	bezier = "specialWorkSwitch",
-	style = "slidefadevert 15%",
-	enabled = true,
+  leaf = "specialWorkspace",
+  speed = 4,
+  bezier = "specialWorkSwitch",
+  style = "slidefadevert 15%",
+  enabled = true,
 })
 
 -- Fades & border
