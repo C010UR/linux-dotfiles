@@ -217,12 +217,16 @@ hl.on("window.open", function(win)
   if dolphin.workspace == nil or dolphin.workspace.name ~= "special:dolphin" or not dolphin.workspace.visible then
     return
   end
-  -- Move the new window to the current regular workspace (special workspaces are overlays;
-  -- get_active_workspace() returns the underlying regular workspace).
+
   local ws = hl.get_active_workspace()
   if ws ~= nil then
-    hl.dispatch(hl.dsp.exec_cmd("hyprctl dispatch movetoworkspacesilent " .. ws.id .. ",address:" .. win.address))
+    hl.dispatch(hl.dsp.window.move({
+      window = win,
+      workspace = ws,
+      follow = false,
+    }))
   end
+
   hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
 end)
 
