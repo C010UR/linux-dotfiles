@@ -1,0 +1,8 @@
+/*
+
+!/.gitignore
+!/Themes/
+/Themes/*
+!/Themes/caelestia/
+/Themes/caelestia/*
+!/Themes/caelestia/user.css
