@@ -140,6 +140,7 @@ hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd("caelestia toggle sysmon"))
 hl.bind("SUPER + M", hl.dsp.exec_cmd("caelestia toggle music"))
 hl.bind("SUPER + D", hl.dsp.workspace.toggle_special("communication"))
+hl.bind("SUPER + H", hl.dsp.workspace.toggle_special("huddle"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("caelestia toggle todo"))
 
 -- ── App launchers ─────────────────────────────────────────────────────────────

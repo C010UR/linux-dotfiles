@@ -97,6 +97,14 @@ hl.window_rule({
   match = { class = "feishin|Spotify|Supersonic|Cider|spotify" },
 })
 hl.window_rule({ name = "spotify-wayland", workspace = "special:music", match = { initial_title = "Spotify( Free)?" } }) -- Spotify Wayland sets no WM class
+-- Slack Huddle: more specific than the communication rule below — must come first.
+-- Identified by initialTitle since the window title changes once a call connects.
+hl.window_rule({
+  name = "slack-huddle",
+  workspace = "special:huddle",
+  fullscreen = true,
+  match = { class = "Slack", initial_title = "Slack - Huddle Preview" },
+})
 hl.window_rule({
   name = "communication",
   workspace = "special:communication",
@@ -195,19 +203,23 @@ hl.window_rule({
 
 -- ── Event handlers ────────────────────────────────────────────────────────────
 
--- When dolphin is visible and a new non-dolphin window opens, hide it.
+-- When dolphin is visible and a new non-dolphin window opens, move it to the current
+-- regular workspace (it would otherwise land in special:dolphin) then hide dolphin.
 hl.on("window.open", function(win)
-  if win.class == "org.kde.dolphin" then
-    return
-  end
+  if win.class == "org.kde.dolphin" then return end
   local dolphins = hl.get_windows({ class = "org.kde.dolphin" })
-  if #dolphins == 0 then
+  if #dolphins == 0 then return end
+  local dolphin = dolphins[1]
+  if dolphin.workspace == nil or dolphin.workspace.name ~= "special:dolphin" or not dolphin.workspace.visible then
     return
   end
-  local dolphin = dolphins[1]
-  if dolphin.workspace ~= nil and dolphin.workspace.name == "special:dolphin" and dolphin.workspace.visible then
-    hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
+  -- Move the new window to the current regular workspace (special workspaces are overlays;
+  -- get_active_workspace() returns the underlying regular workspace).
+  local ws = hl.get_active_workspace()
+  if ws ~= nil then
+    hl.dispatch(hl.dsp.exec_cmd("hyprctl dispatch movetoworkspacesilent " .. ws.id .. ",address:" .. win.address))
   end
+  hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
 end)
 
 -- ── Workspace rules ───────────────────────────────────────────────────────────
