@@ -206,9 +206,13 @@ hl.window_rule({
 -- When dolphin is visible and a new non-dolphin window opens, move it to the current
 -- regular workspace (it would otherwise land in special:dolphin) then hide dolphin.
 hl.on("window.open", function(win)
-  if win.class == "org.kde.dolphin" then return end
+  if win.class == "org.kde.dolphin" then
+    return
+  end
   local dolphins = hl.get_windows({ class = "org.kde.dolphin" })
-  if #dolphins == 0 then return end
+  if #dolphins == 0 then
+    return
+  end
   local dolphin = dolphins[1]
   if dolphin.workspace == nil or dolphin.workspace.name ~= "special:dolphin" or not dolphin.workspace.visible then
     return

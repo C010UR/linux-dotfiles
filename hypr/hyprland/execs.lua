@@ -15,7 +15,8 @@ hl.on("hyprland.start", function()
   -- Auto delete trash 30 days old
   hl.exec_cmd("trash-empty 30")
 
-  -- Apply cursor theme to GTK/GNOME apps (Hyprland-native side set via cursor.theme/size in input.lua)
+  -- Apply cursor theme
+  hl.exec_cmd("hyprctl setcursor " .. v.cursorTheme .. " " .. tostring(v.cursorSize))
   hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme '" .. v.cursorTheme .. "'")
   hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size " .. tostring(v.cursorSize))
 
