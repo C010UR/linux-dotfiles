@@ -153,7 +153,7 @@ hl.window_rule({
   name = "wine-mp3tag-popups",
   float = true,
   center = true,
-  match = { class = "^Mp3tag\\.exe$", title = "^(Options|Tags|Progress|Extended Tags)$" },
+  match = { class = "[Mm]p3tag\\.exe", title = "^(Mp3tag [^v]|M[^p]|Mp[^3]|Mp3[^t]|Mp3t[^a]|Mp3ta[^g]|[^M]).*" },
 })
 hl.window_rule({
   name = "wine-desktop",
