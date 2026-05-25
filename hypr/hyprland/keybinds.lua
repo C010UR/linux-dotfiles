@@ -107,6 +107,10 @@ hl.bind("SUPER + Comma", hl.dsp.group.toggle())
 hl.bind("SUPER + U", hl.dsp.window.move({ out_of_group = true }))
 hl.bind("SUPER + SHIFT + Comma", hl.dsp.group.lock_active())
 
+-- Move active workspace to next/previous monitor
+hl.bind("SUPER + ALT + Comma", hl.dsp.workspace.move({ monitor = "-1" }))
+hl.bind("SUPER + ALT + Period", hl.dsp.workspace.move({ monitor = "+1" }))
+
 -- ── Window focus & movement ───────────────────────────────────────────────────
 
 hl.bind("SUPER + left", hl.dsp.focus({ direction = "left" }))
