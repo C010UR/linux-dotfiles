@@ -2,9 +2,6 @@
 -- Uses process parent/ancestor relationships so Playwright popups, Steam
 -- windows, and other forked children follow the original window.
 
-local focus_anchor = nil
-local focus_workspace = nil
-
 local function get_ppid(pid)
   local f = io.open("/proc/" .. pid .. "/status")
   if f == nil then
@@ -119,38 +116,15 @@ local function should_suppress_focus(win)
   return find_related_workspace(win.pid, pid_to_ws, ppid_to_ws) ~= nil
 end
 
-local function remember_focus()
-  local ws = hl.get_active_workspace()
-  if ws ~= nil then
-    focus_workspace = ws
-  end
-
-  local active = hl.get_active_window()
-  if active ~= nil and not should_suppress_focus(active) then
-    focus_anchor = active
-  end
-end
-
-local function restore_focus()
-  if focus_workspace ~= nil then
-    local current = hl.get_active_workspace()
-    if current == nil or current.name ~= focus_workspace.name then
-      hl.dispatch(hl.dsp.focus({ workspace = focus_workspace }))
-    end
-  end
-
-  if focus_anchor ~= nil and focus_anchor.mapped then
-    hl.dispatch(hl.dsp.focus({ window = focus_anchor }))
-  end
-end
-
 hl.on("window.open_early", function(win)
   if win.pid == nil or win.workspace == nil then
     return
   end
 
   if should_suppress_focus(win) then
-    remember_focus()
+    -- Block Hyprland's initial focus during creation so it won't animate
+    -- to this window's workspace. Cleared again in window.open.
+    hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "1", window = win }))
   end
 
   local pid_to_ws, ppid_to_ws = build_process_maps(win)
@@ -170,19 +144,6 @@ hl.on("window.open", function(win)
     return
   end
 
+  hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "0", window = win }))
   hl.dispatch(hl.dsp.window.set_prop({ prop = "focus_on_activate", value = "0", window = win }))
-
-  -- Defer refocus so we don't fight Hyprland during window creation.
-  hl.timer(function()
-    restore_focus()
-  end, { timeout = 50, type = "oneshot" })
-end)
-
-hl.on("window.active", function(win, active)
-  if active == 0 or should_suppress_focus(win) then
-    return
-  end
-
-  focus_anchor = win
-  focus_workspace = win.workspace
 end)
