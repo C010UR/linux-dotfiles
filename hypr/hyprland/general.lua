@@ -2,6 +2,7 @@ local c = require("hyprland/scheme")
 
 hl.config({
   general = {
+    layout = "master",
     gaps_workspaces = 3,
     gaps_in = 2,
     gaps_out = { top = 5, right = 5, bottom = 5, left = 7 },
@@ -11,8 +12,8 @@ hl.config({
     ["col.inactive_border"] = c.rgba(c.onSurfaceVariant, "11"),
   },
 
-  dwindle = {
-    preserve_split = true,
+  master = {
+    mfact = 0.5,
   },
 
   xwayland = {

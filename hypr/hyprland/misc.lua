@@ -9,6 +9,7 @@ hl.config({
 
     allow_session_lock_restore = true,
     middle_click_paste = false,
+    initial_workspace_tracking = 2,
     focus_on_activate = true,
     session_lock_xray = true,
 
