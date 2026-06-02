@@ -12,8 +12,12 @@ M.editor = "nvim"
 M.cursorTheme = "polarnight-cursors"
 M.cursorSize = 24
 
--- Touchpad device name (from `hyprctl devices`)
+-- Pointer device names (from `hyprctl devices`)
 M.touchpadDevice = "asuf1209:00-2808:0219-touchpad"
+M.mouseDevices = {
+  "compx-2.4g-wireless-receiver-1",
+  "compx-2.4g-wireless-receiver-consumer-control-1",
+}
 
 -- ── Workspace helpers (replaces wsaction.fish) ───────────────────────────────
 -- Workspaces are grouped in bands of 10 (ws 1–10, 11–20, …).

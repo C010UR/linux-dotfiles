@@ -1,3 +1,5 @@
+local v = require("hyprland.vars")
+
 hl.config({
   input = {
     kb_layout = "us,ru",
@@ -6,9 +8,6 @@ hl.config({
     repeat_rate = 50,
 
     focus_on_close = 1,
-
-    accel_profile = "flat",
-    sensitivity = 0.4,
 
     touchpad = {
       natural_scroll = true,
@@ -25,3 +24,17 @@ hl.config({
     hotspot_padding = 1,
   },
 })
+
+hl.device({
+  name = v.touchpadDevice,
+  accel_profile = "adaptive",
+  sensitivity = 0.2,
+})
+
+for _, name in ipairs(v.mouseDevices) do
+  hl.device({
+    name = name,
+    accel_profile = "adaptive",
+    sensitivity = -0.6,
+  })
+end

@@ -1,6 +1,6 @@
--- Keep child windows on the same workspace as related existing windows.
--- Uses process parent/ancestor relationships so Playwright popups, Steam
--- windows, and other forked children follow the original window.
+-- Playwright headed tests: keep browser windows on the same workspace as the
+-- rest of the test session, without stealing focus or workspace from the user.
+-- Normal app launches are handled by misc.initial_workspace_tracking instead.
 
 local function get_ppid(pid)
   local f = io.open("/proc/" .. pid .. "/status")
@@ -18,57 +18,6 @@ local function get_ppid(pid)
   f:close()
 
   return ppid and tonumber(ppid) or nil
-end
-
-local function build_process_maps(exclude_win)
-  local pid_to_ws = {}
-  local ppid_to_ws = {}
-
-  for _, w in ipairs(hl.get_windows()) do
-    if w ~= exclude_win and w.pid ~= nil and w.workspace ~= nil then
-      pid_to_ws[w.pid] = w.workspace
-
-      local ppid = get_ppid(w.pid)
-      if ppid ~= nil and ppid_to_ws[ppid] == nil then
-        ppid_to_ws[ppid] = w.workspace
-      end
-    end
-  end
-
-  return pid_to_ws, ppid_to_ws
-end
-
-local function find_related_workspace(pid, pid_to_ws, ppid_to_ws)
-  local visited = {}
-  local current = pid
-
-  while current ~= nil and current > 1 do
-    if visited[current] then
-      break
-    end
-    visited[current] = true
-
-    if pid_to_ws[current] ~= nil then
-      return pid_to_ws[current]
-    end
-
-    local ppid = get_ppid(current)
-    if ppid == nil then
-      break
-    end
-
-    if pid_to_ws[ppid] ~= nil then
-      return pid_to_ws[ppid]
-    end
-
-    if ppid_to_ws[ppid] ~= nil then
-      return ppid_to_ws[ppid]
-    end
-
-    current = ppid
-  end
-
-  return nil
 end
 
 local function get_cmdline(pid)
@@ -103,32 +52,94 @@ local function is_playwright_process(pid)
   return false
 end
 
-local function should_suppress_focus(win)
-  if win.pid == nil then
-    return false
+local function build_playwright_maps(exclude_win)
+  local pid_to_ws = {}
+  local ppid_to_ws = {}
+
+  for _, w in ipairs(hl.get_windows()) do
+    if w ~= exclude_win and w.pid ~= nil and w.workspace ~= nil and is_playwright_process(w.pid) then
+      pid_to_ws[w.pid] = w.workspace
+
+      local ppid = get_ppid(w.pid)
+      if ppid ~= nil and ppid_to_ws[ppid] == nil then
+        ppid_to_ws[ppid] = w.workspace
+      end
+    end
   end
 
-  if is_playwright_process(win.pid) then
-    return true
+  return pid_to_ws, ppid_to_ws
+end
+
+local function find_playwright_workspace(pid, pid_to_ws, ppid_to_ws)
+  local visited = {}
+  local current = pid
+
+  while current ~= nil and current > 1 do
+    if visited[current] then
+      break
+    end
+    visited[current] = true
+
+    if pid_to_ws[current] ~= nil then
+      return pid_to_ws[current]
+    end
+
+    local ppid = get_ppid(current)
+    if ppid == nil then
+      break
+    end
+
+    if pid_to_ws[ppid] ~= nil then
+      return pid_to_ws[ppid]
+    end
+
+    if ppid_to_ws[ppid] ~= nil then
+      return ppid_to_ws[ppid]
+    end
+
+    current = ppid
   end
 
-  local pid_to_ws, ppid_to_ws = build_process_maps(win)
-  return find_related_workspace(win.pid, pid_to_ws, ppid_to_ws) ~= nil
+  return nil
+end
+
+-- For the first browser window in a run, walk up to the terminal (or other
+-- parent app) that launched the Playwright process.
+local function find_launcher_workspace(pid, exclude_win)
+  local visited = {}
+  local current = pid
+
+  while current ~= nil and current > 1 do
+    if visited[current] then
+      break
+    end
+    visited[current] = true
+
+    for _, w in ipairs(hl.get_windows()) do
+      if w ~= exclude_win and w.pid == current and w.workspace ~= nil and not is_playwright_process(w.pid) then
+        return w.workspace
+      end
+    end
+
+    current = get_ppid(current)
+  end
+
+  return nil
+end
+
+local function resolve_playwright_workspace(win)
+  local pid_to_ws, ppid_to_ws = build_playwright_maps(win)
+  return find_playwright_workspace(win.pid, pid_to_ws, ppid_to_ws) or find_launcher_workspace(win.pid, win)
 end
 
 hl.on("window.open_early", function(win)
-  if win.pid == nil or win.workspace == nil then
+  if win.pid == nil or win.workspace == nil or not is_playwright_process(win.pid) then
     return
   end
 
-  if should_suppress_focus(win) then
-    -- Block Hyprland's initial focus during creation so it won't animate
-    -- to this window's workspace. Cleared again in window.open.
-    hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "1", window = win }))
-  end
+  hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "1", window = win }))
 
-  local pid_to_ws, ppid_to_ws = build_process_maps(win)
-  local target_ws = find_related_workspace(win.pid, pid_to_ws, ppid_to_ws)
+  local target_ws = resolve_playwright_workspace(win)
 
   if target_ws ~= nil and target_ws.name ~= win.workspace.name then
     hl.dispatch(hl.dsp.window.move({
@@ -140,7 +151,7 @@ hl.on("window.open_early", function(win)
 end)
 
 hl.on("window.open", function(win)
-  if not should_suppress_focus(win) then
+  if win.pid == nil or not is_playwright_process(win.pid) then
     return
   end
 

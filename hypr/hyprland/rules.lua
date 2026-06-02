@@ -103,12 +103,12 @@ hl.window_rule({
   name = "slack-huddle",
   workspace = "special:huddle",
   fullscreen = true,
-  match = { class = "Slack", initial_title = "Slack - Huddle Preview" },
+  match = { class = "(?i)slack", initial_title = "Slack - Huddle Preview" },
 })
 hl.window_rule({
   name = "communication",
   workspace = "special:communication",
-  match = { class = "discord|equibop|vesktop|whatsapp|org.telegram.desktop|Slack" },
+  match = { class = "discord|equibop|vesktop|whatsapp|org.telegram.desktop|(?i)slack" },
 })
 hl.window_rule({ name = "todo", workspace = "special:todo", match = { class = "Todoist" } })
 
@@ -207,6 +207,10 @@ hl.window_rule({
 -- regular workspace (it would otherwise land in special:dolphin) then hide dolphin.
 hl.on("window.open", function(win)
   if win.class == "org.kde.dolphin" then
+    return
+  end
+  -- Leave windows on their assigned special workspaces (Slack, Telegram, etc.)
+  if win.workspace ~= nil and win.workspace.name:match("^special:") and win.workspace.name ~= "special:dolphin" then
     return
   end
   local dolphins = hl.get_windows({ class = "org.kde.dolphin" })
