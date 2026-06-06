@@ -32,4 +32,5 @@ hl.on("hyprland.start", function()
 
   -- Start shell
   hl.exec_cmd("caelestia shell -d")
+  hl.exec_cmd("exec quickshell -d ~/.config/quickshell/f1-window")
 end)

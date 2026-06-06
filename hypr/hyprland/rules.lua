@@ -263,3 +263,9 @@ hl.layer_rule({
   ignore_alpha = 0.57,
   match = { namespace = "caelestia-drawers" },
 })
+hl.layer_rule({
+  name = "f1-window",
+  blur = true,
+  ignore_alpha = 0.57,
+  match = { namespace = "f1-window" },
+})

@@ -1,4 +1,5 @@
 require("hyprland.env")
+require("hyprland.hl_helpers")
 require("hyprland.general")
 require("hyprland.monitors")
 require("hyprland.input")

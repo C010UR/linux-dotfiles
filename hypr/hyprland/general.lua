@@ -1,4 +1,4 @@
-local c = require("hyprland/scheme")
+local c = require("hyprland.scheme")
 
 hl.config({
   general = {

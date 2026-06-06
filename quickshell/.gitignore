@@ -1,0 +1,5 @@
+# Ignore symlinks (managed by setup.sh)
+f1-window/components
+f1-window/modules
+f1-window/services
+f1-window/utils
