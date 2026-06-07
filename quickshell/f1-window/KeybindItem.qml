@@ -21,17 +21,21 @@ ColumnLayout {
         const s = name.trim()
         const low = s.toLowerCase()
         const map = {
-            "super_l": "\u2318", "super": "\u2318",
-            "backspace": "\u232B",
-            "return": "\u23CE", "enter": "\u23CE",
-            "delete": "\u2326",
+            "super": "\u2318",
+            "ctrl": "Ctrl",
+            "alt": "Alt",
+            "shift": "Shift",
+            "delete": "Delete",
+            "tab": "Tab",
+            "space": "Space",
             "escape": "Esc",
             "page_up": "PgUp",
             "page_down": "PgDn",
-            "up": "\u2191", "down": "\u2193", "left": "\u2190", "right": "\u2192",
             "caps_lock": "Caps",
-            "space": "Space",
             "print": "Prt Scr",
+            "backspace": "\u232B",
+            "return": "\u23CE", "enter": "\u23CE",
+            "up": "\u2191", "down": "\u2193", "left": "\u2190", "right": "\u2192",
             "minus": "\u2212",
             "equal": "=",
             "backslash": "\\",
@@ -58,7 +62,11 @@ ColumnLayout {
     }
 
     function formatKey(raw) {
-        return raw.split("+").map(k => keyIcon(k)).join(" + ").toUpperCase()
+        if (raw.toLowerCase() === 'super + super_l') {
+            raw = 'super';
+        }
+
+        return raw.split("+").map(k => keyIcon(k)).join(" + ")
     }
 
     RowLayout {
