@@ -72,6 +72,12 @@ hl.cbind("XF86MonBrightnessDown", hl.dsp.global("caelestia:brightnessDown"), {
   locked = true,
   order = 20,
 })
+hl.cbind("SUPER + SHIFT + B", v.toggle_autobrightness, {
+  desc = "Toggle Auto Brightness",
+  category = "media",
+  icon = "brightness_auto",
+  order = 30,
+})
 
 -- Media controls
 hl.cbind("CTRL + SUPER + SPACE", hl.dsp.global("caelestia:mediaToggle"), {
@@ -671,7 +677,8 @@ hl.cbind("XF86TouchpadToggle", v.toggle_touchpad, {
   locked = true,
   order = 20,
 })
-hl.cbind("SUPER + F7", v.toggle_touchpad, {
+-- For some fucking reason the touchpad toggle on Asus Zenbook S16 is actually a screen mirroring toggle. fn + f7 calls super + p
+hl.cbind("SUPER + P", v.toggle_touchpad, {
   desc = "Toggle Touchpad",
   category = "utility",
   icon = "laptop_mac",
@@ -726,4 +733,3 @@ hl.cbind(
     order = 70,
   }
 )
-

@@ -90,14 +90,9 @@
           }
         ],
         "command": [
-          "foot",
-          "-a",
-          "btop",
-          "-T",
-          "btop",
-          "fish",
-          "-C",
-          "exec btop"
+          "ghostty",
+          "-e",
+          "btop"
         ]
       }
     },

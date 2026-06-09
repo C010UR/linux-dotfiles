@@ -5,78 +5,54 @@ import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
 import qs.services
+import qs.modules.nexus.common
 
-SectionContainer {
+ColumnLayout {
     id: root
 
     required property string title
     required property string groupIcon
     required property var items
 
-    contentSpacing: 0
-
-    readonly property int half: Math.ceil(root.items.length / 2)
-
-    RowLayout {
-        spacing: Tokens.spacing.small
-        Layout.bottomMargin: Tokens.spacing.small
-
-        MaterialIcon {
-            text: root.groupIcon
-            fill: 1
-            color: Colours.palette.m3primary
-            font.pointSize: Tokens.spacing.large
-        }
-
-        StyledText {
-            text: root.title + " (" + root.items.length + ")"
-            font.pointSize: Tokens.font.size.normal
-            font.weight: 500
-        }
-
-        Item {
-            Layout.fillWidth: true
-        }
-    }
+    spacing: Tokens.spacing.extraSmall / 2
+    Layout.fillWidth: true
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: Tokens.spacing.large
+        Layout.leftMargin: Tokens.padding.small
+        spacing: Tokens.spacing.small
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 0
-
-            Repeater {
-                model: root.half
-
-                KeybindItem {
-                    required property int index
-
-                    key: root.items[index].key
-                    description: root.items[index].description
-                    icon: root.items[index].icon
-                    isLast: index === root.half - 1
-                }
-            }
+        MaterialIcon {
+            text: root.groupIcon
+            color: Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.icon.small
+            fill: 1
         }
 
-        ColumnLayout {
+        StyledText {
             Layout.fillWidth: true
-            spacing: 0
-            visible: root.items.length > root.half
+            text: root.title + "  \u00B7  " + root.items.length
+            color: Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.label.medium
+            elide: Text.ElideRight
+        }
+    }
 
-            Repeater {
-                model: root.items.length - root.half
+    ColumnLayout {
+        Layout.fillWidth: true
+        spacing: 0
 
-                KeybindItem {
-                    required property int index
+        Repeater {
+            model: root.items.length
 
-                    key: root.items[root.half + index].key
-                    description: root.items[root.half + index].description
-                    icon: root.items[root.half + index].icon
-                    isLast: index === root.items.length - root.half - 1
-                }
+            KeybindItem {
+                required property int index
+
+                first: index === 0
+                last: index === root.items.length - 1
+                key: root.items[index].key
+                description: root.items[index].description
+                icon: root.items[index].icon
             }
         }
     }

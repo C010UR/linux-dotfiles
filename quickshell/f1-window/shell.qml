@@ -14,7 +14,7 @@ ShellRoot {
     GlobalShortcut {
         appid: "f1-window"
         name: "toggle"
-        onPressed: visibilities.dashboard = !visibilities.dashboard
+        onPressed: state.visible = !state.visible
     }
 
     PanelWindow {
@@ -29,19 +29,23 @@ ShellRoot {
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusiveZone: 0
         WlrLayershell.namespace: "f1-window"
-        WlrLayershell.keyboardFocus: visibilities.dashboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: state.visible ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
         contentItem.Config.screen: screen.name
         contentItem.Tokens.screen: screen.name
 
         HyprlandFocusGrab {
-            active: visibilities.dashboard
+            active: state.visible
             windows: [popup]
-            onCleared: visibilities.dashboard = false
+            onCleared: state.visible = false
         }
 
-        DrawerVisibilities {
-            id: visibilities
+        F1WindowState {
+            id: state
+        }
+
+        F1WindowConfig {
+            id: config
         }
 
         KeybindsService {
@@ -60,7 +64,7 @@ ShellRoot {
 
             BlobGroup {
                 id: blobGroup
-                color: Colours.palette.m3surface
+                color: Colours.tPalette.m3surface
                 smoothing: Config.border.smoothing
 
                 Behavior on color {
@@ -82,18 +86,20 @@ ShellRoot {
             BlobRect {
                 id: blobBg
                 group: blobGroup
-                x: dashboardWrapper.x
-                y: dashboardWrapper.y + Config.border.thickness
-                implicitWidth: dashboardWrapper.width
-                implicitHeight: dashboardWrapper.height
+                x: panelWrapper.x
+                y: panelWrapper.y + Config.border.thickness
+                implicitWidth: panelWrapper.width
+                implicitHeight: panelWrapper.height
                 radius: Tokens.rounding.large
                 deformScale: (0.1 * Config.appearance.deformScale) / 10000
             }
         }
 
         Wrapper {
-            id: dashboardWrapper
-            visibilities: visibilities
+            id: panelWrapper
+            state: state
+            config: config
+            screen: popup.screen
             keybindsService: keybindsService
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
@@ -103,10 +109,10 @@ ShellRoot {
         }
 
         mask: Region {
-            x: dashboardWrapper.x
-            y: dashboardWrapper.y
-            width: dashboardWrapper.width
-            height: dashboardWrapper.height
+            x: panelWrapper.x
+            y: panelWrapper.y
+            width: panelWrapper.width
+            height: panelWrapper.height
         }
     }
 }

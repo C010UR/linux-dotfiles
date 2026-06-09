@@ -1,4 +1,14 @@
-hl.monitor({ output = "eDP-1", mode = "2880x1800@120", position = "0x0", scale = 1.25 })
+hl.pmonitor({
+  output = "eDP-1",
+  mode = "2880x1800",
+  position = "0x0",
+  scale = 1.25,
+  refresh = {
+    performance = 120,
+    balanced = 60,
+    ["power-saver"] = 60,
+  },
+})
 hl.monitor({
   output = "desc:LG Electronics LG ULTRAFINE 512NTJJJK124",
   mode = "3840x2160@60",

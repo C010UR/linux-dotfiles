@@ -2,18 +2,168 @@
     "appearance": {
         "anim": {
             "durations": {
-                "scale": 0.5
+                "scale": 0.4
             }
         },
+        "deformScale": 1,
         "font": {
-            "family": {
-                "clock": "Rubik",
-                "material": "Material Symbols Rounded",
-                "mono": "CaskaydiaCove NF",
-                "sans": "Rubik"
+            "body": {
+                "family": "GoogleSansFlex",
+                "large": {
+                    "italic": false,
+                    "size": 16,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 400
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 14,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 400
+                },
+                "small": {
+                    "italic": false,
+                    "size": 12,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 400
+                }
             },
-            "size": {
-                "scale": 1
+            "clock": "Rubik",
+            "headline": {
+                "family": "GoogleSansFlex",
+                "large": {
+                    "italic": false,
+                    "size": 32,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 28,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "small": {
+                    "italic": false,
+                    "size": 24,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                }
+            },
+            "icon": {
+                "extraLarge": {
+                    "italic": false,
+                    "size": 36,
+                    "vaxes": {},
+                    "weight": 400
+                },
+                "family": "Material Symbols Rounded",
+                "large": {
+                    "italic": false,
+                    "size": 24,
+                    "vaxes": {},
+                    "weight": 400
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 18,
+                    "vaxes": {},
+                    "weight": 400
+                },
+                "small": {
+                    "italic": false,
+                    "size": 15,
+                    "vaxes": {},
+                    "weight": 400
+                }
+            },
+            "label": {
+                "family": "GoogleSansFlex",
+                "large": {
+                    "italic": false,
+                    "size": 14,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 12,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "small": {
+                    "italic": false,
+                    "size": 11,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 400
+                }
+            },
+            "mono": {
+                "family": "CaskaydiaCove NF",
+                "large": {
+                    "italic": false,
+                    "size": 16,
+                    "vaxes": {},
+                    "weight": 400
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 14,
+                    "vaxes": {},
+                    "weight": 400
+                },
+                "small": {
+                    "italic": false,
+                    "size": 12,
+                    "vaxes": {},
+                    "weight": 400
+                }
+            },
+            "scale": 1,
+            "title": {
+                "family": "GoogleSansFlex",
+                "large": {
+                    "italic": false,
+                    "size": 22,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "medium": {
+                    "italic": false,
+                    "size": 16,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                },
+                "small": {
+                    "italic": false,
+                    "size": 14,
+                    "vaxes": {
+                        "ROND": 25
+                    },
+                    "weight": 500
+                }
             }
         },
         "padding": {
@@ -55,11 +205,14 @@
             "enabled": false,
             "rounding": 1,
             "spacing": 1
-        }
+        },
+        "wallpaperEnabled": true
     },
     "bar": {
         "activeWindow": {
-            "inverted": false
+            "compact": false,
+            "inverted": false,
+            "showOnHover": false
         },
         "clock": {
             "background": false,
@@ -101,9 +254,7 @@
                 "id": "power"
             }
         ],
-        "excludedScreens": [
-            ""
-        ],
+        "excludedScreens": [],
         "persistent": true,
         "popouts": {
             "activeWindow": true,
@@ -115,7 +266,7 @@
             "volume": true,
             "workspaces": true
         },
-        "showOnHover": true,
+        "showOnHover": false,
         "status": {
             "showAudio": false,
             "showBattery": true,
@@ -129,20 +280,23 @@
         "tray": {
             "background": false,
             "compact": false,
-            "iconSubs": [
-            ],
+            "hiddenIcons": [],
+            "iconSubs": [],
             "recolour": false
         },
         "workspaces": {
             "activeIndicator": true,
             "activeLabel": "",
-            "activeTrail": false,
+            "activeTrail": true,
+            "capitalisation": "preserve",
             "label": "  ",
+            "maxWindowIcons": 5,
             "occupiedBg": false,
             "occupiedLabel": "",
             "perMonitorWorkspaces": true,
             "showWindows": false,
-            "shown": 5,
+            "showWindowsOnSpecialWorkspaces": false,
+            "shown": 9,
             "specialWorkspaceIcons": [
                 {
                     "icon": "sports_esports",
@@ -166,6 +320,15 @@
         "dragThreshold": 50,
         "enabled": true,
         "mediaUpdateInterval": 500,
+        "performance": {
+            "showBattery": true,
+            "showCpu": true,
+            "showGpu": true,
+            "showMemory": true,
+            "showNetwork": true,
+            "showStorage": true
+        },
+        "resourceUpdateInterval": 1000,
         "showDashboard": true,
         "showMedia": true,
         "showOnHover": false,
@@ -234,9 +397,10 @@
                 }
             ]
         },
-        "logo": "caelestia",
+        "logo": "",
         "mediaGifSpeedAdjustment": 300,
-        "sessionGifSpeed": 0.7
+        "sessionGifSpeed": 0.7,
+        "showOverFullscreen": false
     },
     "launcher": {
         "actionPrefix": ">",
@@ -284,17 +448,6 @@
                 "enabled": true,
                 "icon": "colors",
                 "name": "Variant"
-            },
-            {
-                "command": [
-                    "autocomplete",
-                    "transparency"
-                ],
-                "dangerous": false,
-                "description": "Change shell transparency",
-                "enabled": false,
-                "icon": "opacity",
-                "name": "Transparency"
             },
             {
                 "command": [
@@ -390,7 +543,7 @@
                 "command": [
                     "caelestia",
                     "shell",
-                    "controlCenter",
+                    "nexus",
                     "open"
                 ],
                 "dangerous": false,
@@ -402,8 +555,8 @@
         ],
         "dragThreshold": 50,
         "enableDangerousActions": false,
-        "favouriteApps": [
-        ],
+        "enabled": true,
+        "favouriteApps": [],
         "hiddenApps": [
             "qvidcap",
             "btop",
@@ -460,8 +613,14 @@
         "vimKeybinds": false
     },
     "lock": {
+        "enableFprint": true,
         "hideNotifs": false,
-        "recolourLogo": false
+        "maxFprintTries": 3,
+        "recolourLogo": true
+    },
+    "nexus": {
+        "networkRescanInterval": 15000,
+        "wallpapersPerRow": 4
     },
     "notifs": {
         "actionOnClick": false,
@@ -469,6 +628,9 @@
         "defaultExpireTimeout": 5000,
         "expandThreshold": 20,
         "expire": true,
+        "fullscreen": "on",
+        "fullscreenExpireTimeout": 2000,
+        "groupPreviewNum": 3,
         "openExpanded": false
     },
     "osd": {
@@ -479,7 +641,7 @@
     },
     "paths": {
         "lockNoNotifsPic": "root:/assets/dino.png",
-        "lyricsDir": "~/Music/lyrics",
+        "lyricsDir": "~/Music/lyrics/",
         "mediaGif": "root:/assets/bongocat.gif",
         "noNotifsPic": "root:/assets/dino.png",
         "sessionGif": "root:/assets/kurukuru.gif",
@@ -490,6 +652,7 @@
         "brightnessIncrement": 0.1,
         "defaultPlayer": "Spotify",
         "gpuType": "",
+        "lyricsBackend": "Auto",
         "maxVolume": 1,
         "playerAliases": [
             {
@@ -501,7 +664,7 @@
         "useFahrenheit": false,
         "useFahrenheitPerformance": false,
         "useTwelveHourClock": false,
-        "visualiserBars": 45,
+        "visualiserBars": 60,
         "weatherLocation": ""
     },
     "session": {
@@ -567,7 +730,7 @@
                 "id": "dnd"
             },
             {
-                "enabled": true,
+                "enabled": false,
                 "id": "vpn"
             }
         ],
@@ -578,6 +741,7 @@
             "chargingChanged": true,
             "configLoaded": true,
             "dndChanged": true,
+            "fullscreen": "off",
             "gameModeChanged": true,
             "kbLayoutChanged": true,
             "kbLimit": true,
@@ -586,7 +750,7 @@
             "vpnChanged": true
         },
         "vpn": {
-            "enabled": true,
+            "enabled": false,
             "provider": [
                 {
                     "displayName": "Wireguard (Your VPN)",

@@ -74,11 +74,54 @@ function M.toggle_touchpad()
   local enabled = _read_touchpad_state() == "enabled"
   hl.device({ name = M.touchpadDevice, enabled = not enabled })
   _write_touchpad_state(enabled and "disabled" or "enabled")
-  hl.notification.create({
+  hl.caelestia_notification({
     text = "Touchpad: " .. (enabled and "Disabled" or "Enabled"),
     duration = 2000,
     icon = "info",
   })
+end
+
+-- ── Auto brightness toggle (wluma systemd service) ────────────────────────────
+
+local _wluma_state_file = "/tmp/wluma_autobrightness_state"
+
+local function _read_wluma_state()
+  local f = io.open(_wluma_state_file, "r")
+  if not f then
+    return "enabled"
+  end
+  local s = f:read("*l")
+  f:close()
+  return s
+end
+
+local function _write_wluma_state(state)
+  local f = io.open(_wluma_state_file, "w")
+  if f then
+    f:write(state)
+    f:close()
+  end
+end
+
+function M.toggle_autobrightness()
+  local enabled = _read_wluma_state() == "enabled"
+  if enabled then
+    hl.exec_cmd("systemctl --user stop wluma.service")
+    _write_wluma_state("disabled")
+    hl.caelestia_notification({
+      text = "Auto brightness: Disabled",
+      duration = 2000,
+      icon = "info",
+    })
+  else
+    hl.exec_cmd("systemctl --user start wluma.service")
+    _write_wluma_state("enabled")
+    hl.caelestia_notification({
+      text = "Auto brightness: Enabled",
+      duration = 2000,
+      icon = "info",
+    })
+  end
 end
 
 -- ── Toggle Dolphin: show/hide as a special workspace overlay (special:dolphin).

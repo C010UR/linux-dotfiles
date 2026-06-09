@@ -14,9 +14,6 @@ Item {
 
     required property var keybindsService
 
-    implicitWidth: 1024
-    implicitHeight: 600
-
     readonly property var categories: ({
             shell: { label: "Shell", icon: "widgets" },
             workspace: { label: "Workspaces", icon: "grid_view" },
@@ -29,142 +26,172 @@ Item {
             utility: { label: "Utilities", icon: "build" }
         })
 
-    readonly property var filteredGroups: {
-        const filtered = root.keybindsService.filter(root.keybindsService.hyprlandKeybinds, search.text)
-        return root.keybindsService.groupByCategory(filtered)
+    readonly property var categoryOrder: ["shell", "workspace", "window", "window_group", "app_launcher", "media", "screenshot_recording", "special_workspace", "utility"]
+
+    property string searchQuery: ""
+    property var displayGroups: keybindsService.sortGroups(keybindsService.allGroups, categoryOrder)
+
+    function refreshDisplay() {
+        displayGroups = keybindsService.sortGroups(
+            keybindsService.filterAndGroup(searchQuery),
+            categoryOrder
+        );
     }
 
-    readonly property var categoryOrder: ["shell", "workspace", "window", "window_group", "app_launcher", "media", "screenshot_recording", "special_workspace", "utility"]
+    Timer {
+        id: searchDebounce
+        interval: 80
+        onTriggered: root.refreshDisplay()
+    }
+
+    Connections {
+        function onAllGroupsChanged(): void {
+            root.refreshDisplay();
+        }
+
+        target: root.keybindsService
+    }
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: Tokens.spacing.normal
+        spacing: Tokens.spacing.extraLargeIncreased
 
-        Item {
+        StyledRect {
+            id: searchBar
+
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            implicitHeight: searchLayout.implicitHeight + Tokens.padding.medium * 2
 
-            ClippingRectangle {
+            radius: Tokens.rounding.full
+            color: Colours.tPalette.m3surfaceContainerLowest
+            border.color: searchField.activeFocus ? Colours.palette.m3primary : Colours.palette.m3outlineVariant
+
+            Behavior on border.color {
+                CAnim {}
+            }
+
+            MouseArea {
                 anchors.fill: parent
-                radius: Tokens.rounding.normal
-                color: "transparent"
+                cursorShape: Qt.IBeamCursor
+                onClicked: searchField.focus = true
+            }
 
-                StyledFlickable {
-                    id: flick
+            RowLayout {
+                id: searchLayout
 
-                    anchors.fill: parent
-                    contentWidth: width
-                    contentHeight: contentCol.implicitHeight
-                    flickableDirection: Flickable.VerticalFlick
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: Tokens.padding.large
 
-                    WheelHandler {
-                        rotationScale: 1
-                        target: flick
-                        property: "contentY"
+                spacing: Tokens.spacing.small
+
+                MaterialIcon {
+                    text: "search"
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.icon.medium
+                }
+
+                StyledTextField {
+                    id: searchField
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    placeholderText: qsTr("Search keybinds...")
+                    placeholderTextColor: Colours.palette.m3onSurfaceVariant
+                    color: Colours.palette.m3onSurface
+                    font: Tokens.font.body.large
+
+                    onTextChanged: {
+                        root.searchQuery = text;
+                        if (!text) {
+                            searchDebounce.stop();
+                            root.refreshDisplay();
+                            return;
+                        }
+                        searchDebounce.restart();
                     }
 
-                    ColumnLayout {
-                        id: contentCol
+                    Component.onCompleted: forceActiveFocus()
+                    Keys.onEscapePressed: searchField.text = ""
+                }
 
-                        width: flick.width
-                        spacing: Tokens.spacing.normal
-
-                        Repeater {
-                            model: root.filteredGroups.sort((a, b) => {
-                                const ai = root.categoryOrder.indexOf(a.key);
-                                const bi = root.categoryOrder.indexOf(b.key);
-                                return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-                            })
-
-                            KeybindGroup {
-                                required property var modelData
-
-                                Layout.fillWidth: true
-                                title: root.categories[modelData.key]?.label ?? modelData.key
-                                groupIcon: root.categories[modelData.key]?.icon ?? "help"
-                                items: modelData.items
-                            }
-                        }
-
-                        StyledText {
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.topMargin: Tokens.padding.large
-                            visible: root.filteredGroups.length === 0
-                            text: search.text ? "No matching keybinds" : "No keybinds loaded"
-                            color: Colours.palette.m3onSurfaceVariant
-                            font.pointSize: Tokens.font.size.normal
-                        }
+                IconButton {
+                    icon: "close"
+                    font: Tokens.font.icon.medium
+                    type: IconButton.Text
+                    padding: Tokens.padding.extraSmall
+                    isRound: true
+                    onClicked: {
+                        searchField.clear();
+                        root.searchQuery = "";
+                        searchDebounce.stop();
+                        root.refreshDisplay();
                     }
 
-                    StyledScrollBar.vertical: StyledScrollBar {
-                        flickable: flick
+                    opacity: searchField.text.length > 0 ? 1 : 0
+
+                    Behavior on opacity {
+                        Anim {
+                            type: Anim.DefaultEffects
+                        }
                     }
                 }
             }
         }
 
-        StyledRect {
-            color: Colours.layer(Colours.palette.m3surfaceContainer, 2)
-            radius: Tokens.rounding.full
-
+        ClippingRectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: Math.max(searchIcon.implicitHeight, search.implicitHeight, clearIcon.implicitHeight)
+            Layout.fillHeight: true
+            radius: Tokens.rounding.extraLarge
+            color: "transparent"
 
-            MaterialIcon {
-                id: searchIcon
+            StyledFlickable {
+                id: flick
 
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: Tokens.padding.normal
-                text: "search"
-                color: Colours.palette.m3onSurfaceVariant
-            }
+                anchors.fill: parent
+                contentWidth: width
+                contentHeight: contentCol.implicitHeight
+                flickableDirection: Flickable.VerticalFlick
 
-            StyledTextField {
-                id: search
-
-                anchors.left: searchIcon.right
-                anchors.right: clearIcon.left
-                anchors.leftMargin: Tokens.spacing.small
-                anchors.rightMargin: Tokens.spacing.small
-                topPadding: Tokens.padding.larger
-                bottomPadding: Tokens.padding.larger
-                placeholderText: qsTr("Search keybinds...")
-
-                Component.onCompleted: forceActiveFocus()
-                Keys.onEscapePressed: search.text = ""
-            }
-
-            MaterialIcon {
-                id: clearIcon
-
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: Tokens.padding.normal
-                width: search.text ? implicitWidth : implicitWidth / 2
-                opacity: search.text ? (clearMouse.pressed ? 0.7 : clearMouse.containsMouse ? 0.8 : 1) : 0
-                text: "close"
-                color: Colours.palette.m3onSurfaceVariant
-
-                MouseArea {
-                    id: clearMouse
-
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: search.text ? Qt.PointingHandCursor : undefined
-                    onClicked: search.text = ""
+                WheelHandler {
+                    rotationScale: 1
+                    target: flick
+                    property: "contentY"
                 }
 
-                Behavior on width {
-                    Anim {
-                        type: Anim.StandardSmall
+                ColumnLayout {
+                    id: contentCol
+
+                    width: flick.width
+                    spacing: Tokens.spacing.extraLargeIncreased
+
+                    Repeater {
+                        model: root.displayGroups
+
+                        KeybindGroup {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            title: root.categories[modelData.key]?.label ?? modelData.key
+                            groupIcon: root.categories[modelData.key]?.icon ?? "help"
+                            items: modelData.items
+                        }
+                    }
+
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.topMargin: Tokens.padding.large
+                        visible: root.displayGroups.length === 0
+                        text: root.searchQuery ? qsTr("No matching keybinds") : qsTr("No keybinds loaded")
+                        color: Colours.palette.m3outline
+                        font: Tokens.font.body.large
                     }
                 }
 
-                Behavior on opacity {
-                    Anim {
-                        type: Anim.StandardSmall
-                    }
+                StyledScrollBar.vertical: StyledScrollBar {
+                    flickable: flick
                 }
             }
         }
