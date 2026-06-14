@@ -23,4 +23,6 @@ if status is-interactive
     abbr ll 'ls -l'
     abbr la 'ls -a'
     abbr lla 'ls -la'
+
+    abbr rm trash
 end
