@@ -34,11 +34,23 @@ hl.cbind("SUPER + L", hl.dsp.global("caelestia:lock"), {
   icon = "lock",
   order = 40,
 })
-hl.cbind("SUPER + F1", hl.dsp.global("f1-window:toggle"), {
+hl.cbind("SUPER + F1", hl.dsp.global("clste:toggleF1"), {
   desc = "Toggle Keybinds",
   category = "shell",
   icon = "help",
   order = 30,
+})
+hl.cbind("SUPER + F6", hl.dsp.global("clste:toggleAutoclickerWindow"), {
+  desc = "Autoclicker config",
+  category = "shell",
+  icon = "touch_app",
+  order = 31,
+})
+hl.cbind("F6", hl.dsp.global("clste:toggleAutoclicker"), {
+  desc = "Toggle autoclicker",
+  category = "shell",
+  icon = "ads_click",
+  order = 32,
 })
 
 -- Restore lock: restart shell then lock

@@ -66,26 +66,30 @@
                 "extraLarge": {
                     "italic": false,
                     "size": 36,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 },
                 "family": "Material Symbols Rounded",
                 "large": {
                     "italic": false,
                     "size": 24,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 },
                 "medium": {
                     "italic": false,
                     "size": 18,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 },
                 "small": {
                     "italic": false,
                     "size": 15,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 }
             },
@@ -121,19 +125,22 @@
                 "large": {
                     "italic": false,
                     "size": 16,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 },
                 "medium": {
                     "italic": false,
                     "size": 14,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 },
                 "small": {
                     "italic": false,
                     "size": 12,
-                    "vaxes": {},
+                    "vaxes": {
+                    },
                     "weight": 400
                 }
             },
@@ -254,7 +261,8 @@
                 "id": "power"
             }
         ],
-        "excludedScreens": [],
+        "excludedScreens": [
+        ],
         "persistent": true,
         "popouts": {
             "activeWindow": true,
@@ -280,8 +288,10 @@
         "tray": {
             "background": false,
             "compact": false,
-            "hiddenIcons": [],
-            "iconSubs": [],
+            "hiddenIcons": [
+            ],
+            "iconSubs": [
+            ],
             "recolour": false
         },
         "workspaces": {
@@ -556,7 +566,8 @@
         "dragThreshold": 50,
         "enableDangerousActions": false,
         "enabled": true,
-        "favouriteApps": [],
+        "favouriteApps": [
+        ],
         "hiddenApps": [
             "qvidcap",
             "btop",

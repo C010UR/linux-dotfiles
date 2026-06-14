@@ -40,7 +40,7 @@ ColumnLayout {
 
     ColumnLayout {
         Layout.fillWidth: true
-        spacing: 0
+        spacing: Tokens.spacing.extraSmall
 
         Repeater {
             model: root.items.length
