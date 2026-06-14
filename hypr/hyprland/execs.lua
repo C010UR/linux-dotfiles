@@ -28,9 +28,9 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("mpris-proxy")
 
   -- Resize and move windows based on matches (e.g. pip)
-  hl.exec_cmd("caelestia resizer -d")
+  -- hl.exec_cmd("caelestia resizer -d")
 
   -- Start shell
   hl.exec_cmd("caelestia shell -d")
-  hl.exec_cmd("quickshell -c clste -d")
+  hl.exec_cmd("qs -c clste -d")
 end)
