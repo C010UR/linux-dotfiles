@@ -8,7 +8,7 @@ function restart --description 'Restart a managed service'
         case zerotier
             sudo systemctl restart zerotier-one
         case twingate
-            twingate service stop
+            sudo twingate service-stop
             and twingate start
         case '*'
             echo "Unknown service: $argv[1]" >&2

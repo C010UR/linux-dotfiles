@@ -8,7 +8,7 @@ function stop --description 'Stop a managed service'
         case zerotier
             sudo systemctl stop zerotier-one
         case twingate
-            twingate service stop
+            sudo twingate service-stop
         case '*'
             echo "Unknown service: $argv[1]" >&2
             return 1
