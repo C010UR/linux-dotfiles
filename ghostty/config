@@ -26,5 +26,7 @@ quick-terminal-size = 35%
 
 keybind = ctrl+t=new_tab
 keybind = ctrl+w=close_tab
+keybind = ctrl+shift+h=previous_tab
+keybind = ctrl+shift+l=next_tab
 
 keybind = global:ctrl+backquote=toggle_quick_terminal

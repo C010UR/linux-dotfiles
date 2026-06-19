@@ -35,19 +35,19 @@ format = '[$hash]($style) '
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 
-[git_metrics]
-
 [git_status]
-format = '$ahead_behind$conflicted$deleted$renamed$modified$staged$untracked$stashed'
+format = '$ahead_behind$conflicted$worktree_deleted$worktree_modified$renamed$index_deleted$index_modified$index_added$untracked$stashed'
 ahead = '[⇡${count}](bold blue) '
 diverged = '[⇡${ahead_count}⇣${behind_count}](bold cyan) '
 behind = '[⇣${count}](bold purple) '
 untracked = '[?${count}](bold red) '
 stashed = '[$](bold blue) '
-modified = '[~${count}](bold red) '
-staged = '[+${count}](bold green) '
 renamed = '[!${count}](bold red) '
-deleted = '[-${count}](bold red) '
+worktree_deleted = '[-${count}](bold red) '
+worktree_modified = '[~${count}](bold red) '
+index_deleted = '[-${count}](bold green) '
+index_modified = '[~${count}](bold green) '
+index_added = '[+${count}](bold green) '
 style = ''
 
 [fill]

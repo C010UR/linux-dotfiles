@@ -34,7 +34,7 @@ hl.device({
 for _, name in ipairs(v.mouseDevices) do
   hl.device({
     name = name,
-    accel_profile = "adaptive",
-    sensitivity = -0.6,
+    accel_profile = "flat",
+    sensitivity = -0.4,
   })
 end
