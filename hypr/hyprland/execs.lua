@@ -33,4 +33,11 @@ hl.on("hyprland.start", function()
   -- Start shell
   hl.exec_cmd("caelestia shell -d")
   hl.exec_cmd("qs -c clste -d")
+
+  v.apply_persisted_state()
+  hl.exec_cmd(v.get_config_path() .. "/scripts/watch-resume.sh")
+end)
+
+hl.on("config.reloaded", function()
+  v.apply_persisted_state()
 end)

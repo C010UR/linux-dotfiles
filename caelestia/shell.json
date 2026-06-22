@@ -429,6 +429,17 @@
             {
                 "command": [
                     "autocomplete",
+                    "calc"
+                ],
+                "dangerous": false,
+                "description": "Do simple math equations (powered by Qalc)",
+                "enabled": true,
+                "icon": "calculate",
+                "name": "c"
+            },
+            {
+                "command": [
+                    "autocomplete",
                     "scheme"
                 ],
                 "dangerous": false,

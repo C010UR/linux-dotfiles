@@ -70,14 +70,14 @@ hl.cbind("SUPER + ALT + L", hl.dsp.global("caelestia:lock"), {
 })
 
 -- Brightness
-hl.cbind("XF86MonBrightnessUp", hl.dsp.global("caelestia:brightnessUp"), {
+hl.cbind("XF86MonBrightnessUp", v.brightness_up, {
   desc = "Brightness Up",
   category = "media",
   icon = "brightness_6",
   locked = true,
   order = 10,
 })
-hl.cbind("XF86MonBrightnessDown", hl.dsp.global("caelestia:brightnessDown"), {
+hl.cbind("XF86MonBrightnessDown", v.brightness_down, {
   desc = "Brightness Down",
   category = "media",
   icon = "brightness_5",
@@ -543,19 +543,19 @@ hl.cbind("SUPER + R", hl.dsp.exec_cmd("caelestia toggle todo"), {
 
 -- ── App launchers ─────────────────────────────────────────────────────────────
 
-hl.cbind("SUPER + T", hl.dsp.exec_cmd("app2unit -- " .. v.terminal), {
+hl.cbind("SUPER + T", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.terminal), {
   desc = "Open Terminal",
   category = "app_launcher",
   icon = "terminal",
   order = 10,
 })
-hl.cbind("SUPER + W", hl.dsp.exec_cmd("app2unit -- " .. v.browser), {
+hl.cbind("SUPER + W", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.browser), {
   desc = "Open Browser",
   category = "app_launcher",
   icon = "web",
   order = 20,
 })
-hl.cbind("SUPER + C", hl.dsp.exec_cmd("app2unit -- " .. v.editor), {
+hl.cbind("SUPER + C", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.editor), {
   desc = "Open Editor",
   category = "app_launcher",
   icon = "edit_note",
@@ -567,19 +567,19 @@ hl.cbind("SUPER + E", v.toggle_dolphin, {
   icon = "folder",
   order = 40,
 })
-hl.cbind("SUPER + ALT + E", hl.dsp.exec_cmd("app2unit -- nemo"), {
+hl.cbind("SUPER + ALT + E", hl.dsp.exec_cmd("app2unit -t scope -- nemo"), {
   desc = "File Manager (Nemo)",
   category = "app_launcher",
   icon = "folder",
   order = 50,
 })
-hl.cbind("CTRL + ALT + ESCAPE", hl.dsp.exec_cmd("app2unit -- qps"), {
+hl.cbind("CTRL + ALT + ESCAPE", hl.dsp.exec_cmd("app2unit -t scope -- qps"), {
   desc = "Process Manager",
   category = "app_launcher",
   icon = "monitor_heart",
   order = 60,
 })
-hl.cbind("CTRL + ALT + V", hl.dsp.exec_cmd("app2unit -- pavucontrol"), {
+hl.cbind("CTRL + ALT + V", hl.dsp.exec_cmd("app2unit -t scope -- pavucontrol"), {
   desc = "Audio Settings",
   category = "app_launcher",
   icon = "settings",
