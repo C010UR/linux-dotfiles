@@ -7,6 +7,7 @@ local M = {}
 M.terminal = "ghostty"
 M.browser = "google-chrome-stable"
 M.editor = "nvim"
+M.notes_dir = os.getenv("HOME") .. "/.local/share/notes"
 
 -- Cursor
 M.cursorTheme = "polarnight-cursors"
@@ -205,6 +206,37 @@ function M.toggle_dolphin()
     return
   end
   hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
+end
+
+-- ── Toggle Qalculate: show/hide as a special workspace overlay (special:qalculate).
+function M.toggle_qalculate()
+  local wins = hl.get_windows({ class = "qalculate-gtk" })
+  if #wins == 0 then
+    hl.exec_cmd("qalculate-gtk") -- window rule sends it to special:qalculate
+    return
+  end
+  hl.dispatch(hl.dsp.workspace.toggle_special("qalculate"))
+end
+
+-- ── Toggle Notes: show/hide as a special workspace overlay (special:notes).
+function M.toggle_notes()
+  local wins = {}
+  for _, w in ipairs(hl.get_windows()) do
+    if w.class == "com.mitchellh.ghostty" and w.title ~= nil and w.title:match("^notes$") then
+      wins[#wins + 1] = w
+    end
+  end
+  if #wins == 0 then
+    hl.exec_cmd(
+      'ghostty --title=notes --shell-integration-features=cursor,no-sudo,no-ssh-env,no-ssh-terminfo,path -e fish -C "mkdir -p '
+        .. M.notes_dir
+        .. "; cd "
+        .. M.notes_dir
+        .. '; exec nvim ."'
+    )
+    return
+  end
+  hl.dispatch(hl.dsp.workspace.toggle_special("notes"))
 end
 
 function M.get_config_path()

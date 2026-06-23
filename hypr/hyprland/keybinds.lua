@@ -534,10 +534,10 @@ hl.cbind("SUPER + H", hl.dsp.workspace.toggle_special("huddle"), {
   icon = "groups",
   order = 70,
 })
-hl.cbind("SUPER + R", hl.dsp.exec_cmd("caelestia toggle todo"), {
-  desc = "Toggle Todo",
+hl.cbind("SUPER + R", v.toggle_notes, {
+  desc = "Toggle Notes",
   category = "special_workspace",
-  icon = "checklist",
+  icon = "edit_note",
   order = 80,
 })
 
@@ -555,10 +555,10 @@ hl.cbind("SUPER + W", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.browser), {
   icon = "web",
   order = 20,
 })
-hl.cbind("SUPER + C", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.editor), {
-  desc = "Open Editor",
+hl.cbind("SUPER + C", v.toggle_qalculate, {
+  desc = "Calculator",
   category = "app_launcher",
-  icon = "edit_note",
+  icon = "calculate",
   order = 30,
 })
 hl.cbind("SUPER + E", v.toggle_dolphin, {

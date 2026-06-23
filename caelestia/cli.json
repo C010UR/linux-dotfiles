@@ -95,20 +95,6 @@
           "btop"
         ]
       }
-    },
-    "todo": {
-      "todoist": {
-        "enable": false,
-        "match": [
-          {
-            "class": "Todoist"
-          }
-        ],
-        "command": [
-          "todoist"
-        ],
-        "move": true
-      }
     }
   }
 }
