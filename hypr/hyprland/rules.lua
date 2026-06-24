@@ -218,6 +218,21 @@ hl.window_rule({
   match = { xwayland = true, title = "win[0-9]+" },
 })
 
+-- Google meet is sharing your screen
+hl.window_rule({
+  name = "google-meet-screen-share",
+  pin = true,
+  move = "63 ((monitor_h*1)-window_h-(monitor_h*0.005))",
+  match = { title = "meet.google.com is sharing your screen." },
+})
+
+hl.window_rule({
+  name = "hyprland-share-picker",
+  float = true,
+  center = true,
+  match = { class = "hyprland-share-picker" },
+})
+
 -- ── Event handlers ────────────────────────────────────────────────────────────
 
 -- When a floating special overlay is visible and a new window opens, move it to the

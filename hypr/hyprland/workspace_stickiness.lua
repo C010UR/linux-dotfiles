@@ -149,22 +149,28 @@ hl.on("window.open_early", function(win)
     return
   end
 
-  if win.workspace.name:match("^special:") then
-    return
-  end
-
+  -- When a special workspace is visible Hyprland may assign new windows there even
+  -- though they belong elsewhere (e.g. Playwright from Ghostty). Still resolve the
+  -- PID-tree target so we can relocate; windows with no stick target (window rules,
+  -- manual special opens) keep their initial special workspace.
   local initial_ws = win.workspace.name
   local target = resolve_stick_target(win)
 
-  if target ~= nil and target.name ~= initial_ws then
+  if target ~= nil then
+    -- Tree-derived launch (terminal, popup, inherited child): don't steal focus.
     hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "1", window = win }))
-    hl.dispatch(hl.dsp.window.move({
-      window = win,
-      workspace = target,
-      follow = false,
-    }))
+    hl.dispatch(hl.dsp.window.set_prop({ prop = "focus_on_activate", value = "0", window = win }))
+
+    if target.name ~= initial_ws then
+      hl.dispatch(hl.dsp.window.move({
+        window = win,
+        workspace = target,
+        follow = false,
+      }))
+      _relocated[win_key(win)] = true
+    end
+
     register_anchor(win.pid, target.name)
-    _relocated[win_key(win)] = true
     return
   end
 
@@ -186,6 +192,6 @@ hl.on("window.open", function(win)
     return
   end
 
+  -- Background relocation: re-enable focus-on-map but keep activation suppressed.
   hl.dispatch(hl.dsp.window.set_prop({ prop = "no_focus", value = "0", window = win }))
-  hl.dispatch(hl.dsp.window.set_prop({ prop = "focus_on_activate", value = "0", window = win }))
 end)

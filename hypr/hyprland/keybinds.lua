@@ -464,10 +464,18 @@ hl.cbind("SUPER + J", hl.dsp.layout("swapwithmaster master"), {
   icon = "swap_vert",
   order = 110,
 })
-hl.cbind("SUPER + X", hl.dsp.window.resize(), {
+hl.cbind("SUPER + mouse:272", hl.dsp.window.drag(), {
+  desc = "Drag Window",
+  category = "window",
+  icon = "open_with",
+  mouse = true,
+  order = 115,
+})
+hl.cbind("SUPER + mouse:273", hl.dsp.window.resize(), {
   desc = "Resize Window",
   category = "window",
   icon = "aspect_ratio",
+  mouse = true,
   order = 120,
 })
 hl.cbind("SUPER + ALT + BACKSLASH", hl.dsp.exec_cmd("caelestia resizer pip"), {
