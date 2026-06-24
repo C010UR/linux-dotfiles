@@ -52,6 +52,12 @@ hl.cbind("F6", hl.dsp.global("clste:toggleAutoclicker"), {
   icon = "ads_click",
   order = 32,
 })
+hl.cbind("SUPER + SHIFT + F6", hl.dsp.global("clste:toggleAutoclicker"), {
+  desc = "Toggle autoclicker (gaming)",
+  category = "shell",
+  icon = "ads_click",
+  order = 33,
+})
 
 -- Restore lock: restart shell then lock
 hl.cbind("SUPER + ALT + L", hl.dsp.exec_cmd("caelestia shell -d"), {

@@ -40,12 +40,34 @@ hl.window_rule({
   center = true,
   match = { class = "com.github.tchx84.Flatseal" },
 })
+-- Prism Launcher: default float/center at native size (progress, message boxes, pickers).
 hl.window_rule({
-  name = "prism-launcher",
+  name = "prism-launcher-popups",
+  float = true,
+  center = true,
+  match = { class = "org.prismlauncher.PrismLauncher" },
+})
+-- Settings, instance editor, and similar dialogs — smaller than the main launcher.
+hl.window_rule({
+  name = "prism-launcher-dialogs",
+  float = true,
+  size = "(monitor_w*0.55) (monitor_h*0.65)",
+  center = true,
+  match = {
+    class = "org.prismlauncher.PrismLauncher",
+    title = "^(Settings|New Instance|Copy Instance|Export Instance|Create Instance Shortcut|Choose Version|View Launcher Logs|Console window for |Edit Instance \\()",
+  },
+})
+-- Main launcher window only (e.g. "Prism Launcher 11.0.2").
+hl.window_rule({
+  name = "prism-launcher-main",
   float = true,
   size = "(monitor_w*0.7) (monitor_h*0.8)",
   center = true,
-  match = { class = "org.prismlauncher.PrismLauncher" },
+  match = {
+    class = "org.prismlauncher.PrismLauncher",
+    title = "^Prism Launcher",
+  },
 })
 hl.window_rule({
   name = "gnome-settings",
@@ -234,10 +256,50 @@ hl.window_rule({
   match = { class = "hyprland-share-picker" },
 })
 
--- Jetbrains
+-- JetBrains
 hl.window_rule({
-  "^(jetbrains-.*)$",
+  name = "jetbrains-splash",
+  center = true,
+  no_focus = true,
+  border_size = 0,
+  match = { class = "^(jetbrains-.*)$", title = "^(splash)$", float = true },
+})
+-- Search, find, new file, etc. (empty title floating popups)
+hl.window_rule({
+  name = "jetbrains-popup",
+  center = true,
+  stay_focused = true,
+  border_size = 0,
+  min_size = "(monitor_w*0.5) (monitor_h*0.5)",
+  match = { class = "^(jetbrains-.*)$", title = "^$", float = true },
+})
+-- Autocomplete, tooltips (title is always win<N>)
+hl.window_rule({
+  name = "jetbrains-tooltip",
+  no_initial_focus = true,
+  match = { class = "^(jetbrains-.*)$", title = "^(win.*)$", float = true },
+})
+-- Tab drag previews (single-space title)
+hl.window_rule({
+  name = "jetbrains-tab-drag",
+  no_initial_focus = true,
+  match = { class = "^(jetbrains-.*)$", title = "^\\s$", float = true },
+})
+-- Settings and other modal dialogs
+hl.window_rule({
+  name = "jetbrains-dialog",
+  stay_focused = true,
+  match = {
+    class = "^(jetbrains-.*)$",
+    title = "^(Settings|Preferences|Project Structure)$",
+    float = true,
+  },
+})
+-- Prevent focus/cursor jumps when moving the mouse between IDE windows and popups
+hl.window_rule({
+  name = "jetbrains-focus",
   no_follow_mouse = true,
+  match = { class = "^(jetbrains-.*)$" },
 })
 
 -- Telegram

@@ -17,6 +17,7 @@ Item {
     property string lastError: ""
     property string controlError: ""
     property string pendingAction: ""
+    property bool awaitingToggleNotify: false
 
     function intervalSeconds() {
         if (root.settings.rateUnit === "cpm")
@@ -134,10 +135,18 @@ Item {
     }
 
     function toggle() {
-        if (root.running)
-            root.stop();
-        else
-            root.start();
+        if (!root.running) {
+            const error = root.validate();
+            if (error) {
+                root.lastError = error;
+                return;
+            }
+        }
+        root.lastError = "";
+        root.controlError = "";
+        root.pendingAction = "toggle";
+        controlProc.command = root.buildCommand(true);
+        controlProc.running = true;
     }
 
     Timer {
@@ -158,7 +167,13 @@ Item {
                     const payload = JSON.parse(text);
                     root.running = payload.running === true;
                     root.activeState = payload.state ?? null;
+                    if (root.awaitingToggleNotify) {
+                        root.awaitingToggleNotify = false;
+                        root.notify(root.running ? "enabled" : "disabled");
+                    }
                 } catch (e) {
+                    if (root.awaitingToggleNotify)
+                        root.awaitingToggleNotify = false;
                 }
             }
         }
@@ -168,12 +183,20 @@ Item {
         id: controlProc
 
         onExited: code => {
-            root.refreshStatus();
             if (code !== 0) {
                 root.lastError = root.controlError || qsTr("Failed to control autoclicker");
                 root.pendingAction = "";
+                root.awaitingToggleNotify = false;
+                root.refreshStatus();
                 return;
             }
+            if (root.pendingAction === "toggle") {
+                root.awaitingToggleNotify = true;
+                root.pendingAction = "";
+                root.refreshStatus();
+                return;
+            }
+            root.refreshStatus();
             root.notify(root.pendingAction);
             root.pendingAction = "";
         }

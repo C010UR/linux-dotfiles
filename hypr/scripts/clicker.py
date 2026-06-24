@@ -17,8 +17,8 @@ YDOTOOL_SOCKET = os.environ.get(
 )
 
 BUTTON_CODES = {
-    "left": "0xC0",
-    "right": "0xC1",
+    "left": 272,
+    "right": 273,
 }
 
 MODIFIER_CODES = {
@@ -77,6 +77,8 @@ KEY_CODES = {
     **{f"f{i}": 58 + i for i in range(1, 13)},
 }
 
+stopping = False
+
 
 def write_state(payload: dict):
     with open(STATE_FILE, "w") as f:
@@ -89,15 +91,24 @@ def remove_state_files():
         os.remove(STATE_FILE)
 
 
-def do_click(button: str, repeat: int = 1, next_delay_ms: int | None = None):
+def ydotool_key(*tokens: str):
+    subprocess.run(
+        ["ydotool", "key", *tokens],
+        check=True,
+        stdin=subprocess.DEVNULL,
+    )
+
+
+def effective_hold_ms(hold_ms: int, interval: float) -> int:
+    max_hold = max(1, int(interval * 1000 * 0.4))
+    return max(1, min(hold_ms, max_hold))
+
+
+def do_click(button: str, hold_ms: int):
     code = BUTTON_CODES[button]
-    cmd = ["ydotool", "click"]
-    if repeat > 1:
-        cmd.extend(["--repeat", str(repeat)])
-    if next_delay_ms is not None:
-        cmd.extend(["--next-delay", str(next_delay_ms)])
-    cmd.append(code)
-    subprocess.run(cmd, check=True)
+    ydotool_key(f"{code}:1")
+    time.sleep(hold_ms / 1000)
+    ydotool_key(f"{code}:0")
 
 
 def parse_key_combo(combo: str) -> list[int]:
@@ -133,11 +144,7 @@ def parse_key_combo(combo: str) -> list[int]:
 
 def do_keypress(combo: str):
     codes = parse_key_combo(combo)
-    args = ["ydotool", "key"] + [f"{code}:{state}" for code, state in zip(codes[::2], codes[1::2])]
-    subprocess.run(
-        args,
-        check=True,
-    )
+    ydotool_key(*[f"{code}:{state}" for code, state in zip(codes[::2], codes[1::2])])
 
 
 def remove_pid_file():
@@ -145,9 +152,9 @@ def remove_pid_file():
         os.remove(PID_FILE)
 
 
-def signal_handler(sig, frame):
-    remove_state_files()
-    sys.exit(0)
+def request_stop(sig, frame):
+    global stopping
+    stopping = True
 
 
 def is_running():
@@ -175,63 +182,59 @@ def read_state():
         return None
 
 
-def click_batch_size(interval: float, deadline: float | None) -> int:
-    if interval > 0.06:
-        return 1
-
-    max_batch = max(1, int(0.25 / interval))
-    if deadline is None:
-        return max_batch
-
-    remaining = deadline - time.monotonic()
-    return max(1, min(max_batch, int(max(remaining, 0) / interval) + 1))
-
-
-def perform_action(action: str, button: str, keys: str | None, interval: float, deadline: float | None) -> int:
+def perform_action(action: str, button: str, keys: str | None, hold_ms: int):
     if action == "mouse":
-        repeat = click_batch_size(interval, deadline)
-        delay = max(1, min(25, round(interval * 500)))
-        do_click(button, repeat, delay)
-        return repeat
+        do_click(button, hold_ms)
     else:
         do_keypress(keys or "")
-        return 1
 
 
-def action_loop(interval: float, action: str, button: str, keys: str | None, duration: float | None):
+def action_loop(
+    interval: float,
+    action: str,
+    button: str,
+    keys: str | None,
+    duration: float | None,
+    hold_ms: int,
+):
+    global stopping
+
     with open(PID_FILE, "w") as f:
         f.write(str(os.getpid()))
 
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, request_stop)
+    signal.signal(signal.SIGTERM, request_stop)
 
     deadline = time.monotonic() + duration if duration and duration > 0 else None
+    hold_ms = effective_hold_ms(hold_ms, interval)
+    next_tick = time.monotonic()
 
     try:
-        while True:
+        while not stopping:
             if deadline is not None and time.monotonic() >= deadline:
                 break
 
-            scheduled = time.monotonic()
-            start = scheduled
-            performed = perform_action(action, button, keys, interval, deadline)
-            elapsed = time.monotonic() - start
-            target_elapsed = interval * performed
+            perform_action(action, button, keys, hold_ms)
 
-            if deadline is not None:
-                remaining = deadline - time.monotonic()
-                if remaining <= 0:
-                    break
-                sleep_time = max(0, min(target_elapsed - elapsed, remaining))
+            next_tick += interval
+            sleep_for = next_tick - time.monotonic()
+            if sleep_for > 0:
+                time.sleep(sleep_for)
             else:
-                sleep_time = max(0, target_elapsed - elapsed)
-
-            time.sleep(sleep_time)
+                next_tick = time.monotonic()
     finally:
         remove_state_files()
 
 
-def start_background(interval: float, action: str, button: str, keys: str | None, duration: float | None, state: dict):
+def start_background(
+    interval: float,
+    action: str,
+    button: str,
+    keys: str | None,
+    duration: float | None,
+    hold_ms: int,
+    state: dict,
+):
     pid = os.fork()
     if pid > 0:
         print("Autoclicker started")
@@ -252,7 +255,7 @@ def start_background(interval: float, action: str, button: str, keys: str | None
         os.dup2(devnull_out.fileno(), 2)
 
     write_state(state)
-    action_loop(interval, action, button, keys, duration)
+    action_loop(interval, action, button, keys, duration, hold_ms)
 
 
 def stop_running():
@@ -262,21 +265,36 @@ def stop_running():
         return False
 
     try:
-        os.kill(pid, signal.SIGTERM)
+        os.killpg(os.getpgid(pid), signal.SIGTERM)
         print("Autoclicker stopped")
     except ProcessLookupError:
         remove_state_files()
         print("Stale PID file removed")
+    except PermissionError:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            print("Autoclicker stopped")
+        except ProcessLookupError:
+            remove_state_files()
+            print("Stale PID file removed")
 
     return True
 
 
-def toggle(interval: float, action: str, button: str, keys: str | None, duration: float | None, state: dict):
+def toggle(
+    interval: float,
+    action: str,
+    button: str,
+    keys: str | None,
+    duration: float | None,
+    hold_ms: int,
+    state: dict,
+):
     pid = is_running()
     if pid:
         stop_running()
     else:
-        start_background(interval, action, button, keys, duration, state)
+        start_background(interval, action, button, keys, duration, hold_ms, state)
 
 
 def print_status():
@@ -289,7 +307,7 @@ def print_status():
     print(json.dumps(payload))
 
 
-def build_state(args, interval: float) -> dict:
+def build_state(args, interval: float, hold_ms: int) -> dict:
     return {
         "interval": interval,
         "action": args.action,
@@ -298,6 +316,7 @@ def build_state(args, interval: float) -> dict:
         "duration": args.duration,
         "cps": args.cps,
         "cpm": args.cpm,
+        "hold_ms": hold_ms,
     }
 
 
@@ -306,45 +325,21 @@ def ensure_backend_available():
         raise SystemExit(
             "ydotool is not installed. Install ydotool and make sure ydotoold is running."
         )
-    if shutil.which("ydotoold") is None:
-        raise SystemExit(
-            "ydotoold is not installed. Install ydotoold and make sure it is in PATH."
-        )
 
-    def ydotool_is_ready() -> bool:
-        return subprocess.run(
-            ["ydotool", "key", "0:0"],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        ).returncode == 0
-
-    if ydotool_is_ready():
-        return
-
-    if os.path.exists(YDOTOOL_SOCKET):
-        try:
-            os.remove(YDOTOOL_SOCKET)
-        except OSError:
-            pass
-
-    subprocess.Popen(
-        ["ydotoold"],
+    ready = subprocess.run(
+        ["ydotool", "key", "0:0"],
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        start_new_session=True,
-    )
+        check=False,
+    ).returncode == 0
 
-    deadline = time.monotonic() + 3.0
-    while time.monotonic() < deadline:
-        if ydotool_is_ready():
-            return
-        time.sleep(0.05)
+    if ready:
+        return
 
     raise SystemExit(
-        f"ydotoold did not create {YDOTOOL_SOCKET}. Check /dev/uinput permissions."
+        f"ydotoold is not reachable at {YDOTOOL_SOCKET}. "
+        "Run: systemctl --user enable --now ydotool.service"
     )
 
 
@@ -380,6 +375,12 @@ def main():
         type=float,
         help="Optional auto-stop duration in seconds",
     )
+    parser.add_argument(
+        "--hold-ms",
+        type=int,
+        default=10,
+        help="Mouse button hold duration in milliseconds (default: 10)",
+    )
 
     args = parser.parse_args()
 
@@ -413,15 +414,19 @@ def main():
     if args.duration is not None and args.duration <= 0:
         raise ValueError("Duration must be greater than 0")
 
+    if args.hold_ms <= 0:
+        raise ValueError("--hold-ms must be greater than 0")
+
     ensure_backend_available()
 
-    state = build_state(args, interval)
+    hold_ms = effective_hold_ms(args.hold_ms, interval)
+    state = build_state(args, interval, hold_ms)
 
     if args.toggle:
-        toggle(interval, args.action, args.button, args.keys, args.duration, state)
+        toggle(interval, args.action, args.button, args.keys, args.duration, hold_ms, state)
     else:
         write_state(state)
-        action_loop(interval, args.action, args.button, args.keys, args.duration)
+        action_loop(interval, args.action, args.button, args.keys, args.duration, hold_ms)
 
 
 if __name__ == "__main__":

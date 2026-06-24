@@ -38,3 +38,8 @@ for _, name in ipairs(v.mouseDevices) do
     sensitivity = -0.4,
   })
 end
+
+hl.device({
+  name = "ydotoold-virtual-device",
+  accel_profile = "flat",
+})
