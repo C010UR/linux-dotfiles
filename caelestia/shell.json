@@ -752,7 +752,7 @@
                 "id": "dnd"
             },
             {
-                "enabled": false,
+                "enabled": true,
                 "id": "vpn"
             }
         ],
@@ -772,13 +772,36 @@
             "vpnChanged": true
         },
         "vpn": {
-            "enabled": false,
+            "enabled": true,
             "provider": [
                 {
-                    "displayName": "Wireguard (Your VPN)",
+                    "connectCmd": [
+                        "mullvad",
+                        "connect"
+                    ],
+                    "disconnectCmd": [
+                        "mullvad",
+                        "disconnect"
+                    ],
+                    "displayName": "Mullvad",
                     "enabled": false,
-                    "interface": "your-connection-name",
-                    "name": "wireguard"
+                    "interface": "wg-mullvad",
+                    "name": "mullvad"
+                },
+                {
+                    "connectCmd": [
+                        "protonvpn-cli",
+                        "connect",
+                        "--fastest"
+                    ],
+                    "disconnectCmd": [
+                        "protonvpn-cli",
+                        "disconnect"
+                    ],
+                    "displayName": "Proton VPN",
+                    "enabled": true,
+                    "interface": "proton0",
+                    "name": "protonvpn"
                 }
             ]
         }

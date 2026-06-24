@@ -1,0 +1,16 @@
+gui:
+  theme:
+    lightTheme: false
+    activeBorderColor:
+      - "#82d3e2"
+    inactiveBorderColor:
+      - "#3f484a"
+    optionsTextColor:
+      - "#dee3e5"
+    selectedLineBgColor:
+      - "#252b2c"
+  authorColors:
+    useRandomColors: true
+git:
+  pagers:
+    diff: delta --dark --paging=never

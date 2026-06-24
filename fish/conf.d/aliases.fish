@@ -25,4 +25,7 @@ if status is-interactive
     abbr lla 'ls -la'
 
     abbr rm trash
+
+    abbr du dust
+    abbr df 'dust -d 1 -r'   # optional: quick home-level overview
 end

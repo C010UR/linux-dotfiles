@@ -226,11 +226,24 @@ hl.window_rule({
   match = { title = "meet.google.com is sharing your screen." },
 })
 
+-- Share picker
 hl.window_rule({
   name = "hyprland-share-picker",
   float = true,
   center = true,
   match = { class = "hyprland-share-picker" },
+})
+
+-- Jetbrains
+hl.window_rule({
+  "^(jetbrains-.*)$",
+  no_follow_mouse = true,
+})
+
+-- Telegram
+hl.window_rule({
+  "org.telegram.desktop",
+  focus_on_activate = false,
 })
 
 -- ── Event handlers ────────────────────────────────────────────────────────────

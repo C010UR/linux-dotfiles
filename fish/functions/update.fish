@@ -1,4 +1,7 @@
 function update
+    # Pre-update snapshot
+    sudo snapper create --description "pre-update "(date +%F_%H%M) 2>/dev/null
+
     set -l py_ver (pacman -Q python 2>/dev/null)
     set -l py_dir /usr/lib/python(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
 
@@ -22,6 +25,9 @@ function update
     if test (count $to_rebuild) -gt 0
         yay -S $to_rebuild --noconfirm --answerclean All --answerdiff None --answeredit None
     end
+
+    # Post-update snapshot (after successful rebuild block)
+    sudo snapper create --description "post-update "(date +%F_%H%M) 2>/dev/null
 
     spicetify update
 end

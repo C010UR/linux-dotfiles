@@ -21,14 +21,14 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size " .. tostring(v.cursorSize))
 
   -- Location provider and night light
-  hl.exec_cmd("/usr/lib/geoclue-2.0/demos/agent")
-  hl.exec_cmd("sleep 1 && gammastep")
+  -- hl.exec_cmd("/usr/lib/geoclue-2.0/demos/agent")
+  -- hl.exec_cmd("sleep 1 && gammastep")
 
   -- Forward bluetooth media commands to MPRIS
   hl.exec_cmd("mpris-proxy")
 
   -- Resize and move windows based on matches (e.g. pip)
-  -- hl.exec_cmd("caelestia resizer -d")
+  hl.exec_cmd("caelestia resizer -d")
 
   -- Start shell
   hl.exec_cmd("caelestia shell -d")
