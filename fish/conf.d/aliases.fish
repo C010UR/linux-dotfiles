@@ -28,4 +28,6 @@ if status is-interactive
 
     abbr du dust
     abbr df 'dust -d 1 -r'   # optional: quick home-level overview
+
+    abbr review tuicr
 end
