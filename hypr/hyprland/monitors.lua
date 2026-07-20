@@ -10,9 +10,9 @@ hl.pmonitor({
   },
 })
 hl.monitor({
-  output = "desc:LG Electronics LG ULTRAFINE 512NTJJJK124",
-  mode = "3840x2160@60",
+  output = "desc:LG Electronics LG ULTRAFINE 508NTABKV160",
+  mode = "2560x1440@60",
   position = "-768x-2160",
-  scale = 1.25,
+  scale = 1,
 })
 hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })

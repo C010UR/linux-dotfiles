@@ -9,3 +9,10 @@ if status is-interactive
     command -v rbenv &> /dev/null && rbenv init - fish | source
 end
 # cat ~/.local/state/caelestia/sequences.txt 2> /dev/null
+
+# pnpm
+set -gx PNPM_HOME "/home/colour/.local/share/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end

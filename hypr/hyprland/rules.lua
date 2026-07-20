@@ -258,46 +258,7 @@ hl.window_rule({
 
 -- JetBrains
 hl.window_rule({
-  name = "jetbrains-splash",
-  center = true,
-  no_focus = true,
-  border_size = 0,
-  match = { class = "^(jetbrains-.*)$", title = "^(splash)$", float = true },
-})
--- Search, find, new file, etc. (empty title floating popups)
-hl.window_rule({
-  name = "jetbrains-popup",
-  center = true,
-  stay_focused = true,
-  border_size = 0,
-  min_size = "(monitor_w*0.5) (monitor_h*0.5)",
-  match = { class = "^(jetbrains-.*)$", title = "^$", float = true },
-})
--- Autocomplete, tooltips (title is always win<N>)
-hl.window_rule({
-  name = "jetbrains-tooltip",
-  no_initial_focus = true,
-  match = { class = "^(jetbrains-.*)$", title = "^(win.*)$", float = true },
-})
--- Tab drag previews (single-space title)
-hl.window_rule({
-  name = "jetbrains-tab-drag",
-  no_initial_focus = true,
-  match = { class = "^(jetbrains-.*)$", title = "^\\s$", float = true },
-})
--- Settings and other modal dialogs
-hl.window_rule({
-  name = "jetbrains-dialog",
-  stay_focused = true,
-  match = {
-    class = "^(jetbrains-.*)$",
-    title = "^(Settings|Preferences|Project Structure)$",
-    float = true,
-  },
-})
--- Prevent focus/cursor jumps when moving the mouse between IDE windows and popups
-hl.window_rule({
-  name = "jetbrains-focus",
+  name = "jetbrains",
   no_follow_mouse = true,
   match = { class = "^(jetbrains-.*)$" },
 })
