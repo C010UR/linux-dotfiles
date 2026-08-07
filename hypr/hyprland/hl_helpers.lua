@@ -145,7 +145,7 @@ end
 local function pmonitor_build_spec(spec, profile)
   local out = {}
   for k, v in pairs(spec) do
-    if k ~= "refresh" then
+    if k ~= "refresh" and k ~= "auto_disable" then
       out[k] = v
     end
   end
@@ -160,20 +160,43 @@ function hl.pmonitor(spec)
   _pmonitors[#_pmonitors + 1] = spec
 end
 
+local function other_monitors_present(except)
+  for _, m in ipairs(hl.get_monitors()) do
+    if m.name ~= except and m.name ~= "FALLBACK" then
+      return true
+    end
+  end
+  return false
+end
+
 local function apply_pmonitors()
   local profile = read_ppd_profile()
   for _, spec in ipairs(_pmonitors) do
     local key = spec.output
-    local hz = pmonitor_hz(spec, profile)
-    if _pmonitor_applied[key] ~= profile .. ":" .. hz then
-      _pmonitor_applied[key] = profile .. ":" .. hz
-      hl.monitor(pmonitor_build_spec(spec, profile))
+    if spec.auto_disable and other_monitors_present(spec.output) then
+      if _pmonitor_applied[key] ~= "disabled" then
+        _pmonitor_applied[key] = "disabled"
+        hl.monitor({ output = spec.output, disabled = true })
+      end
+    else
+      local hz = pmonitor_hz(spec, profile)
+      local tag = profile .. ":" .. hz
+      if _pmonitor_applied[key] ~= tag then
+        _pmonitor_applied[key] = tag
+        local mon_spec = pmonitor_build_spec(spec, profile)
+        mon_spec.disabled = false
+        hl.monitor(mon_spec)
+      end
     end
   end
 end
 
+hl.apply_pmonitors = apply_pmonitors
+
 hl.on("hyprland.start", apply_pmonitors)
 hl.on("config.reloaded", apply_pmonitors)
+hl.on("monitor.added", apply_pmonitors)
+hl.on("monitor.removed", apply_pmonitors)
 
 local _pmonitor_poll = hl.timer(apply_pmonitors, { timeout = 10000, type = "repeat" })
 _pmonitor_poll:set_enabled(true)

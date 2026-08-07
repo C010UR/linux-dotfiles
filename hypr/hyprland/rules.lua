@@ -163,10 +163,13 @@ hl.window_rule({
 
 -- ── Dialogs ───────────────────────────────────────────────────────────────────
 
+-- File pickers often request full monitor height; float + cap size.
 hl.window_rule({
   name = "dialogs",
   float = true,
   center = true,
+  size = "(monitor_w*0.45) (monitor_h*0.75)",
+  suppress_event = "maximize fullscreen",
   match = {
     title = "(Select|Open)( a)? (File|Folder)(s)?"
       .. "|File (Operation|Upload)( Progress)?"
@@ -176,6 +179,15 @@ hl.window_rule({
       .. "|^Rename "
       .. "|^Export ",
   },
+})
+
+hl.window_rule({
+  name = "xdg-file-portal",
+  float = true,
+  center = true,
+  size = "(monitor_w*0.45) (monitor_h*0.75)",
+  suppress_event = "maximize fullscreen",
+  match = { class = "xdg-desktop-portal-gtk|xdg-desktop-portal-kde|org.freedesktop.impl.portal.desktop.kde" },
 })
 
 -- ── Wine ──────────────────────────────────────────────────────────────────────
