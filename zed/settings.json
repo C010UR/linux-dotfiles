@@ -7,7 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "icon_theme": "Zed (Default)",
+  "icon_theme": {
+    "mode": "light",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "agent_servers": {
     "opencode": {
       "type": "registry"
@@ -18,13 +22,16 @@
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {
-    "mode": "light",
-    "light": "One Light",
-    "dark": "Tokyo Night"
+    "mode": "dark",
+    "light": "Tokyo Night Light",
+    "dark": "JetBrains Dark"
   },
   "buffer_font_family": "CaskaydiaCove Nerd Font",
   "multi_cursor_modifier": "cmd_or_ctrl",
   "languages": {
+    "PHP": {
+      "language_servers": ["phpantom", "!intelephense", "!phpactor", "!phptools", "..."]
+    },
     "Nix": {
       "language_servers": ["nixd", "!nil"]
     },

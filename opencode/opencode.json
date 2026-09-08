@@ -2,23 +2,78 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
   "permission": {
-    "bash": "ask"
-  },
-  "provider": {
-    "litellm": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "LiteLLM",
-      "options": {
-        "baseURL": "https://llm.richbrains.net/v1"
-      },
-      "models": {
-        "gpt-5.3-codex": {
-          "name": "GPT-5.3 Codex"
-        },
-        "gpt-5.4": {
-          "name": "GPT-5.4"
-        },
-      }
+    "read": {
+      ".env": "allow",
+      ".env.*": "allow",
+      ".env-*": "allow"
+    },
+    "grep": "allow",
+    "glob": "allow",
+    "list": "allow",
+    "external_directory": {
+      "~/.ssh/**": "deny",
+      "~/.gnupg/**": "deny",
+      "~/.aws/**": "deny",
+      "*": "allow"
+    },
+    "bash": {
+      "awk *": "allow",
+      "cat *": "allow",
+      "composer audit*": "allow",
+      "composer outdated*": "allow",
+      "composer show*": "allow",
+      "composer validate*": "allow",
+      "composer why*": "allow",
+      "diff *": "allow",
+      "du *": "allow",
+      "echo *": "allow",
+      "file *": "allow",
+      "find *": "allow",
+      "git blame *": "allow",
+      "git branch *": "allow",
+      "git diff*": "allow",
+      "git grep *": "allow",
+      "git log*": "allow",
+      "git remote *": "allow",
+      "git show*": "allow",
+      "git stash list": "allow",
+      "git status*": "allow",
+      "grep *": "allow",
+      "head *": "allow",
+      "jq *": "allow",
+      "ls": "allow",
+      "ls *": "allow",
+      "node -e*": "allow",
+      "node -v": "allow",
+      "node -v*": "allow",
+      "npm audit*": "allow",
+      "npm ls*": "allow",
+      "npm outdated*": "allow",
+      "npm view*": "allow",
+      "npm why*": "allow",
+      "php -i*": "allow",
+      "php -r*": "allow",
+      "php -v": "allow",
+      "php -v*": "allow",
+      "readlink *": "allow",
+      "rg *": "allow",
+      "sed -n *": "allow",
+      "sed *": "allow",
+      "sort *": "allow",
+      "stat *": "allow",
+      "tail *": "allow",
+      "tree *": "allow",
+      "wc *": "allow",
+      "which": "allow",
+      "which *": "allow",
+      "git push *": "allow",
+      "sudo": "deny",
+      "sudo *": "deny",
+      "rm -rf /": "deny",
+      "rm -rf /*": "deny",
+      "rm -rf ~": "deny",
+      "rm -rf ~/*": "deny",
+      ":(){:|:&};:": "deny"
     }
   },
   "mcp": {
@@ -30,10 +85,80 @@
       },
       "enabled": true
     },
-    "jira": {
-      "type": "remote",
-      "url": "https://mcp.atlassian.com/v1/mcp",
-      "enabled": true
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    }
+  },
+  "agent": {
+    "build": {
+      "temperature": 0.3
     },
+    "plan": {
+      "temperature": 0.1,
+      "tools": {
+        "write": false,
+        "edit": false,
+        "patch": false
+      },
+      "permission": {
+        "bash": {
+          "awk *": "allow",
+          "cat *": "allow",
+          "composer audit*": "allow",
+          "composer outdated*": "allow",
+          "composer show*": "allow",
+          "composer validate*": "allow",
+          "composer why*": "allow",
+          "diff *": "allow",
+          "du *": "allow",
+          "echo *": "allow",
+          "file *": "allow",
+          "find *": "allow",
+          "git blame *": "allow",
+          "git branch *": "allow",
+          "git diff*": "allow",
+          "git grep *": "allow",
+          "git log*": "allow",
+          "git remote *": "allow",
+          "git show*": "allow",
+          "git stash list": "allow",
+          "git status*": "allow",
+          "grep *": "allow",
+          "head *": "allow",
+          "jq *": "allow",
+          "ls": "allow",
+          "ls *": "allow",
+          "node -e*": "allow",
+          "node -v": "allow",
+          "node -v*": "allow",
+          "npm audit*": "allow",
+          "npm ls*": "allow",
+          "npm outdated*": "allow",
+          "npm view*": "allow",
+          "npm why*": "allow",
+          "php -i*": "allow",
+          "php -r*": "allow",
+          "php -v": "allow",
+          "php -v*": "allow",
+          "readlink *": "allow",
+          "rg *": "allow",
+          "sed -n *": "allow",
+          "sed *": "allow",
+          "sort *": "allow",
+          "stat *": "allow",
+          "tail *": "allow",
+          "tree *": "allow",
+          "wc *": "allow",
+          "which": "allow",
+          "which *": "allow",
+          "bd *": "allow",
+          "pnpm exec tsc*": "allow",
+          "pnpm run lint*": "allow",
+          "pnpm test*": "allow",
+          "*": "ask"
+        }
+      }
+    }
   }
 }

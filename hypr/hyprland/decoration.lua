@@ -4,11 +4,11 @@ hl.config({
   decoration = {
     rounding = 10,
 
-    blur = {
-      passes = 2,
-      popups = true,
-      input_methods = true,
-    },
+    -- blur = {
+    --   passes = 2,
+    --   popups = true,
+    --   input_methods = true,
+    -- },
 
     shadow = {
       range = 20,

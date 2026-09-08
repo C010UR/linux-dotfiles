@@ -184,14 +184,14 @@
         },
         "transparency": {
             "base": 0.85,
-            "enabled": true,
+            "enabled": false,
             "layers": 0.4
         }
     },
     "background": {
         "desktopClock": {
             "background": {
-                "blur": true,
+                "blur": false,
                 "enabled": false,
                 "opacity": 0.7
             },
@@ -275,16 +275,36 @@
             "workspaces": true
         },
         "showOnHover": false,
-        "status": {
-            "showAudio": false,
-            "showBattery": true,
-            "showBluetooth": true,
-            "showKbLayout": false,
-            "showLockStatus": true,
-            "showMicrophone": false,
-            "showNetwork": true,
-            "showWifi": true
-        },
+        "statusIcons": [
+            {
+                "enabled": true,
+                "id": "lockStatus"
+            },
+            {
+                "enabled": false,
+                "id": "audio"
+            },
+            {
+                "enabled": false,
+                "id": "microphone"
+            },
+            {
+                "enabled": false,
+                "id": "kbLayout"
+            },
+            {
+                "enabled": true,
+                "id": "network"
+            },
+            {
+                "enabled": true,
+                "id": "bluetooth"
+            },
+            {
+                "enabled": true,
+                "id": "battery"
+            }
+        ],
         "tray": {
             "background": false,
             "compact": false,
@@ -298,7 +318,8 @@
             "activeIndicator": true,
             "activeLabel": "",
             "activeTrail": true,
-            "capitalisation": "preserve",
+            "capitalisation": "Preserve",
+            "displayType": "Shapes",
             "label": "  ",
             "maxWindowIcons": 5,
             "occupiedBg": false,
@@ -397,13 +418,6 @@
                     "idleAction": "dpms off",
                     "returnAction": "dpms on",
                     "timeout": 300
-                },
-                {
-                    "idleAction": [
-                        "systemctl",
-                        "suspend-then-hibernate"
-                    ],
-                    "timeout": 600
                 }
             ]
         },
@@ -506,8 +520,7 @@
             },
             {
                 "command": [
-                    "systemctl",
-                    "poweroff"
+                    "/usr/local/sbin/graceful-shutdown-and-poweroff"
                 ],
                 "dangerous": true,
                 "description": "Shutdown the system",
@@ -517,8 +530,7 @@
             },
             {
                 "command": [
-                    "systemctl",
-                    "reboot"
+                    "/usr/local/sbin/graceful-shutdown-and-reboot"
                 ],
                 "dangerous": true,
                 "description": "Reboot the system",
@@ -638,9 +650,11 @@
         "enableFprint": true,
         "hideNotifs": false,
         "maxFprintTries": 3,
-        "recolourLogo": true
+        "recolourLogo": true,
+        "useWallpaper": true
     },
     "nexus": {
+        "maxNetworksShown": 10,
         "networkRescanInterval": 15000,
         "wallpapersPerRow": 4
     },
@@ -650,7 +664,7 @@
         "defaultExpireTimeout": 5000,
         "expandThreshold": 20,
         "expire": true,
-        "fullscreen": "on",
+        "fullscreen": "On",
         "fullscreenExpireTimeout": 2000,
         "groupPreviewNum": 3,
         "openExpanded": false
@@ -673,7 +687,7 @@
         "audioIncrement": 0.1,
         "brightnessIncrement": 0.1,
         "defaultPlayer": "Spotify",
-        "gpuType": "",
+        "gpuType": "Auto",
         "lyricsBackend": "Auto",
         "maxVolume": 1,
         "playerAliases": [
@@ -701,12 +715,10 @@
                 ""
             ],
             "reboot": [
-                "systemctl",
-                "reboot"
+                "/usr/local/sbin/graceful-shutdown-and-reboot"
             ],
             "shutdown": [
-                "systemctl",
-                "poweroff"
+                "/usr/local/sbin/graceful-shutdown-and-poweroff"
             ]
         },
         "dragThreshold": 30,
@@ -724,6 +736,11 @@
         "enabled": true
     },
     "utilities": {
+        "cards": {
+            "keepAwake": true,
+            "quickToggles": true,
+            "recorder": true
+        },
         "enabled": true,
         "maxToasts": 4,
         "quickToggles": [
@@ -772,7 +789,7 @@
             "vpnChanged": true
         },
         "vpn": {
-            "enabled": true,
+            "enabled": false,
             "provider": [
                 {
                     "connectCmd": [
@@ -784,7 +801,7 @@
                         "disconnect"
                     ],
                     "displayName": "Mullvad",
-                    "enabled": false,
+                    "id": "vpn-msslum4o-975dc",
                     "interface": "wg-mullvad",
                     "name": "mullvad"
                 },
@@ -799,11 +816,12 @@
                         "disconnect"
                     ],
                     "displayName": "Proton VPN",
-                    "enabled": true,
+                    "id": "vpn-msslum4o-6nsjo",
                     "interface": "proton0",
                     "name": "protonvpn"
                 }
-            ]
+            ],
+            "selectedProvider": "vpn-msslum4o-6nsjo"
         }
     }
 }

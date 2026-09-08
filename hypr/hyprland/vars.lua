@@ -1,29 +1,18 @@
--- Shared variables — require this module from any sub-config that needs app
--- names, cursor settings, or the color scheme.
-
 local M = {}
 
--- Apps
 M.terminal = "ghostty"
 M.browser = "google-chrome-stable"
 M.editor = "nvim"
 M.notes_dir = os.getenv("HOME") .. "/.local/share/notes"
 
--- Cursor
 M.cursorTheme = "polarnight-cursors"
 M.cursorSize = 24
 
--- Pointer device names (from `hyprctl devices`)
-M.touchpadDevice = "asuf1209:00-2808:0219-touchpad"
+M.touchpadDevice = "asuf1209-palm-filtered-touchpad"
 M.mouseDevices = {
   "compx-2.4g-wireless-receiver-1",
   "compx-2.4g-wireless-receiver-consumer-control-1",
 }
-
--- ── Workspace helpers (replaces wsaction.fish) ───────────────────────────────
--- Workspaces are grouped in bands of 10 (ws 1–10, 11–20, …).
--- Normal mode: stay in the current group, jump to slot N within it.
--- Group mode:  stay in the current slot, jump to group N.
 
 local function active_ws_id()
   return hl.get_active_workspace().id
@@ -48,8 +37,6 @@ function M.ws_move_group(n)
   local id = (n - 1) * 10 + (active_ws_id() % 10)
   hl.dispatch(hl.dsp.window.move({ workspace = id }))
 end
-
--- ── Persisted device state (touchpad + auto brightness) ──────────────────────
 
 local _STATE_DIR = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr"
 local _touchpad_state_file = _STATE_DIR .. "/touchpad_state"
@@ -197,8 +184,6 @@ function M.brightness_up()
   hl.dispatch(hl.dsp.global("caelestia:brightnessUp"))
 end
 
--- ── Toggle Dolphin: show/hide as a special workspace overlay (special:dolphin).
--- The window rule automatically places dolphin there on first launch.
 function M.toggle_dolphin()
   local wins = hl.get_windows({ class = "org.kde.dolphin" })
   if #wins == 0 then
@@ -208,7 +193,6 @@ function M.toggle_dolphin()
   hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
 end
 
--- ── Toggle Qalculate: show/hide as a special workspace overlay (special:qalculate).
 function M.toggle_qalculate()
   local wins = hl.get_windows({ class = "qalculate-gtk" })
   if #wins == 0 then
@@ -218,7 +202,6 @@ function M.toggle_qalculate()
   hl.dispatch(hl.dsp.workspace.toggle_special("qalculate"))
 end
 
--- ── Toggle Notes: show/hide as a special workspace overlay (special:notes).
 function M.toggle_notes()
   local wins = {}
   for _, w in ipairs(hl.get_windows()) do

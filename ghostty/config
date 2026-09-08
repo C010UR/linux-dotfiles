@@ -8,7 +8,7 @@ cursor-style = block
 shell-integration = fish
 command = fish
 
-theme = tokyonight-night
+theme = jb-dark
 
 tab-inherit-working-directory = true
 split-inherit-working-directory = true

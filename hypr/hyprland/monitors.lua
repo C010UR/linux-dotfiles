@@ -23,7 +23,7 @@ hl.monitor({
 -- LG UltraFine (when used)
 hl.monitor({
   output = "desc:LG Electronics LG ULTRAFINE 508NTABKV160",
-  mode = "2560x1440@60",
+  mode = "3840x2160@60",
   position = "0x0",
-  scale = 1,
+  scale = 1.25,
 })
