@@ -88,6 +88,21 @@
     "chrome-devtools": {
       "type": "local",
       "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    },
+    "cloudflare-api": {
+      "type": "remote",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "servers": {
+      "playwright": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@playwright/mcp@0.0.83",
+          "--browser=chrome"
+        ]
+      }
     }
   },
   "agent": {

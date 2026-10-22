@@ -324,22 +324,9 @@
             "maxWindowIcons": 5,
             "occupiedBg": false,
             "occupiedLabel": "",
-            "perMonitorWorkspaces": true,
             "showWindows": false,
             "showWindowsOnSpecialWorkspaces": false,
-            "shown": 9,
-            "specialWorkspaceIcons": [
-                {
-                    "icon": "sports_esports",
-                    "name": "steam"
-                }
-            ],
-            "windowIcons": [
-                {
-                    "icon": "sports_esports",
-                    "regex": "steam(_app_(default|[0-9]+))?"
-                }
-            ]
+            "shown": 9
         }
     },
     "border": {
@@ -697,9 +684,6 @@
             }
         ],
         "smartScheme": true,
-        "useFahrenheit": false,
-        "useFahrenheitPerformance": false,
-        "useTwelveHourClock": false,
         "visualiserBars": 60,
         "weatherLocation": ""
     },

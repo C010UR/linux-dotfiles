@@ -28,3 +28,8 @@ end
 
 # opencode
 fish_add_path /home/colour/.opencode/bin
+
+# flyctl
+set -gx FLYCTL_INSTALL "/home/colour/.fly"
+fish_add_path --global "$FLYCTL_INSTALL/bin"
+# flyctl end
