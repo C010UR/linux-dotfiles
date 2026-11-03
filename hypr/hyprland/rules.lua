@@ -16,6 +16,20 @@ hl.window_rule({
   match = { float = true, xwayland = false },
 })
 
+-- Fix XWayland drags: unnamed popups love to snap to the cursor while dragging.
+hl.window_rule({
+  name = "fix-xwayland-drags",
+  no_focus = true,
+  match = {
+    class = "^$",
+    title = "^$",
+    xwayland = true,
+    float = true,
+    fullscreen = false,
+    pin = false,
+  },
+})
+
 -- ── Floating apps ─────────────────────────────────────────────────────────────
 
 hl.window_rule({ name = "guifetch", float = true, match = { class = "guifetch" } })
@@ -277,7 +291,8 @@ hl.window_rule({
 
 -- Telegram
 hl.window_rule({
-  "org.telegram.desktop",
+  name = "telegram",
+  match = { class = "org.telegram.desktop" },
   focus_on_activate = false,
 })
 
@@ -349,14 +364,6 @@ hl.on("window.open", function(win)
     end
   end
 end)
-
--- ── Workspace rules ───────────────────────────────────────────────────────────
-
-hl.workspace_rule({ workspace = "w[tv1]s[false]", gaps_out = { top = 5, right = 5, bottom = 5, left = 7 } })
-hl.workspace_rule({ workspace = "f[1]s[false]", gaps_out = { top = 5, right = 5, bottom = 5, left = 7 } })
-hl.workspace_rule({ workspace = "special:dolphin", gaps_out = { top = 5, right = 5, bottom = 5, left = 7 } })
-hl.workspace_rule({ workspace = "special:qalculate", gaps_out = { top = 5, right = 5, bottom = 5, left = 7 } })
-hl.workspace_rule({ workspace = "special:notes", gaps_out = { top = 5, right = 5, bottom = 5, left = 7 } })
 
 -- ── Layer rules ───────────────────────────────────────────────────────────────
 

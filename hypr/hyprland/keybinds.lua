@@ -2,6 +2,14 @@ local v = require("hyprland.vars")
 
 -- ── Shell / Caelestia keybinds ────────────────────────────────────────────────
 
+-- Interrupt the pending launcher toggle when Super is used as a modifier.
+-- The per-key interrupt is added automatically by hl.cbind; these cover the
+-- secondary modifiers (Super+Ctrl/Shift/Alt+<key>) even when the modifier is
+-- pressed after Super.
+for _, key in ipairs({ "Ctrl_L", "Ctrl_R", "Shift_L", "Shift_R", "Alt_L", "Alt_R" }) do
+  hl.bind("SUPER + " .. key, hl.dsp.global("caelestia:launcherInterrupt"))
+end
+
 hl.cbind("SUPER + Super_L", hl.dsp.global("caelestia:launcher"), {
   desc = "Toggle Launcher",
   category = "shell",
@@ -163,7 +171,7 @@ hl.cbind("SUPER + SHIFT + R", hl.dsp.exec_cmd("qs -c caelestia kill"), {
   release = true,
   order = 90,
 })
-hl.cbind("SUPER + ALT + R", hl.dsp.exec_cmd("qs -c caelestia kill; caelestia shell -d"), {
+hl.cbind("SUPER + CTRL + ALT + R", hl.dsp.exec_cmd("qs -c caelestia kill; caelestia shell -d"), {
   desc = "Restart Shell",
   category = "shell",
   icon = "restart_alt",
@@ -377,7 +385,7 @@ hl.cbind("SUPER + U", hl.dsp.window.move({ out_of_group = true }), {
   icon = "ungroup",
   order = 60,
 })
-hl.cbind("SUPER + SHIFT + COMMA", hl.dsp.group.lock_active(), {
+hl.cbind("SUPER + SHIFT + COMMA", hl.dsp.group.lock(), {
   desc = "Lock Group",
   category = "window_group",
   icon = "lock",
@@ -491,7 +499,7 @@ hl.cbind("SUPER + ALT + BACKSLASH", hl.dsp.exec_cmd("caelestia resizer pip"), {
   order = 130,
 })
 
-hl.cbind("SUPER + P", hl.dsp.window.pin(), {
+hl.cbind("SUPER + ALT + P", hl.dsp.window.pin(), {
   desc = "Pin Window",
   category = "window",
   icon = "push_pin",

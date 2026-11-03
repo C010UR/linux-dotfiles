@@ -40,6 +40,6 @@ for _, name in ipairs(v.mouseDevices) do
 end
 
 hl.device({
-  name = "ydotoold-virtual-device",
+  name = v.ydotoolDevice,
   accel_profile = "flat",
 })

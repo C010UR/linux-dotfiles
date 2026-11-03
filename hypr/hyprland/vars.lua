@@ -8,7 +8,8 @@ M.notes_dir = os.getenv("HOME") .. "/.local/share/notes"
 M.cursorTheme = "polarnight-cursors"
 M.cursorSize = 24
 
-M.touchpadDevice = "asuf1209-palm-filtered-touchpad"
+M.touchpadDevice = "asuf1209:00-2808:0219-touchpad"
+M.ydotoolDevice = "ydotoold-virtual-device-1"
 M.mouseDevices = {
   "compx-2.4g-wireless-receiver-1",
   "compx-2.4g-wireless-receiver-consumer-control-1",

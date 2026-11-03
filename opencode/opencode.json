@@ -1,6 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
+  "providers": {
+    "opencode-go": {
+      "models": {
+        "deepseek-v4.1-flash": {}
+      }
+    }
+  },
   "permission": {
     "read": {
       ".env": "allow",
@@ -87,7 +94,11 @@
     },
     "chrome-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
     },
     "cloudflare-api": {
       "type": "remote",
@@ -115,64 +126,6 @@
         "write": false,
         "edit": false,
         "patch": false
-      },
-      "permission": {
-        "bash": {
-          "awk *": "allow",
-          "cat *": "allow",
-          "composer audit*": "allow",
-          "composer outdated*": "allow",
-          "composer show*": "allow",
-          "composer validate*": "allow",
-          "composer why*": "allow",
-          "diff *": "allow",
-          "du *": "allow",
-          "echo *": "allow",
-          "file *": "allow",
-          "find *": "allow",
-          "git blame *": "allow",
-          "git branch *": "allow",
-          "git diff*": "allow",
-          "git grep *": "allow",
-          "git log*": "allow",
-          "git remote *": "allow",
-          "git show*": "allow",
-          "git stash list": "allow",
-          "git status*": "allow",
-          "grep *": "allow",
-          "head *": "allow",
-          "jq *": "allow",
-          "ls": "allow",
-          "ls *": "allow",
-          "node -e*": "allow",
-          "node -v": "allow",
-          "node -v*": "allow",
-          "npm audit*": "allow",
-          "npm ls*": "allow",
-          "npm outdated*": "allow",
-          "npm view*": "allow",
-          "npm why*": "allow",
-          "php -i*": "allow",
-          "php -r*": "allow",
-          "php -v": "allow",
-          "php -v*": "allow",
-          "readlink *": "allow",
-          "rg *": "allow",
-          "sed -n *": "allow",
-          "sed *": "allow",
-          "sort *": "allow",
-          "stat *": "allow",
-          "tail *": "allow",
-          "tree *": "allow",
-          "wc *": "allow",
-          "which": "allow",
-          "which *": "allow",
-          "bd *": "allow",
-          "pnpm exec tsc*": "allow",
-          "pnpm run lint*": "allow",
-          "pnpm test*": "allow",
-          "*": "ask"
-        }
       }
     }
   }

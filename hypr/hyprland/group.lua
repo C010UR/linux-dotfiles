@@ -17,6 +17,13 @@ hl.config({
       gaps_out = 3,
 
       text_color = c.rgb(c.onPrimary),
+      text_color_inactive = c.rgb(c.onSurfaceVariant),
+      text_color_locked_active = c.rgb(c.onPrimary),
+      text_color_locked_inactive = c.rgb(c.onSurfaceVariant),
+      text_padding = 4,
+      keep_upper_gap = true,
+      rounding = 5,
+
       ["col.active"] = c.rgba(c.primary, "d4"),
       ["col.inactive"] = c.rgba(c.outline, "d4"),
       ["col.locked_active"] = c.rgba(c.primary, "d4"),

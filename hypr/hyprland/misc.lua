@@ -9,8 +9,9 @@ hl.config({
 
     allow_session_lock_restore = true,
     middle_click_paste = false,
-    initial_workspace_tracking = 0,
-    focus_on_activate = true,
+    initial_workspace_tracking = 1,
+    initial_workspace_token_timeout = 90,
+    focus_on_activate = false,
     session_lock_xray = true,
 
     mouse_move_enables_dpms = true,
