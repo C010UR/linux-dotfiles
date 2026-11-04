@@ -1,26 +1,33 @@
--- Monitor layout only.
+-- Monitor layout.
 --
--- asus-ptpd owns the internal panel's refresh rate and follows the
--- power-profiles-daemon profile.  Keeping the mode out of Hyprland's
--- polling loop is what removes the old ~10 s switch delay.
+-- Two owners, one job each:
+--   * this file decides which outputs are lit;
+--   * asus-ptpd decides the internal panel's refresh rate and follows the
+--     power-profiles-daemon profile.
 --
--- Hyprland's Lua API only lists *enabled* monitors, so a disabled
--- external is invisible to hl.get_monitor().  Always ask for the
--- external first and only park the laptop once it is actually up.
+-- The laptop rule deliberately has no fixed `mode`.  hl.monitor() merges
+-- into the existing rule for an output, so the rate asus-ptpd last
+-- selected stays in the rule and survives a dock/undock.  At config load
+-- the rule is rebuilt from scratch, so it is seeded with the panel's
+-- actual current rate instead of a hardcoded one; the daemon still owns
+-- every later change.
 --
--- hl.monitor() merges into the existing rule for an output, so every
--- field we care about must be set explicitly.  Without disabled = false
--- a later hl.monitor(laptop) inherits disabled = true and the panel
--- never comes back.
+-- Everything below is a reconcile from observed state.  Hyprland lists
+-- enabled outputs by default and all outputs with { all = true }, so we
+-- never need a cached "last applied" value that can go stale.
 
 local LAPTOP = "eDP-1"
 
-local laptop = {
+local laptop_on = {
   output = LAPTOP,
-  mode = "2880x1800@60",
   position = "0x0",
   scale = 1.25,
   disabled = false,
+}
+
+local laptop_off = {
+  output = LAPTOP,
+  disabled = true,
 }
 
 local external = {
@@ -31,8 +38,8 @@ local external = {
   disabled = false,
 }
 
--- hl.get_monitors() returns enabled outputs only.  A non-eDP entry is
--- therefore a live second screen, not just a plugged-in connector.
+-- Enabled outputs only.  A plugged-in but disabled screen is not a second
+-- screen, so it must not park the laptop panel.
 local function external_enabled()
   for _, mon in ipairs(hl.get_monitors()) do
     local name = mon.name or ""
@@ -43,67 +50,83 @@ local function external_enabled()
   return false
 end
 
-local applied = nil
-
-local function apply(force)
-  local want = external_enabled() and "external" or "laptop"
-  if not force and applied == want then
-    return
+-- Includes disabled outputs, so we can tell whether the panel is parked.
+local function laptop_enabled()
+  for _, mon in ipairs(hl.get_monitors({ all = true })) do
+    if mon.name == LAPTOP then
+      return mon.enabled
+    end
   end
-  applied = want
+  return false
+end
 
-  if want == "external" then
-    -- Bring the external up first, then park the laptop panel.
-    hl.monitor(external)
-    hl.monitor({ output = LAPTOP, disabled = true })
-  else
-    -- No second screen: the laptop panel must stay usable.  Enabling an
-    -- absent output is a no-op, so this also repairs the external rule.
-    hl.monitor(laptop)
-    hl.monitor(external)
+-- The panel's current rate, used only to seed the rule at config load so
+-- a reload does not reset the panel to its EDID preferred mode.  Returns
+-- nil when the output has not reported a mode yet, in which case the
+-- rule simply has no mode and Hyprland uses preferred.
+local function laptop_current_mode()
+  for _, mon in ipairs(hl.get_monitors({ all = true })) do
+    if mon.name == LAPTOP then
+      local width, height, hz = mon.width, mon.height, mon.refresh_rate
+      if width and height and hz and width > 0 and height > 0 and hz > 0 then
+        return string.format("%dx%d@%d", width, height, math.floor(hz + 0.5))
+      end
+    end
+  end
+  return nil
+end
+
+local function reconcile()
+  if external_enabled() then
+    -- Park the panel only when a live second output can take over.
+    if laptop_enabled() then
+      hl.monitor(laptop_off)
+    end
+  elseif not laptop_enabled() then
+    hl.monitor(laptop_on)
   end
 end
 
--- Debounce: give the external's modeset time to settle before parking
--- the laptop panel.  One pending timer, never a repeating one.
+-- Register both rules once per config load.  Rules are matched by output,
+-- so a monitor that appears later is configured by its rule instead of by
+-- a follow-up modeset.  The laptop rule is seeded with the panel's current
+-- rate and, while docked, with disabled = true, so reloading the config
+-- neither resets the rate nor briefly wakes the panel.  Runtime changes
+-- use the mode-less specs above so the daemon's choice is never
+-- overwritten.
+hl.monitor({
+  output = LAPTOP,
+  position = "0x0",
+  scale = 1.25,
+  disabled = external_enabled(),
+  mode = laptop_current_mode(),
+})
+hl.monitor(external)
+
+-- Debounce hotplug bursts: the compositor is still applying its own layout
+-- when the first event lands.  One pending timer, never a repeating one.
 local pending = false
-local function apply_soon(force)
+local function reconcile_soon()
   if pending then
     return
   end
   pending = true
   local timer = hl.timer(function()
     pending = false
-    apply(force)
+    reconcile()
   end, { timeout = 1200, type = "oneshot" })
   timer:set_enabled(true)
 end
 
-hl.on("hyprland.start", function()
-  applied = nil
-  apply_soon(true)
-end)
+-- monitor.removed can hand us an expired object, so the handlers ignore
+-- their argument and reconcile from hl.get_monitors() instead.  A
+-- reconcile that finds nothing to do writes nothing, which is what makes
+-- disabling the panel safe: the resulting monitor.removed event cannot
+-- start a disable/enable loop.
+hl.on("hyprland.start", reconcile_soon)
+hl.on("config.reloaded", reconcile_soon)
+hl.on("monitor.added", reconcile_soon)
+hl.on("monitor.removed", reconcile_soon)
+hl.on("monitor.layout_changed", reconcile_soon)
 
-hl.on("config.reloaded", function()
-  -- A reload clears the monitor rules, so re-apply even if the desired
-  -- state looks unchanged.
-  applied = nil
-  apply_soon(true)
-end)
-
-hl.on("monitor.added", function(mon)
-  -- Only a new *external* changes the layout.  eDP appearing is the
-  -- result of this file re-enabling it, not a reason to disable it.
-  if mon == nil or mon.name ~= LAPTOP then
-    apply_soon(false)
-  end
-end)
-
-hl.on("monitor.removed", function(mon)
-  -- Only the external leaving changes the layout.  eDP disappearing is
-  -- the result of this file disabling it; re-enabling it here would
-  -- start an infinite disable/enable loop.
-  if mon == nil or mon.name ~= LAPTOP then
-    apply_soon(false)
-  end
-end)
+return { reconcile = reconcile }

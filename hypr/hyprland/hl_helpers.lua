@@ -1,3 +1,6 @@
+-- Helpers shared by the rest of the config: Caelestia notifications, the
+-- caelestia launcher interrupt on SUPER binds, and the keybind export
+-- consumed by the shell's keybind cheatsheet.
 local M = {}
 
 local function shell_quote(s)
@@ -87,7 +90,7 @@ end
 
 function M.export()
   local dir = os.getenv("HOME") .. "/.cache/quickshell/f1-window"
-  os.execute("mkdir -p " .. dir)
+  os.execute("mkdir -p " .. shell_quote(dir))
 
   local function j(s)
     return '"' .. tostring(s):gsub("\\", "\\\\"):gsub('"', '\\"') .. '"'
@@ -123,6 +126,5 @@ end)
 hl.on("config.reloaded", function()
   M.export()
 end)
-
 
 return M
