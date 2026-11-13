@@ -17,8 +17,6 @@ if status is-interactive
     set -gx ATUIN_NOBIND "true"
     command -v atuin &> /dev/null && atuin init fish | source
 end
-# cat ~/.local/state/caelestia/sequences.txt 2> /dev/null
-
 # pnpm
 set -gx PNPM_HOME "/home/colour/.local/share/pnpm"
 if not string match -q -- $PNPM_HOME $PATH

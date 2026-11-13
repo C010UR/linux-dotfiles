@@ -1,0 +1,81 @@
+# Noctalia headings hand-written here; everything else is left at the
+# shell's defaults and managed from its Settings window.
+
+[bar.default]
+position = "left"
+thickness = 60
+scale = 1.25
+capsule_thickness = 0.86
+capsule_radius = 8.0
+widget_spacing = 14
+hover_highlight = true
+margin_ends = 0
+radius = 12
+radius_top_left = 0
+radius_bottom_left = 0
+concave_edge_corners = true
+start = ["launcher", "workspaces"]
+center = ["clock"]
+end = [
+  "tray",
+  "notifications",
+  "network",
+  "bluetooth",
+  "volume",
+  "brightness",
+  "battery",
+  "keyboard_layout",
+  "control-center",
+  "session",
+]
+
+[widget.network]
+show_label = false
+
+[widget.workspaces]
+show_labels = true
+labels_only_when_occupied = true
+scale = 1.25
+inactive_pill_size = 1.0
+active_pill_size = 2.0
+occupied_color = "surface_container"
+empty_color = "surface_container"
+
+[theme]
+source = "wallpaper"
+
+[theme.templates]
+enable_builtin_templates = true
+builtin_ids = ["btop", "gtk3", "gtk4", "hyprland", "qt"]
+
+[theme.templates.user.hypr-scheme]
+input_path = "$XDG_CONFIG_HOME/noctalia/templates/hypr-scheme.conf"
+output_path = "$XDG_CONFIG_HOME/hypr/scheme/noctalia.conf"
+index = 5
+
+[theme.templates.user.hypr-reload]
+input_path = "$XDG_CONFIG_HOME/noctalia/templates/hypr-reload.txt"
+output_path = "$XDG_STATE_HOME/noctalia/hypr-reload.txt"
+post_hook = "hyprctl reload"
+index = 10
+
+[wallpaper]
+directory = "/home/colour/Pictures/Wallpapers"
+
+[lockscreen]
+enabled = true
+fingerprint = true
+lock_before_suspend = true
+transition = ["fade"]
+transition_duration = 150
+
+[idle]
+pre_action_fade_seconds = 0
+
+[idle.behavior.lock]
+timeout = 180
+action = "lock"
+
+[idle.behavior.screen-off]
+timeout = 300
+action = "screen_off"

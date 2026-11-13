@@ -64,5 +64,13 @@
         "arguments": ["-E"]
       }
     }
+  },
+  "context_servers": {
+    "browse": {
+      "command": "/home/colour/.local/bin/browse",
+      "args": [
+        "mcp"
+      ]
+    }
   }
 }

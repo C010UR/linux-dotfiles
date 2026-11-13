@@ -45,6 +45,15 @@ hl.window_rule({ name = "imv", float = true, match = { class = "imv" } })
 hl.window_rule({ name = "printer", float = true, match = { class = "system-config-printer" } })
 hl.window_rule({ name = "quickshell", float = true, match = { class = "org.quickshell" } })
 
+-- Noctalia settings window
+hl.window_rule({
+  name = "noctalia-settings",
+  float = true,
+  center = true,
+  size = { 1080, 920 },
+  match = { class = "dev.noctalia.Noctalia" },
+})
+
 -- ── Sized + centered floating apps ───────────────────────────────────────────
 
 hl.window_rule({
@@ -126,53 +135,10 @@ hl.window_rule({
 
 -- ── Special workspaces ────────────────────────────────────────────────────────
 
-hl.window_rule({ name = "sysmon", workspace = "special:sysmon", match = { class = "btop" } })
-hl.window_rule({
-  name = "music",
-  workspace = "special:music",
-  match = { class = "feishin|Spotify|Supersonic|Cider|spotify" },
-})
-hl.window_rule({ name = "spotify-wayland", workspace = "special:music", match = { initial_title = "Spotify( Free)?" } }) -- Spotify Wayland sets no WM class
--- Slack Huddle: more specific than the communication rule below — must come first.
--- Identified by initialTitle since the window title changes once a call connects.
-hl.window_rule({
-  name = "slack-huddle",
-  workspace = "special:huddle",
-  fullscreen = true,
-  match = { class = "(?i)slack", initial_title = "Slack - Huddle Preview" },
-})
 hl.window_rule({
   name = "communication",
   workspace = "special:communication",
   match = { class = "discord|equibop|vesktop|whatsapp|org.telegram.desktop|(?i)slack" },
-})
--- Notes: lives in special:notes, toggled by Win+R
-hl.window_rule({
-  name = "notes",
-  float = true,
-  size = "(monitor_w*0.85) (monitor_h*0.75)",
-  center = true,
-  workspace = "special:notes",
-  match = { class = "com.mitchellh.ghostty", title = "^notes$" },
-})
--- Dolphin: lives in special:dolphin, toggled by Win+E
-hl.window_rule({
-  name = "dolphin",
-  float = true,
-  size = "(monitor_w*0.7) (monitor_h*0.8)",
-  center = true,
-  workspace = "special:dolphin",
-  match = { class = "org.kde.dolphin" },
-})
-
--- Qalculate: lives in special:qalculate, toggled by Win+C
-hl.window_rule({
-  name = "qalculate",
-  float = true,
-  size = "(monitor_w*0.3) (monitor_h*0.65)",
-  center = true,
-  workspace = "special:qalculate",
-  match = { class = "qalculate-gtk" },
 })
 
 -- ── Dialogs ───────────────────────────────────────────────────────────────────
@@ -296,101 +262,18 @@ hl.window_rule({
   focus_on_activate = false,
 })
 
--- ── Event handlers ────────────────────────────────────────────────────────────
-
--- When a floating special overlay is visible and a new window opens, move it to the
--- current regular workspace then hide the overlay.
-local function window_matches(win, match)
-  if match.class ~= nil and win.class ~= match.class then
-    return false
-  end
-  if match.title ~= nil and (win.title == nil or not win.title:match(match.title)) then
-    return false
-  end
-  return true
-end
-
-local function find_matching_windows(match)
-  local found = {}
-  for _, w in ipairs(hl.get_windows()) do
-    if window_matches(w, match) then
-      found[#found + 1] = w
-    end
-  end
-  return found
-end
-
-local overlay_specials = {
-  { name = "dolphin", match = { class = "org.kde.dolphin" } },
-  { name = "qalculate", match = { class = "qalculate-gtk" } },
-  { name = "notes", match = { class = "com.mitchellh.ghostty", title = "^notes$" } },
-}
-
-hl.on("window.open", function(win)
-  for _, overlay in ipairs(overlay_specials) do
-    if window_matches(win, overlay.match) then
-      return
-    end
-  end
-
-  local overlay_names = {}
-  for _, overlay in ipairs(overlay_specials) do
-    overlay_names["special:" .. overlay.name] = true
-  end
-
-  -- Leave windows on their assigned special workspaces (Slack, Telegram, etc.)
-  if win.workspace ~= nil and win.workspace.name:match("^special:") and not overlay_names[win.workspace.name] then
-    return
-  end
-
-  for _, overlay in ipairs(overlay_specials) do
-    local wins = find_matching_windows(overlay.match)
-    if #wins > 0 then
-      local owner = wins[1]
-      local special = "special:" .. overlay.name
-      if owner.workspace ~= nil and owner.workspace.name == special and owner.workspace.visible then
-        local ws = hl.get_active_workspace()
-        if ws ~= nil then
-          hl.dispatch(hl.dsp.window.move({
-            window = win,
-            workspace = ws,
-            follow = false,
-          }))
-        end
-
-        hl.dispatch(hl.dsp.workspace.toggle_special(overlay.name))
-        return
-      end
-    end
-  end
-end)
-
 -- ── Layer rules ───────────────────────────────────────────────────────────────
 
 hl.layer_rule({ name = "hyprpicker", animation = "fade", match = { namespace = "hyprpicker" } })
 hl.layer_rule({ name = "wlogout", animation = "fade", match = { namespace = "logout_dialog" } })
 hl.layer_rule({ name = "slurp", animation = "fade", match = { namespace = "selection" } })
 hl.layer_rule({ name = "wayfreeze", animation = "fade", match = { namespace = "wayfreeze" } })
+hl.layer_rule({ name = "screenshot-region", no_anim = true, match = { namespace = "noctalia-screenshot-region" } })
 hl.layer_rule({ name = "launcher", animation = "popin 80%", blur = true, match = { namespace = "launcher" } })
 hl.layer_rule({
-  name = "caelestia-no-anim",
+  name = "noctalia-no-anim",
   no_anim = true,
-  match = { namespace = "caelestia-(border-exclusion|area-picker)" },
-})
-hl.layer_rule({
-  name = "caelestia-fade",
-  animation = "fade",
-  match = { namespace = "caelestia-(drawers|background)" },
-})
-hl.layer_rule({
-  name = "caelestia-blur",
-  blur = true,
-  ignore_alpha = 0.57,
-  match = { namespace = "caelestia-drawers" },
-})
-hl.layer_rule({
-  name = "f1-window",
-  blur = true,
-  ignore_alpha = 0.57,
-  match = { namespace = "f1-window" },
+  match = {
+    namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$",
+  },
 })

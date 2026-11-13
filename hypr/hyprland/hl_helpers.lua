@@ -1,18 +1,17 @@
--- Helpers shared by the rest of the config: Caelestia notifications, the
--- caelestia launcher interrupt on SUPER binds, and the keybind export
--- consumed by the shell's keybind cheatsheet.
+-- Helpers shared by the rest of the config.
+
 local M = {}
 
 local function shell_quote(s)
   return "'" .. tostring(s):gsub("'", "'\\''") .. "'"
 end
 
--- Route notifications through Caelestia's freedesktop notification server.
-function hl.caelestia_notification(opts)
+-- Route notifications through the freedesktop notification server.
+function hl.notify(opts)
   opts = opts or {}
   local text = opts.text or opts.summary
   if not text then
-    error("hl.caelestia_notification: 'text' is required")
+    error("hl.notify: 'text' is required")
   end
 
   local timeout = opts.duration or opts.timeout or 2000
@@ -44,36 +43,15 @@ function hl.caelestia_notification(opts)
   hl.exec_cmd(table.concat(parts, " "))
 end
 
-local _keybinds = {}
 local _orig_bind = hl.bind
-
-local launcher_interrupt = hl.dsp.global("caelestia:launcherInterrupt")
 
 function hl.cbind(keys, dispatcher, opts)
   opts = opts or {}
 
-  local upper_keys = keys:upper()
-  if upper_keys:find("SUPER", 1, true) and not upper_keys:find("SUPER_L", 1, true) then
-    if opts.mouse then
-      _orig_bind(keys, launcher_interrupt, { mouse = true })
-    else
-      _orig_bind(keys, launcher_interrupt)
-    end
-  end
-
-  table.insert(_keybinds, {
-    key = keys,
-    desc = opts.desc or "",
-    category = opts.category or "misc",
-    icon = opts.icon or "help",
-    locked = opts.locked or false,
-    order = opts.order or 999,
-  })
-
   local bind_opts = {}
-  for k, v in pairs(opts) do
+  for k, value in pairs(opts) do
     if k ~= "desc" and k ~= "category" and k ~= "icon" and k ~= "order" then
-      bind_opts[k] = v
+      bind_opts[k] = value
     end
   end
 
@@ -87,44 +65,5 @@ function hl.cbind(keys, dispatcher, opts)
     _orig_bind(keys, dispatcher)
   end
 end
-
-function M.export()
-  local dir = os.getenv("HOME") .. "/.cache/quickshell/f1-window"
-  os.execute("mkdir -p " .. shell_quote(dir))
-
-  local function j(s)
-    return '"' .. tostring(s):gsub("\\", "\\\\"):gsub('"', '\\"') .. '"'
-  end
-
-  local lines = { "[" }
-  for i, kb in ipairs(_keybinds) do
-    local c = i < #_keybinds and "," or ""
-    lines[#lines + 1] = string.format(
-      '  {"key":%s,"description":%s,"category":%s,"icon":%s,"locked":%s,"order":%d}%s',
-      j(kb.key),
-      j(kb.desc),
-      j(kb.category),
-      j(kb.icon),
-      tostring(kb.locked),
-      kb.order,
-      c
-    )
-  end
-  lines[#lines + 1] = "]"
-
-  local f = io.open(dir .. "/hyprland_keybinds.json", "w")
-  if f then
-    f:write(table.concat(lines, "\n"))
-    f:close()
-  end
-end
-
-hl.on("hyprland.start", function()
-  M.export()
-end)
-
-hl.on("config.reloaded", function()
-  M.export()
-end)
 
 return M

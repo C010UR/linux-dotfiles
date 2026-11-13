@@ -3,7 +3,9 @@ local v = require("hyprland.vars")
 hl.on("hyprland.start", function()
   -- Keyring and auth
   hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
-  hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+
+  -- Desktop shell
+  hl.exec_cmd("noctalia --daemon")
 
   -- Automount storage devices
   hl.exec_cmd("udiskie")
@@ -26,13 +28,6 @@ hl.on("hyprland.start", function()
 
   -- Forward bluetooth media commands to MPRIS
   hl.exec_cmd("mpris-proxy")
-
-  -- Resize and move windows based on matches (e.g. pip)
-  hl.exec_cmd("caelestia resizer -d")
-
-  -- Start shell
-  hl.exec_cmd("caelestia shell -d")
-  hl.exec_cmd("qs -c clste -d")
 
   v.apply_persisted_state()
   hl.exec_cmd(v.get_config_path() .. "/scripts/watch-resume.sh")

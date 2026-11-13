@@ -19,7 +19,10 @@ notify-on-command-finish-after = 10s
 
 shell-integration-features = title,ssh-env,ssh-terminfo
 
-scrollback-limit = 100000000
+# bytes of scrollback per surface (upstream default is 10000000)
+# was 100000000; lowered because heavy TUI output + Ghostty's page-reuse
+# leak made large limits multiply memory use
+scrollback-limit = 10000000
 
 quick-terminal-position = top
 quick-terminal-size = 35%

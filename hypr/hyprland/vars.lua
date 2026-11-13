@@ -1,6 +1,6 @@
 local M = {}
 
-M.terminal = "ghostty"
+M.terminal = "kitty"
 M.browser = "google-chrome-stable"
 M.editor = "nvim"
 M.notes_dir = os.getenv("HOME") .. "/.local/share/notes"
@@ -128,7 +128,7 @@ function M.disable_autobrightness(silent)
   hl.exec_cmd("systemctl --user stop wluma.service")
   _write_wluma_state("disabled")
   if not silent then
-    hl.caelestia_notification({
+    hl.notify({
       text = "Auto brightness: Disabled",
       duration = 2000,
       icon = "info",
@@ -141,7 +141,7 @@ function M.toggle_touchpad()
   local next_state = enabled and "disabled" or "enabled"
   hl.device({ name = M.touchpadDevice, enabled = not enabled })
   _write_touchpad_state(next_state)
-  hl.caelestia_notification({
+  hl.notify({
     text = "Touchpad: " .. (enabled and "Disabled" or "Enabled"),
     duration = 2000,
     icon = "info",
@@ -155,7 +155,7 @@ function M.toggle_autobrightness()
   else
     hl.exec_cmd("systemctl --user start wluma.service")
     _write_wluma_state("enabled")
-    hl.caelestia_notification({
+    hl.notify({
       text = "Auto brightness: Enabled",
       duration = 2000,
       icon = "info",
@@ -165,7 +165,7 @@ end
 
 function M.brightness_down()
   M.disable_autobrightness(true)
-  hl.dispatch(hl.dsp.global("caelestia:brightnessDown"))
+  hl.exec_cmd("noctalia msg brightness-down")
 end
 
 function M.brightness_up()
@@ -182,45 +182,7 @@ function M.brightness_up()
   if auto_on then
     M.disable_autobrightness(true)
   end
-  hl.dispatch(hl.dsp.global("caelestia:brightnessUp"))
-end
-
-function M.toggle_dolphin()
-  local wins = hl.get_windows({ class = "org.kde.dolphin" })
-  if #wins == 0 then
-    hl.exec_cmd("dolphin") -- window rule sends it to special:dolphin
-    return
-  end
-  hl.dispatch(hl.dsp.workspace.toggle_special("dolphin"))
-end
-
-function M.toggle_qalculate()
-  local wins = hl.get_windows({ class = "qalculate-gtk" })
-  if #wins == 0 then
-    hl.exec_cmd("qalculate-gtk") -- window rule sends it to special:qalculate
-    return
-  end
-  hl.dispatch(hl.dsp.workspace.toggle_special("qalculate"))
-end
-
-function M.toggle_notes()
-  local wins = {}
-  for _, w in ipairs(hl.get_windows()) do
-    if w.class == "com.mitchellh.ghostty" and w.title ~= nil and w.title:match("^notes$") then
-      wins[#wins + 1] = w
-    end
-  end
-  if #wins == 0 then
-    hl.exec_cmd(
-      'ghostty --title=notes --shell-integration-features=cursor,no-sudo,no-ssh-env,no-ssh-terminfo,path -e fish -C "mkdir -p '
-        .. M.notes_dir
-        .. "; cd "
-        .. M.notes_dir
-        .. '; exec nvim ."'
-    )
-    return
-  end
-  hl.dispatch(hl.dsp.workspace.toggle_special("notes"))
+  hl.exec_cmd("noctalia msg brightness-up")
 end
 
 function M.get_config_path()

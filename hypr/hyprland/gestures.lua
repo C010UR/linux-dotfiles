@@ -8,14 +8,6 @@ hl.config({
 
 -- Multi-finger gestures
 hl.gesture({ fingers = 4, direction = "horizontal", action = "workspace" })
-hl.gesture({ fingers = 3, direction = "up", action = "special", workspace_name = "special" })
-hl.gesture({
-  fingers = 3,
-  direction = "down",
-  action = function()
-    hl.exec_cmd("caelestia toggle specialws")
-  end,
-})
 hl.gesture({
   fingers = 4,
   direction = "down",

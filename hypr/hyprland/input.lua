@@ -11,8 +11,7 @@ hl.config({
 
     touchpad = {
       natural_scroll = true,
-      scroll_factor = 0.3,
-      tap_to_click = false,
+      tap_to_click = true,
     },
   },
 
@@ -28,7 +27,7 @@ hl.config({
 hl.device({
   name = v.touchpadDevice,
   accel_profile = "adaptive",
-  sensitivity = 0.2,
+  sensitivity = 0,
 })
 
 for _, name in ipairs(v.mouseDevices) do

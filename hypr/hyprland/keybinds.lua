@@ -1,86 +1,40 @@
 local v = require("hyprland.vars")
 
--- ── Shell / Caelestia keybinds ────────────────────────────────────────────────
+-- ── Shell keybinds (Noctalia) ─────────────────────────────────────────────────
 
--- Interrupt the pending launcher toggle when Super is used as a modifier.
--- The per-key interrupt is added automatically by hl.cbind; these cover the
--- secondary modifiers (Super+Ctrl/Shift/Alt+<key>) even when the modifier is
--- pressed after Super.
-for _, key in ipairs({ "Ctrl_L", "Ctrl_R", "Shift_L", "Shift_R", "Alt_L", "Alt_R" }) do
-  hl.bind("SUPER + " .. key, hl.dsp.global("caelestia:launcherInterrupt"))
-end
-
-hl.cbind("SUPER + Super_L", hl.dsp.global("caelestia:launcher"), {
+hl.cbind("SUPER + SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), {
   desc = "Toggle Launcher",
   category = "shell",
   icon = "apps",
   order = 10,
 })
 
-hl.cbind("CTRL + ALT + Delete", hl.dsp.global("caelestia:session"), {
-  desc = "Session Menu",
-  category = "shell",
-  icon = "logout",
-  order = 50,
-})
-hl.cbind("CTRL + ALT + C", hl.dsp.global("caelestia:clearNotifs"), {
-  desc = "Clear Notifications",
-  category = "shell",
-  icon = "notifications_off",
-  locked = true,
-  order = 60,
-})
-hl.cbind("SUPER + K", hl.dsp.global("caelestia:dashboard"), {
-  desc = "Toggle Dashboard",
-  category = "shell",
-  icon = "dashboard",
-  order = 20,
-})
-hl.cbind("SUPER + L", hl.dsp.global("caelestia:lock"), {
+hl.cbind("SUPER + L", hl.dsp.exec_cmd("noctalia msg session lock"), {
   desc = "Lock Screen",
   category = "shell",
   icon = "lock",
   order = 40,
 })
-hl.cbind("SUPER + F1", hl.dsp.global("clste:toggleF1"), {
-  desc = "Toggle Keybinds",
+
+hl.cbind("SUPER + V", hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard"), {
+  desc = "Clipboard History",
   category = "shell",
-  icon = "help",
-  order = 30,
-})
-hl.cbind("SUPER + F6", hl.dsp.global("clste:toggleAutoclickerWindow"), {
-  desc = "Autoclicker config",
-  category = "shell",
-  icon = "touch_app",
-  order = 31,
-})
-hl.cbind("F6", hl.dsp.global("clste:toggleAutoclicker"), {
-  desc = "Toggle autoclicker",
-  category = "shell",
-  icon = "ads_click",
-  order = 32,
-})
-hl.cbind("SUPER + SHIFT + F6", hl.dsp.global("clste:toggleAutoclicker"), {
-  desc = "Toggle autoclicker (gaming)",
-  category = "shell",
-  icon = "ads_click",
-  order = 33,
+  icon = "clipboard",
+  order = 20,
 })
 
--- Restore lock: restart shell then lock
-hl.cbind("SUPER + ALT + L", hl.dsp.exec_cmd("caelestia shell -d"), {
-  desc = "Restart Shell",
+hl.cbind("SUPER + C", hl.dsp.exec_cmd("noctalia msg panel-toggle yuuto/calculator:panel"), {
+  desc = "Calculator",
   category = "shell",
-  icon = "restart_alt",
-  locked = true,
-  order = 80,
+  icon = "calculator",
+  order = 30,
 })
-hl.cbind("SUPER + ALT + L", hl.dsp.global("caelestia:lock"), {
-  desc = "Lock Screen",
-  category = "shell",
-  icon = "lock",
-  locked = true,
-  order = 85,
+
+hl.cbind("SUPER + SHIFT + P", hl.dsp.exec_cmd("noctalia msg power-cycle"), {
+  desc = "Cycle Power Profile",
+  category = "system",
+  icon = "battery_charging",
+  order = 10,
 })
 
 -- Brightness
@@ -106,77 +60,40 @@ hl.cbind("SUPER + SHIFT + B", v.toggle_autobrightness, {
 })
 
 -- Media controls
-hl.cbind("CTRL + SUPER + SPACE", hl.dsp.global("caelestia:mediaToggle"), {
-  desc = "Play / Pause",
-  category = "media",
-  icon = "play_pause",
-  locked = true,
-  order = 30,
-})
-hl.cbind("XF86AudioPlay", hl.dsp.global("caelestia:mediaToggle"), {
+hl.cbind("XF86AudioPlay", hl.dsp.exec_cmd("noctalia msg media toggle"), {
   desc = "Play / Pause",
   category = "media",
   icon = "play_pause",
   locked = true,
   order = 31,
 })
-hl.cbind("XF86AudioPause", hl.dsp.global("caelestia:mediaToggle"), {
+hl.cbind("XF86AudioPause", hl.dsp.exec_cmd("noctalia msg media toggle"), {
   desc = "Play / Pause",
   category = "media",
   icon = "play_pause",
   locked = true,
   order = 32,
 })
-hl.cbind("CTRL + SUPER + Equal", hl.dsp.global("caelestia:mediaNext"), {
-  desc = "Next Track",
-  category = "media",
-  icon = "skip_next",
-  locked = true,
-  order = 40,
-})
-hl.cbind("XF86AudioNext", hl.dsp.global("caelestia:mediaNext"), {
+hl.cbind("XF86AudioNext", hl.dsp.exec_cmd("noctalia msg media next"), {
   desc = "Next Track",
   category = "media",
   icon = "skip_next",
   locked = true,
   order = 41,
 })
-hl.cbind("CTRL + SUPER + Minus", hl.dsp.global("caelestia:mediaPrev"), {
-  desc = "Previous Track",
-  category = "media",
-  icon = "skip_previous",
-  locked = true,
-  order = 50,
-})
-hl.cbind("XF86AudioPrev", hl.dsp.global("caelestia:mediaPrev"), {
+hl.cbind("XF86AudioPrev", hl.dsp.exec_cmd("noctalia msg media previous"), {
   desc = "Previous Track",
   category = "media",
   icon = "skip_previous",
   locked = true,
   order = 51,
 })
-hl.cbind("XF86AudioStop", hl.dsp.global("caelestia:mediaStop"), {
+hl.cbind("XF86AudioStop", hl.dsp.exec_cmd("noctalia msg media stop"), {
   desc = "Stop",
   category = "media",
   icon = "stop",
   locked = true,
   order = 60,
-})
-
--- Kill / restart shell
-hl.cbind("SUPER + SHIFT + R", hl.dsp.exec_cmd("qs -c caelestia kill"), {
-  desc = "Kill Shell",
-  category = "shell",
-  icon = "close",
-  release = true,
-  order = 90,
-})
-hl.cbind("SUPER + CTRL + ALT + R", hl.dsp.exec_cmd("qs -c caelestia kill; caelestia shell -d"), {
-  desc = "Restart Shell",
-  category = "shell",
-  icon = "restart_alt",
-  release = true,
-  order = 95,
 })
 
 -- ── Workspace navigation ──────────────────────────────────────────────────────
@@ -247,12 +164,12 @@ hl.cbind("SUPER + Page_Down", hl.dsp.focus({ workspace = "e+1" }), {
   order = 37,
 })
 
--- Toggle special workspace
-hl.cbind("SUPER + S", hl.dsp.exec_cmd("caelestia toggle specialws"), {
-  desc = "Toggle Special Workspace",
-  category = "special_workspace",
-  icon = "star",
-  order = 10,
+-- Toggle control center
+hl.cbind("SUPER + S", hl.dsp.exec_cmd("noctalia msg panel-toggle control-center"), {
+  desc = "Toggle Control Center",
+  category = "shell",
+  icon = "dashboard",
+  order = 20,
 })
 
 -- ── Move window to workspace ──────────────────────────────────────────────────
@@ -323,40 +240,18 @@ hl.cbind("SUPER + ALT + LEFT", hl.dsp.window.move({ workspace = "e-1" }), {
   order = 77,
 })
 
--- Move window to/from special workspace
-hl.cbind("CTRL + SUPER + SHIFT + UP", hl.dsp.window.move({ workspace = "special:special" }), {
-  desc = "Move to Special Workspace",
-  category = "special_workspace",
-  icon = "star",
-  order = 20,
-})
-hl.cbind("CTRL + SUPER + SHIFT + DOWN", hl.dsp.window.move({ workspace = "e+0" }), {
-  desc = "Move from Special Workspace",
-  category = "special_workspace",
-  icon = "star",
-  order = 30,
-})
-hl.cbind("SUPER + ALT + S", hl.dsp.window.move({ workspace = "special:special" }), {
-  desc = "Move to Special Workspace",
-  category = "special_workspace",
-  icon = "star",
-  order = 35,
-})
-
 -- ── Window groups ─────────────────────────────────────────────────────────────
 
-hl.cbind("ALT + TAB", hl.dsp.window.cycle_next(), {
-  desc = "Cycle Windows",
+hl.cbind("ALT + TAB", hl.dsp.exec_cmd("noctalia msg window-switcher hold"), {
+  desc = "Window Switcher",
   category = "window_group",
   icon = "swap_horiz",
-  repeating = true,
   order = 10,
 })
-hl.cbind("SHIFT + ALT + TAB", hl.dsp.window.cycle_next({ prev = true }), {
-  desc = "Cycle Windows (Prev)",
+hl.cbind("SHIFT + ALT + TAB", hl.dsp.exec_cmd("noctalia msg window-switcher hold reverse"), {
+  desc = "Window Switcher (Reverse)",
   category = "window_group",
   icon = "swap_horiz",
-  repeating = true,
   order = 20,
 })
 hl.cbind("CTRL + ALT + TAB", hl.dsp.group.next(), {
@@ -492,13 +387,6 @@ hl.cbind("SUPER + mouse:273", hl.dsp.window.resize(), {
   mouse = true,
   order = 120,
 })
-hl.cbind("SUPER + ALT + BACKSLASH", hl.dsp.exec_cmd("caelestia resizer pip"), {
-  desc = "PiP Mode",
-  category = "window",
-  icon = "picture_in_picture_alt",
-  order = 130,
-})
-
 hl.cbind("SUPER + ALT + P", hl.dsp.window.pin(), {
   desc = "Pin Window",
   category = "window",
@@ -530,37 +418,13 @@ hl.cbind("SUPER + Q", hl.dsp.window.close(), {
   order = 180,
 })
 
--- ── Special workspace toggles ─────────────────────────────────────────────────
+-- ── Special workspace ─────────────────────────────────────────────────────────
 
-hl.cbind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("caelestia toggle sysmon"), {
-  desc = "Toggle System Monitor",
-  category = "special_workspace",
-  icon = "monitor_heart",
-  order = 40,
-})
-hl.cbind("SUPER + M", hl.dsp.exec_cmd("caelestia toggle music"), {
-  desc = "Toggle Music",
-  category = "special_workspace",
-  icon = "music_cast",
-  order = 50,
-})
 hl.cbind("SUPER + D", hl.dsp.workspace.toggle_special("communication"), {
   desc = "Toggle Communication",
   category = "special_workspace",
   icon = "forum",
   order = 60,
-})
-hl.cbind("SUPER + H", hl.dsp.workspace.toggle_special("huddle"), {
-  desc = "Toggle Huddle",
-  category = "special_workspace",
-  icon = "groups",
-  order = 70,
-})
-hl.cbind("SUPER + R", v.toggle_notes, {
-  desc = "Toggle Notes",
-  category = "special_workspace",
-  icon = "edit_note",
-  order = 80,
 })
 
 -- ── App launchers ─────────────────────────────────────────────────────────────
@@ -576,18 +440,6 @@ hl.cbind("SUPER + W", hl.dsp.exec_cmd("app2unit -t scope -- " .. v.browser), {
   category = "app_launcher",
   icon = "web",
   order = 20,
-})
-hl.cbind("SUPER + C", v.toggle_qalculate, {
-  desc = "Calculator",
-  category = "app_launcher",
-  icon = "calculate",
-  order = 30,
-})
-hl.cbind("SUPER + E", v.toggle_dolphin, {
-  desc = "File Manager",
-  category = "app_launcher",
-  icon = "folder",
-  order = 40,
 })
 hl.cbind("SUPER + ALT + E", hl.dsp.exec_cmd("app2unit -t scope -- nemo"), {
   desc = "File Manager (Nemo)",
@@ -608,93 +460,63 @@ hl.cbind("CTRL + ALT + V", hl.dsp.exec_cmd("app2unit -t scope -- pavucontrol"), 
   order = 70,
 })
 
--- ── Screenshots & Recording ───────────────────────────────────────────────────
+-- ── Screenshots ───────────────────────────────────────────────────────────────
 
-hl.cbind("Print", hl.dsp.exec_cmd("caelestia screenshot"), {
+hl.cbind("Print", hl.dsp.exec_cmd("noctalia msg screenshot-fullscreen"), {
   desc = "Screenshot (Full)",
   category = "screenshot_recording",
   icon = "screenshot_monitor",
   locked = true,
   order = 10,
 })
-hl.cbind("SUPER + SHIFT + S", hl.dsp.global("caelestia:screenshotFreeze"), {
-  desc = "Screenshot (Freeze)",
-  category = "screenshot_recording",
-  icon = "screenshot_monitor",
-  order = 20,
-})
-hl.cbind("SUPER + SHIFT + ALT + S", hl.dsp.global("caelestia:screenshot"), {
+
+hl.cbind("SUPER + SHIFT + S", hl.dsp.exec_cmd("noctalia msg screenshot-region"), {
   desc = "Screenshot (Region)",
   category = "screenshot_recording",
-  icon = "screenshot_monitor",
-  order = 30,
-})
-hl.cbind("SUPER + ALT + R", hl.dsp.exec_cmd("caelestia record -s"), {
-  desc = "Record with Sound",
-  category = "screenshot_recording",
-  icon = "screen_record",
-  order = 40,
-})
-hl.cbind("CTRL + ALT + R", hl.dsp.exec_cmd("caelestia record"), {
-  desc = "Record Screen",
-  category = "screenshot_recording",
-  icon = "screen_record",
-  order = 50,
-})
-hl.cbind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd("caelestia record -r"), {
-  desc = "Record Region",
-  category = "screenshot_recording",
-  icon = "screen_record",
-  order = 60,
+  icon = "screenshot_region",
+  locked = true,
+  order = 20,
 })
 
 -- ── Volume ────────────────────────────────────────────────────────────────────
 
-hl.cbind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), {
+hl.cbind("XF86AudioMicMute", hl.dsp.exec_cmd("noctalia msg mic-mute"), {
   desc = "Toggle Mic Mute",
   category = "media",
   icon = "mic",
   locked = true,
   order = 70,
 })
-hl.cbind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), {
+hl.cbind("XF86AudioMute", hl.dsp.exec_cmd("noctalia msg volume-mute"), {
   desc = "Toggle Mute",
   category = "media",
   icon = "volume_off",
   locked = true,
   order = 80,
 })
-hl.cbind("SUPER + SHIFT + M", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), {
+hl.cbind("SUPER + SHIFT + M", hl.dsp.exec_cmd("noctalia msg volume-mute"), {
   desc = "Toggle Mute",
   category = "media",
   icon = "volume_off",
   locked = true,
   order = 81,
 })
-hl.cbind(
-  "XF86AudioRaiseVolume",
-  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 10%+"),
-  {
-    desc = "Volume Up",
-    category = "media",
-    icon = "volume_up",
-    locked = true,
-    repeating = true,
-    order = 90,
-  }
-)
-hl.cbind(
-  "XF86AudioLowerVolume",
-  hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"),
-  {
-    desc = "Volume Down",
-    category = "media",
-    icon = "volume_down",
-    locked = true,
-    repeating = true,
-    order = 100,
-  }
-)
+hl.cbind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("noctalia msg volume-up"), {
+  desc = "Volume Up",
+  category = "media",
+  icon = "volume_up",
+  locked = true,
+  repeating = true,
+  order = 90,
+})
+hl.cbind("XF86AudioLowerVolume", hl.dsp.exec_cmd("noctalia msg volume-down"), {
+  desc = "Volume Down",
+  category = "media",
+  icon = "volume_down",
+  locked = true,
+  repeating = true,
+  order = 100,
+})
 
 -- ── Utility ───────────────────────────────────────────────────────────────────
 
@@ -718,14 +540,6 @@ hl.cbind("SUPER + P", v.toggle_touchpad, {
   icon = "laptop_mac",
   order = 25,
 })
-hl.cbind("XF86Launch1", hl.dsp.global("caelestia:showall"), {
-  desc = "Show All Drawers",
-  category = "shell",
-  icon = "select_all",
-  locked = true,
-  repeating = true,
-  order = 70,
-})
 
 -- ── Sleep ─────────────────────────────────────────────────────────────────────
 
@@ -736,28 +550,10 @@ hl.cbind("SUPER + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend-then-hibernate"
   order = 30,
 })
 
--- ── Clipboard / emoji ─────────────────────────────────────────────────────────
+-- ── Clipboard ─────────────────────────────────────────────────────────────────
 
-hl.cbind("SUPER + V", hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard"), {
-  desc = "Clipboard History",
-  category = "utility",
-  icon = "content_paste",
-  order = 40,
-})
-hl.cbind("SUPER + ALT + V", hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard -d"), {
-  desc = "Clipboard (Delete)",
-  category = "utility",
-  icon = "delete",
-  order = 50,
-})
-hl.cbind("SUPER + PERIOD", hl.dsp.exec_cmd("pkill fuzzel || caelestia emoji -p"), {
-  desc = "Emoji Picker",
-  category = "utility",
-  icon = "emoji_symbols",
-  order = 60,
-})
 hl.cbind(
-  "CTRL + SHIFT + ALT + V",
+  "CTRL + SHIFT + ALT + P",
   hl.dsp.exec_cmd([[sleep 0.5s && ydotool type -d 1 "$(cliphist list | head -1 | cliphist decode)"]]),
   {
     desc = "Paste (Alternate)",
