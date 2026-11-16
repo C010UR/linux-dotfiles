@@ -1,206 +1,74 @@
+<p align="center">
+  <img src="docs/preview.webp" alt="Hyprland on CachyOS — floating kitty windows over a mountain wallpaper">
+</p>
+
+<p align="center"><sub>CachyOS · Hyprland + KDE · Noctalia · ASUS Zenbook S16</sub></p>
+
 # dotfiles
 
-Reproducible user + system configuration for this laptop (CachyOS / Arch-based,
-Hyprland + KDE, fish).
+My CachyOS setup: Hyprland + KDE, fish, kitty, and the small system tweaks that
+make the machine feel like one piece. Dotfiles are managed with **chezmoi**;
+packages, `/etc` files and services live next to them, so a fresh install is a
+single command.
 
-Managed with [chezmoi](https://www.chezmoi.org). System files and package
-manifests live alongside it so a rebuild is one command.
-
-Layout is intentionally Nix-friendly: everything under `home/` corresponds to
-`$HOME`, which maps cleanly onto Home Manager's `xdg.configFile` / `home.file`.
-
-```
-.
-├── .chezmoiroot        # "home" -> chezmoi source root is home/
-├── home/               # chezmoi source state (maps to $HOME)
-├── system/             # absolute-path mirror of /etc
-├── packages/           # native / AUR / flatpak manifests
-├── units/              # systemd units to enable
-├── scripts/            # export-packages.py (regenerates manifests)
-└── bootstrap.sh        # fresh machine -> this machine
-```
-
-## Fresh machine
+## Quick start
 
 ```bash
-git clone <this repo> ~/dotfiles
+git clone https://github.com/C010UR/linux-dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./bootstrap.sh          # asks before touching /etc
+./bootstrap.sh
 ```
 
-Then finish the manual parts listed at the end of `bootstrap.sh`.
-
-## Daily use
+The script shows what it detected, lets you toggle the optional pieces, then
+installs packages, copies system files, enables services and applies the
+dotfiles. Nothing is written before you continue.
 
 ```bash
-chezmoi add ~/.config/something   # start tracking
-chezmoi edit ~/.gitconfig         # edit source, then...
-chezmoi diff
-chezmoi apply
-chezmoi re-add                    # pull live edits back into source
-chezmoi cd                        # shell in the source repo
+./bootstrap.sh --dry-run   # print the plan, change nothing
+./bootstrap.sh --yes       # accept the defaults, no prompts
+./bootstrap.sh --no-nvim   # skip a component (system, flatpak, nvim, device)
 ```
 
-`chezmoi` is configured in `~/.config/chezmoi/chezmoi.toml` with
-`sourceDir = ~/dotfiles`.
+## What's inside
 
-## Package manifests
+- `home/` — chezmoi source for `$HOME`: Hyprland, Noctalia, fish, kitty, btop…
+- `system/` — the portable `/etc` files and units for the base system
+- `packages/` — explicit native, AUR and Flatpak apps, no dependency clutter
+- `devices/` — hardware-specific extras, applied only when the DMI matches
+- `components/` — optional things that live in their own repositories
 
-Only **explicit** packages are listed. Dependencies are never pinned — they come
-in with their parents. `packages/excluded.txt` documents the libraries that were
-deliberately dropped, so future-you knows it was a decision, not an accident.
+## Optional components
 
-Regenerate from the live machine:
-
-```bash
-./scripts/export-packages.py
-```
-
-Then review `git diff` before committing. The script keeps anything with a
-user-facing binary/desktop entry, plus kernels, firmware, drivers, GPU runtime,
-codecs, fonts and metapackages, and drops the rest.
-
-Install:
-
-```bash
-mapfile -t native < <(grep -vE '^\s*(#|$)' packages/native.txt)
-mapfile -t aur    < <(grep -vE '^\s*(#|$)' packages/aur.txt)
-sudo pacman -S --needed "${native[@]}"
-paru -S --needed "${aur[@]}"
-```
-
-Pass package names as arguments rather than piping them into pacman/paru: without
-a tty pacman fails with `failed to reopen stdin` and paru can then resolve the
-wrong transaction.
-
-### Local packages
-
-Packages that are not in any repo are built with `makepkg` from a source
-checkout, and listed in the device profile that needs them
-(`devices/asus-zenbook-s16/local.txt` for the ASUS driver/daemon). The profile's
-`repo`/`dir` files say where to clone and build; `LOCAL_REPO` and `LOCAL_DIR`
-override them.
-
-The ASUS packages (`asus-ptp`, `asus-control`) are only built when DMI matches
-this laptop — see **Device profiles** below. Build deps come from the PKGBUILDs
-(`dkms`, `clang`, `lld`, `llvm`, `sparse`, `cargo`, `pkgconf`).
-
-## System files
-
-`system/` is an absolute-path mirror of `/etc`
-(`system/etc/greetd/config.toml` → `/etc/greetd/config.toml`). `bootstrap.sh`
-copies it with `cp -a system/. /` and enables the units in `units/`. Anything
-under `/usr/local/sbin` is machine-specific and lives in a device profile.
-
-Captured on purpose:
-
-- greetd + noctalia greeter
-- custom udev rules (external mouse wakeup), `btusb` autosuspend
-- `mkinitcpio.conf`, `pacman.conf`, locale, vconsole, plymouth, libvirt network,
-  faillock
-- `ufw.conf` plus `ufw/user.rules` + `user6.rules` (the allow rules, otherwise a
-  fresh machine enables UFW default-deny with nothing open — including SSH)
-
-**Not** captured, on purpose:
-
-| Thing | Why |
+| Piece | What it does |
 |---|---|
-| `/etc/fstab`, `/etc/locale.gen`, `/etc/passwd`, `/etc/shadow` | generated / machine-specific |
-| `/etc/default/limine`, `/etc/kernel/cmdline` | contains the machine's `root=UUID=`; extra flags go in the device profile's `limine-entry-tool.d` drop-in |
-| `/etc/NetworkManager/system-connections` | contains WiFi/VPN secrets |
-| `.ssh`, `.gnupg`, `.git-credentials`, `*.token` | secrets — keep out of git |
-| `.config/opencode/service.json` | contains a token/password |
-| `fish_variables` | runtime universal vars, churns, can contain secrets |
-| `systemd/*.wants/` | generated by `systemctl enable`; recreated from `units/` |
-| browser/app state, caches, `node_modules` | not configuration |
+| **Neovim** | Clones [neovim-setup](https://github.com/C010UR/neovim-setup) into `~/.config/nvim`. It stays a separate repo; bootstrap only clones or fast-forwards it, and never touches a dirty checkout. |
+| **ASUS Zenbook S16** | `asusctl`, the touchpad daemon, power-button stack, and limine + snapper. Offered only when the hardware matches. |
+| **Flatpaks** | Flatseal, OrcaSlicer and LibreOffice. |
+| **System files** | Copies `system/` into `/etc` and enables the units in `units/`. Skippable if you only want the desktop config. |
 
-## Disk layout (manual)
-
-This machine: btrfs with subvolumes `@`, `@home`, `@root`, `@srv`, `@cache`,
-`@tmp`, `@log`, plus `/swapfile`. UUIDs are per-machine, so `fstab` and the
-kernel cmdline need reviewing on a reinstall.
-
-The base layer is bootloader-agnostic; this machine's limine + snapper setup
-lives in `devices/asus-zenbook-s16/`, so other machines (and VMs) get no
-bootloader-specific packages or hooks from `bootstrap.sh`.
-
-## Migrating from the old `~/.config` repo
-
-The previous setup was `~/.config` itself as a git repo with a whitelist
-`.gitignore`. It is left untouched; the new source of truth is `~/dotfiles`.
-Once you are happy with `chezmoi diff`, you can archive the old one:
+## Everyday use
 
 ```bash
-cd ~/.config && git remote -v        # still points at the old remote
-# optional: keep history somewhere else, then
-# git remote remove origin
+chezmoi add ~/.config/something   # start tracking a file
+chezmoi edit ~/.config/hypr/...   # edit the source
+chezmoi diff && chezmoi apply     # preview and apply
+./scripts/export-packages.py      # refresh the package lists
 ```
 
-Note that the old repo could not see `$HOME`-level files (`~/.gitconfig`,
-`~/.tmux.conf`, `~/.local/bin`, …) or most of `~/.config`; those are only in the
-new repo.
+The package lists only contain explicit packages — dependencies come in on their
+own. `packages/excluded.txt` records the libraries that were deliberately left
+out.
 
-## Troubleshooting
+## Not in git
 
-**`signature ... is unknown trust` / `corrupted (invalid or corrupted package (PGP signature))`**
+Wi-Fi and VPN credentials, SSH/GPG keys, tokens, browser profiles and
+`fish_variables` stay out of the repo on purpose. The manual steps are printed
+when bootstrap finishes.
 
-This is a stale keyring on the install media, not real corruption. `bootstrap.sh`
-now runs `pacman-key --init`, populates `archlinux` + `cachyos`, and updates the
-keyring packages before any upgrade. If it still happens on an existing box:
+## Notes
 
-```bash
-sudo pacman-key --init
-sudo pacman-key --populate archlinux cachyos
-sudo pacman-key --refresh-keys
-sudo pacman -Syu
-```
-
-Answer `Y` to delete the "corrupted" cached packages; they will be re-downloaded.
-
-**`bootstrap.sh` refuses to run**
-
-It aborts inside the live ISO (`/run/archiso`). Install to disk, reboot into the
-installed system, then run it there — the live session is ephemeral.
-
-## Device profiles
-
-Hardware-specific packages and config live in `devices/<name>/` and are applied
-only when the machine's DMI matches, so the repo is safe on other laptops and in
-VMs (nothing ASUS-specific is touched there).
-
-```
-devices/asus-zenbook-s16/
-├── match          # lowercased globs against "$sys_vendor $product_name $board_name"
-├── packages.txt   # repo packages only on this model (asusctl, limine, snapper, …)
-├── local.txt      # makepkg packages (asus-ptp, asus-control)
-├── repo           # git URL to clone for the local build
-├── dir            # checkout location (~/Projects/asus)
-├── units.txt      # units to enable (asus-ptpd, powerbtn, snapper timers, limine)
-└── system/        # /etc files copied only on match
-    ├── hostname
-    ├── asusd/, asus-ptp/
-    ├── limine-*/  (kernel cmdline drop-in, snapshot sync)
-    ├── systemd/system/powerbtn.service + logind drop-in
-    ├── polkit/rules.d/50-allow-shutdown.rules
-    └── usr/local/sbin/ (graceful-shutdown, powerbtn-watch.py)
-```
-
-Bootloader (limine), snapshotting (snapper), ASUS drivers and the custom
-power-button stack all live here — none of it is safe to apply on a machine that
-doesn't match.
-
-Every non-comment line in `match` must match the DMI string; e.g. for this
-laptop: `*asus*` and `*um5606wa*`. No match → the whole profile is skipped.
-
-Add a machine by creating `devices/<name>/` with at least a `match` file.
-
-## Roadmap: Nix
-
-`home/` is shaped so Home Manager can take over incrementally on any distro:
-
-1. install Nix (determinate installer) + enable `nix-command flakes`
-2. add a `home-manager` flake next to this repo
-3. port `packages/native.txt` → `home.packages`, then config files one by one
-4. `system/` and `/etc` stay imperative until a move to NixOS
-
-Standalone Home Manager needs `targets.genericLinux.enable = true` on non-NixOS.
+- Written for CachyOS (Arch-based); the base manifests use its repos.
+- The base setup is bootloader-agnostic. limine + snapper live in the ASUS device
+  profile, so a VM or another laptop gets a clean install.
+- `home/` maps one-to-one to `$HOME`, so it can move to Home Manager later
+  without changing the layout.
