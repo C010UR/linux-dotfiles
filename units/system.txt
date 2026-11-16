@@ -1,7 +1,6 @@
 # systemd units enabled on the source machine.
 # Applied with: systemctl enable <unit>
 ananicy-cpp.service
-asus-ptpd.service
 avahi-daemon.service
 avahi-daemon.socket
 bluetooth.service

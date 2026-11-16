@@ -9,7 +9,6 @@ ansible-core
 archlinux-xdg-menu
 ark
 ast-grep
-asusctl
 atuin
 aws-cli-v2
 bacon

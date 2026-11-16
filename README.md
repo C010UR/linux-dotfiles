@@ -69,15 +69,15 @@ grep -vE '^\s*(#|$)' packages/aur.txt    | paru -S --needed -
 
 ### Local packages
 
-`packages/local.txt` lists packages built with `makepkg` from a source checkout
-because they are not in any repo — currently `asus-ptp` (DKMS touchpad driver)
-and `asus-control` (daemon/panel) from
-`https://github.com/C010UR/asus-control.git`.
+Packages that are not in any repo are built with `makepkg` from a source
+checkout, and listed in the device profile that needs them
+(`devices/asus-zenbook-s16/local.txt` for the ASUS driver/daemon). The profile's
+`repo`/`dir` files say where to clone and build; `LOCAL_REPO` and `LOCAL_DIR`
+override them.
 
-`bootstrap.sh` clones the repo to `~/Projects/asus` (override with `LOCAL_DIR`
-and `LOCAL_REPO`), then runs `makepkg -si` for each directory in the listed
-order. Build deps come from the PKGBUILDs (`dkms`, `clang`, `lld`, `llvm`,
-`sparse`, `cargo`, `pkgconf`).
+The ASUS packages (`asus-ptp`, `asus-control`) are only built when DMI matches
+this laptop — see **Device profiles** below. Build deps come from the PKGBUILDs
+(`dkms`, `clang`, `lld`, `llvm`, `sparse`, `cargo`, `pkgconf`).
 
 ## System files
 
@@ -152,6 +152,28 @@ Answer `Y` to delete the "corrupted" cached packages; they will be re-downloaded
 
 It aborts inside the live ISO (`/run/archiso`). Install to disk, reboot into the
 installed system, then run it there — the live session is ephemeral.
+
+## Device profiles
+
+Hardware-specific packages and config live in `devices/<name>/` and are applied
+only when the machine's DMI matches, so the repo is safe on other laptops and in
+VMs (nothing ASUS-specific is touched there).
+
+```
+devices/asus-zenbook-s16/
+├── match          # lowercased globs against "$sys_vendor $product_name $board_name"
+├── packages.txt   # repo packages only on this model (asusctl)
+├── local.txt      # makepkg packages (asus-ptp, asus-control)
+├── repo           # git URL to clone for the local build
+├── dir            # checkout location (~/Projects/asus)
+├── units.txt      # units to enable (asus-ptpd.service)
+└── system/        # /etc files copied only on match (asusd.ron, asus-ptp/config.toml)
+```
+
+Every non-comment line in `match` must match the DMI string; e.g. for this
+laptop: `*asus*` and `*um5606wa*`. No match → the whole profile is skipped.
+
+Add a machine by creating `devices/<name>/` with at least a `match` file.
 
 ## Roadmap: Nix
 

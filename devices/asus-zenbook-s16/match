@@ -1,0 +1,4 @@
+# DMI globs, lowercased. Every line must match the combined
+# "$sys_vendor $product_name $board_name" string.
+*asus*
+*um5606wa*

@@ -29,6 +29,28 @@ run_stdin() { if (( DRY_RUN )); then cat >/dev/null; printf '   [dry] %s\n' "$*"
 sudorun() { if (( DRY_RUN )); then printf '   [dry] sudo %s\n' "$*"; else sudo "$@"; fi; }
 pkgs() { grep -vE '^[[:space:]]*(#|$)' "$1"; }
 
+# --------------------------------------------------------------- device DMI
+dmi_string() {
+  printf '%s %s %s' \
+    "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)" \
+    "$(cat /sys/class/dmi/id/product_name 2>/dev/null)" \
+    "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" | tr '[:upper:]' '[:lower:]'
+}
+
+# A profile matches when *every* glob line in its match file matches the
+# lowercased DMI string. No match file, no match.
+profile_matches() {
+  local profile=$1 dmi pat seen=0
+  dmi="$(dmi_string)"
+  while IFS= read -r pat; do
+    [[ -z "$pat" ]] && continue
+    pat="${pat,,}"
+    [[ "$dmi" == $pat ]] || return 1
+    seen=1
+  done < <(pkgs "$profile/match")
+  (( seen ))
+}
+
 command -v pacman >/dev/null || { echo "not an Arch-based system" >&2; exit 1; }
 (( EUID == 0 )) && { echo "run as your user, not root" >&2; exit 1; }
 
@@ -85,30 +107,17 @@ if [[ -s "$REPO/packages/flatpak.txt" ]]; then
   done < <(pkgs "$REPO/packages/flatpak.txt")
 fi
 
-# ----------------------------------------------------------- local packages
-# Packages built from source (makepkg), e.g. this laptop's asus driver/daemon.
-LOCAL_DIR="${LOCAL_DIR:-$HOME/Projects/asus}"
-LOCAL_REPO="${LOCAL_REPO:-https://github.com/C010UR/asus-control.git}"
-if [[ -s "$REPO/packages/local.txt" ]]; then
-  say "Building local packages from $LOCAL_DIR"
-  if [[ ! -d "$LOCAL_DIR" ]]; then
-    run git clone "$LOCAL_REPO" "$LOCAL_DIR"
-  elif [[ ! -d "$LOCAL_DIR/.git" ]]; then
-    warn "$LOCAL_DIR exists but is not a git checkout — using it as-is"
-  fi
-  while read -r p; do
-    [[ -z "$p" ]] && continue
-    if [[ -d "$LOCAL_DIR/$p" ]]; then
-      if (( DRY_RUN )); then
-        printf '   [dry] (cd %s/%s && makepkg -si --noconfirm --needed)\n' "$LOCAL_DIR" "$p"
-      else
-        ( cd "$LOCAL_DIR/$p" && makepkg -si --noconfirm --needed ) \
-          || warn "build failed: $p (check makedepends)"
-      fi
-    else
-      warn "local package dir missing: $LOCAL_DIR/$p"
-    fi
-  done < <(pkgs "$REPO/packages/local.txt")
+# ------------------------------------------------------------ device match
+matched_profiles=()
+for profile in "$REPO"/devices/*/; do
+  [[ -f "$profile/match" ]] || continue
+  profile="${profile%/}"
+  profile_matches "$profile" && matched_profiles+=("$profile")
+done
+if (( ${#matched_profiles[@]} )); then
+  say "Device profile: $(for p in "${matched_profiles[@]}"; do basename "$p"; done | paste -sd, -)"
+else
+  say "No device profile matches [$dmi_string] — hardware-specific parts skipped"
 fi
 
 # ------------------------------------------------------------ system files
@@ -131,6 +140,63 @@ say "Enabling user units"
 while read -r u; do
   run systemctl --user enable "$u" 2>/dev/null || warn "could not enable user unit $u"
 done < <(pkgs "$REPO/units/user.txt")
+
+# -------------------------------------------------------- device profiles
+for profile in "${matched_profiles[@]}"; do
+  name="$(basename "$profile")"
+  say "Applying device profile: $name"
+
+  if [[ -s "$profile/packages.txt" ]]; then
+    pkgs "$profile/packages.txt" | run_stdin sudo pacman -S --needed --noconfirm -
+  fi
+
+  if [[ -s "$profile/local.txt" ]]; then
+    ldir="$(cat "$profile/dir" 2>/dev/null || true)"
+    ldir="${ldir/#\~/$HOME}"
+    ldir="${LOCAL_DIR:-${ldir:-$HOME/Projects/$name}}"
+    lrepo="$(cat "$profile/repo" 2>/dev/null || true)"
+    lrepo="${LOCAL_REPO:-$lrepo}"
+
+    if (( DRY_RUN )); then
+      while read -r p; do
+        [[ -z "$p" ]] && continue
+        printf '   [dry] (cd %s/%s && makepkg -si --noconfirm --needed)\n' "$ldir" "$p"
+      done < <(pkgs "$profile/local.txt")
+    else
+      say "  building local packages from $ldir"
+      if [[ ! -d "$ldir" ]]; then
+        if [[ -n "$lrepo" ]]; then
+          run git clone "$lrepo" "$ldir"
+        else
+          warn "no repo configured for $name; cannot fetch $ldir"
+        fi
+      elif [[ ! -d "$ldir/.git" ]]; then
+        warn "$ldir exists but is not a git checkout — using it as-is"
+      fi
+      while read -r p; do
+        [[ -z "$p" ]] && continue
+        if [[ -d "$ldir/$p" ]]; then
+          ( cd "$ldir/$p" && makepkg -si --noconfirm --needed ) \
+            || warn "build failed: $p (check makedepends)"
+        else
+          warn "local package dir missing: $ldir/$p"
+        fi
+      done < <(pkgs "$profile/local.txt")
+    fi
+  fi
+
+  if [[ -d "$profile/system" ]]; then
+    sudorun cp -a "$profile/system/." /
+    sudorun systemctl daemon-reload
+  fi
+
+  if [[ -s "$profile/units.txt" ]]; then
+    while read -r u; do
+      [[ "$u" == *@* ]] && continue
+      sudorun systemctl enable "$u" 2>/dev/null || warn "could not enable $u"
+    done < <(pkgs "$profile/units.txt")
+  fi
+done
 
 # initramfs + bootloader only matter if those files changed
 if (( ! DRY_RUN )); then

@@ -1,6 +1,0 @@
-# Local packages built from source with makepkg — not in any repo.
-# Source repo: https://github.com/C010UR/asus-control.git  (override: LOCAL_REPO)
-# Checkout:    ~/Projects/asus                            (override: LOCAL_DIR)
-# Order matters: the DKMS driver (asus-ptp) before the daemon/panel (asus-control).
-asus-ptp
-asus-control

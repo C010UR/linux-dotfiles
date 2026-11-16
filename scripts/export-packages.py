@@ -88,9 +88,8 @@ def allowlisted(pkg):
     return any(fnmatch.fnmatch(pkg, pat) for pat in KEEP)
 
 
-def read_local():
-    """Packages listed in packages/local.txt (built from source, not in a repo)."""
-    path = f"{REPO}/packages/local.txt"
+def read_list(path):
+    """One package name per line, '#' comments allowed."""
     if not os.path.exists(path):
         return []
     with open(path) as f:
@@ -98,10 +97,26 @@ def read_local():
                 if line.strip() and not line.lstrip().startswith("#")]
 
 
+def device_packages():
+    """Package names owned by device profiles (packages.txt + local.txt)."""
+    owned = {}
+    root = f"{REPO}/devices"
+    if os.path.isdir(root):
+        for name in sorted(os.listdir(root)):
+            d = os.path.join(root, name)
+            if os.path.isdir(d):
+                owned[name] = (set(read_list(f"{d}/packages.txt"))
+                               | set(read_list(f"{d}/local.txt")))
+    return owned
+
+
 def main():
-    native = sorted(out("pacman", "-Qqen").split())
-    local = read_local()
-    foreign = [p for p in sorted(out("pacman", "-Qqem").split()) if p not in local]
+    device_pkgs = set().union(*device_packages().values()) if device_packages() else set()
+    local = read_list(f"{REPO}/packages/local.txt")
+    native = [p for p in sorted(out("pacman", "-Qqen").split())
+              if p not in device_pkgs]
+    foreign = [p for p in sorted(out("pacman", "-Qqem").split())
+               if p not in local and p not in device_pkgs]
     flatpak = sorted(
         line for line in
         out("flatpak", "list", "--app", "--columns=application").splitlines()
@@ -135,10 +150,7 @@ def main():
     write("aur.txt", "# AUR / foreign explicit packages (install with paru/yay)\n", foreign)
     if local:
         write("local.txt",
-              "# Local packages built from source with makepkg — not in any repo.\n"
-              "# Source repo: https://github.com/C010UR/asus-control.git  (override: LOCAL_REPO)\n"
-              "# Checkout:    ~/Projects/asus                            (override: LOCAL_DIR)\n"
-              "# Order matters: the DKMS driver (asus-ptp) before the daemon/panel (asus-control).\n",
+              "# Local packages built from source with makepkg — not in any repo.\n",
               local)
     write("flatpak.txt", "# Flatpaks\n", flatpak)
     write("excluded.txt",

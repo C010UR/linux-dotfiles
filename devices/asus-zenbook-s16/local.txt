@@ -1,0 +1,4 @@
+# Built from source with makepkg — not in any repo.
+# Order: DKMS touchpad driver before the daemon/panel.
+asus-ptp
+asus-control
