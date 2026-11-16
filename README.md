@@ -13,7 +13,7 @@ Layout is intentionally Nix-friendly: everything under `home/` corresponds to
 .
 ├── .chezmoiroot        # "home" -> chezmoi source root is home/
 ├── home/               # chezmoi source state (maps to $HOME)
-├── system/             # absolute-path mirror of /etc and /usr/local/sbin
+├── system/             # absolute-path mirror of /etc
 ├── packages/           # native / AUR / flatpak manifests
 ├── units/              # systemd units to enable
 ├── scripts/            # export-packages.py (regenerates manifests)
@@ -63,9 +63,15 @@ codecs, fonts and metapackages, and drops the rest.
 Install:
 
 ```bash
-grep -vE '^\s*(#|$)' packages/native.txt | sudo pacman -S --needed -
-grep -vE '^\s*(#|$)' packages/aur.txt    | paru -S --needed -
+mapfile -t native < <(grep -vE '^\s*(#|$)' packages/native.txt)
+mapfile -t aur    < <(grep -vE '^\s*(#|$)' packages/aur.txt)
+sudo pacman -S --needed "${native[@]}"
+paru -S --needed "${aur[@]}"
 ```
+
+Pass package names as arguments rather than piping them into pacman/paru: without
+a tty pacman fails with `failed to reopen stdin` and paru can then resolve the
+wrong transaction.
 
 ### Local packages
 
@@ -81,9 +87,10 @@ this laptop — see **Device profiles** below. Build deps come from the PKGBUILD
 
 ## System files
 
-`system/` mirrors the absolute path (`system/etc/greetd/config.toml` →
-`/etc/greetd/config.toml`, `system/usr/local/sbin/...`). `bootstrap.sh` copies it
-with `cp -a system/. /` and enables the units in `units/`.
+`system/` is an absolute-path mirror of `/etc`
+(`system/etc/greetd/config.toml` → `/etc/greetd/config.toml`). `bootstrap.sh`
+copies it with `cp -a system/. /` and enables the units in `units/`. Anything
+under `/usr/local/sbin` is machine-specific and lives in a device profile.
 
 Captured on purpose:
 
@@ -99,7 +106,7 @@ Captured on purpose:
 | Thing | Why |
 |---|---|
 | `/etc/fstab`, `/etc/locale.gen`, `/etc/passwd`, `/etc/shadow` | generated / machine-specific |
-| `/etc/default/limine`, `/etc/kernel/cmdline` | contains the machine's `root=UUID=`; managed via the `limine-entry-tool.d` drop-in for extra flags only |
+| `/etc/default/limine`, `/etc/kernel/cmdline` | contains the machine's `root=UUID=`; extra flags go in the device profile's `limine-entry-tool.d` drop-in |
 | `/etc/NetworkManager/system-connections` | contains WiFi/VPN secrets |
 | `.ssh`, `.gnupg`, `.git-credentials`, `*.token` | secrets — keep out of git |
 | `.config/opencode/service.json` | contains a token/password |
@@ -110,9 +117,12 @@ Captured on purpose:
 ## Disk layout (manual)
 
 This machine: btrfs with subvolumes `@`, `@home`, `@root`, `@srv`, `@cache`,
-`@tmp`, `@log`, plus `/swapfile`; systemd-boot/limine with snapper +
-`limine-snapper-sync`. UUIDs are per-machine, so `fstab` and the kernel cmdline
-in `system/etc/default/limine` need reviewing on a reinstall.
+`@tmp`, `@log`, plus `/swapfile`. UUIDs are per-machine, so `fstab` and the
+kernel cmdline need reviewing on a reinstall.
+
+The base layer is bootloader-agnostic; this machine's limine + snapper setup
+lives in `devices/asus-zenbook-s16/`, so other machines (and VMs) get no
+bootloader-specific packages or hooks from `bootstrap.sh`.
 
 ## Migrating from the old `~/.config` repo
 

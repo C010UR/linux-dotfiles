@@ -97,7 +97,7 @@ if [[ -s "$REPO/packages/aur.txt" ]]; then
   elif command -v yay >/dev/null; then AUR=yay
   else
     warn "no AUR helper (paru/yay) found — skipping AUR packages"
-    warn "install one, then: <helper> -S --needed - < packages/aur.txt"
+    warn "install one, then: grep -vE '^[[:space:]]*(#|\$)' packages/aur.txt | xargs <helper> -S --needed"
     AUR=""
   fi
   if [[ -n "$AUR" ]]; then
@@ -129,7 +129,7 @@ else
 fi
 
 # ------------------------------------------------------------ system files
-say "System config (/etc, /usr/local/sbin) from system/"
+say "System config (/etc) from system/"
 if (( ! DRY_RUN && ! ASSUME_YES )); then
   echo "About to copy the tree in $REPO/system/ over / ."
   read -rp "Continue? [y/N] " ans
