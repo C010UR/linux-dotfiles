@@ -225,6 +225,12 @@ fi
 
 # ------------------------------------------------------------------ dotfiles
 say "Applying dotfiles (chezmoi)"
+# Make plain `chezmoi` work afterwards, not just the --source invocation below.
+if (( ! DRY_RUN )) && [[ ! -f "$HOME/.config/chezmoi/chezmoi.toml" ]]; then
+  install -d "$HOME/.config/chezmoi"
+  printf 'sourceDir = "%s"\n\n[git]\n    autoCommit = false\n' "$REPO" \
+    > "$HOME/.config/chezmoi/chezmoi.toml"
+fi
 run chezmoi --source "$REPO" apply --verbose
 
 say "Done."
