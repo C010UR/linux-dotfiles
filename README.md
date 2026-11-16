@@ -59,16 +59,8 @@ The package lists only contain explicit packages — dependencies come in on the
 own. `packages/excluded.txt` records the libraries that were deliberately left
 out.
 
-## Not in git
-
-Wi-Fi and VPN credentials, SSH/GPG keys, tokens, browser profiles and
-`fish_variables` stay out of the repo on purpose. The manual steps are printed
-when bootstrap finishes.
-
 ## Notes
 
 - Written for CachyOS (Arch-based); the base manifests use its repos.
 - The base setup is bootloader-agnostic. limine + snapper live in the ASUS device
   profile, so a VM or another laptop gets a clean install.
-- `home/` maps one-to-one to `$HOME`, so it can move to Home Manager later
-  without changing the layout.

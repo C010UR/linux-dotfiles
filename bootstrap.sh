@@ -390,6 +390,4 @@ Next steps for a manual pass (cannot be automated safely):
   * git identity / GPG key: check ~/.gitconfig and `gpg --list-secret-keys`
   * disk layout + fstab: see README (btrfs subvolumes, UUIDs are per-machine)
   * WiFi/VPN credentials: NetworkManager, Mullvad, Tailscale/Twingate, Zerotier
-  * browser/app profiles and logins are intentionally not managed
-  * Neovim lives in its own repo (~/.config/nvim), cloned or fast-forwarded above
 EOF
