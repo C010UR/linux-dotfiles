@@ -125,7 +125,7 @@ done
 if (( ${#matched_profiles[@]} )); then
   say "Device profile: $(for p in "${matched_profiles[@]}"; do basename "$p"; done | paste -sd, -)"
 else
-  say "No device profile matches [$dmi_string] — hardware-specific parts skipped"
+  say "No device profile matches [$(dmi_string)] — hardware-specific parts skipped"
 fi
 
 # ------------------------------------------------------------ system files
