@@ -1,0 +1,33 @@
+[user]
+    name = Mikhail Buinouski
+    email = buinouskiymikhail@gmail.com
+    signingkey = A0CFB5DBA290F833
+
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://code.richbrains.net"]
+    helper = store
+    cacheOptions = --timeout 300
+    credentialStore = plaintext
+
+[pull]
+    rebase = true
+
+[core]
+    autocrlf = input
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = openpgp
+
+[includeIf "gitdir:~/Job/"]
+    path = ~/.gitconfig-work
+[push]
+	autoSetupRemote = true
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

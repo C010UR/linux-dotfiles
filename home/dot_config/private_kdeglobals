@@ -1,0 +1,163 @@
+[KFileDialog Settings]
+Allow Expansion=false
+Automatically select filename extension=true
+Breadcrumb Navigation=false
+Decoration position=2
+Show Full Path=false
+Show Inline Previews=true
+Show Preview=false
+Show Speedbar=true
+Show hidden files=false
+Sort by=Name
+Sort directories first=true
+Sort hidden files last=false
+Sort reversed=false
+Speedbar Width=183
+View Style=DetailTree
+
+[KDE]
+contrast=4
+
+[General]
+ColorScheme=noctalia
+Name=noctalia
+
+[ColorEffects:Disabled]
+Color=13,14,15
+ColorAmount=0
+ColorEffect=0
+ContrastAmount=0.65
+ContrastEffect=1
+IntensityAmount=0.1
+IntensityEffect=2
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=66,72,74
+ColorAmount=0.025
+ColorEffect=2
+ContrastAmount=0.1
+ContrastEffect=2
+Enable=false
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=26,28,28
+BackgroundNormal=41,42,43
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:Complementary]
+BackgroundAlternate=26,28,28
+BackgroundNormal=18,20,20
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=138,166,176
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:Header]
+BackgroundAlternate=18,20,20
+BackgroundNormal=30,32,32
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:Header][Inactive]
+BackgroundAlternate=30,32,32
+BackgroundNormal=18,20,20
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:Selection]
+BackgroundAlternate=26,28,28
+BackgroundNormal=175,203,213
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=25,52,60
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=147,0,10
+ForegroundNeutral=63,52,74
+ForegroundNormal=25,52,60
+ForegroundPositive=63,52,74
+ForegroundVisited=172,183,187
+
+[Colors:Tooltip]
+BackgroundAlternate=18,20,20
+BackgroundNormal=30,32,32
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:View]
+BackgroundAlternate=30,32,32
+BackgroundNormal=18,20,20
+DecorationFocus=138,166,176
+DecorationHover=25,52,60
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[Colors:Window]
+BackgroundAlternate=33,60,68
+BackgroundNormal=30,32,32
+DecorationFocus=175,203,213
+DecorationHover=175,203,213
+ForegroundActive=175,203,213
+ForegroundInactive=194,199,202
+ForegroundLink=190,200,204
+ForegroundNegative=255,180,171
+ForegroundNeutral=209,193,221
+ForegroundNormal=227,226,226
+ForegroundPositive=209,193,221
+ForegroundVisited=172,183,187
+
+[WM]
+activeBackground=33,60,68
+activeBlend=138,166,176
+activeForeground=138,166,176
+inactiveBackground=18,20,20
+inactiveBlend=194,199,202
+inactiveForeground=194,199,202

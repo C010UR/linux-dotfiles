@@ -1,0 +1,16 @@
+# Not installed explicitly. Libraries pulled in by parents, leftovers,
+# and build-time-only packages. Regenerate with scripts/export-packages.py
+accountsservice              # pulled in by plasma-workspace
+alsa-plugins                 # pulled in by cachyos-gaming-meta
+bluez                        # pulled in by blueman
+bluez-libs                   # pulled in by blueman / pipewire
+libdbusmenu-glib             # pulled in by libappindicator
+libgsf                       # leftover, nothing requires it
+libwnck3                     # leftover, nothing requires it
+networkmanager-openvpn       # pulled in by proton-vpn
+python-defusedxml            # pulled in by freecad / glances
+python-packaging             # pulled in by many
+volk                         # build-time library
+vulkan-headers               # build-time library
+vulkan-utility-libraries     # build-time library
+vulkan-validation-layers     # development only

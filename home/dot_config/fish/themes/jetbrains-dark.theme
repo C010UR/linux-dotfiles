@@ -1,0 +1,21 @@
+# JetBrains PhpStorm "Dark" (New UI) — colors sourced from nickkadutskyi/jb.nvim
+fish_color_normal BCBEC4
+fish_color_command 56A8F5
+fish_color_keyword CF8E6D
+fish_color_quote 6AAB73
+fish_color_redirection CF8E6D
+fish_color_end BCBEC4
+fish_color_error F75464
+fish_color_param BCBEC4
+fish_color_comment 7A7E85
+fish_color_operator CF8E6D
+fish_color_escape CF8E6D
+fish_color_autosuggestion 6F737A
+fish_color_selection --background=214283
+fish_color_search_match --background=114957
+fish_color_cancel F0524F
+fish_pager_color_progress 7A7E85
+fish_pager_color_prefix CF8E6D
+fish_pager_color_completion BCBEC4
+fish_pager_color_description 7A7E85
+fish_pager_color_selected_background --background=214283

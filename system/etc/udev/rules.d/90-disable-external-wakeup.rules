@@ -1,0 +1,2 @@
+# Compx 2.4G Wireless Receiver — external mouse, should not wake from suspend
+ACTION=="add|change", SUBSYSTEM=="usb", ATTRS{idVendor}=="3554", ATTRS{idProduct}=="f524", ATTR{power/wakeup}="disabled"

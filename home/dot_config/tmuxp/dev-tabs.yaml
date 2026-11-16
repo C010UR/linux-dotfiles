@@ -1,0 +1,33 @@
+session_name: dev-tabs
+windows:
+  - window_name: sms-nvim
+    start_directory: ~/job/sms
+    panes:
+      - nvim .
+
+  - window_name: sms-oc
+    start_directory: ~/job/sms
+    panes:
+      - opencode
+
+  - window_name: sms
+    start_directory: ~/job/sms
+
+  - window_name: sp-nvim
+    start_directory: ~/job/student-portal
+    panes:
+      - nvim .
+
+  - window_name: sp-oc
+    start_directory: ~/job/student-portal
+    panes:
+      - opencode
+
+  - window_name: student-portal
+    start_directory: ~/job/student-portal
+
+  - window_name: empty-1
+    start_directory: "$HOME"
+
+  - window_name: empty-2
+    start_directory: "$HOME"

@@ -1,0 +1,31 @@
+# systemd units enabled on the source machine.
+# Applied with: systemctl enable <unit>
+ananicy-cpp.service
+asus-ptpd.service
+avahi-daemon.service
+avahi-daemon.socket
+bluetooth.service
+cachyos-rate-mirrors.timer
+docker.service
+fstrim.timer
+getty@.service
+greetd.service
+limine-snapper-sync.service
+mullvad-daemon.service
+mullvad-early-boot-blocking.service
+NetworkManager-dispatcher.service
+NetworkManager.service
+NetworkManager-wait-online.service
+powerbtn.service
+power-profiles-daemon.service
+proton.VPN.service
+snapper-cleanup.timer
+snapper-timeline.timer
+systemd-resolved-monitor.socket
+systemd-resolved.service
+systemd-resolved-varlink.socket
+systemd-timesyncd.service
+systemd-userdbd.socket
+twingate.service
+ufw.service
+zerotier-one.service

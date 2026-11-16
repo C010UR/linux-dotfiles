@@ -1,0 +1,35 @@
+# Orng
+
+# Default text and UI
+fish_color_normal eeeeee
+fish_color_param eeeeee
+fish_color_comment 808080
+fish_color_autosuggestion 808080
+
+# Syntax highlighting
+fish_color_command EE7948
+fish_color_keyword EC5B2B
+fish_color_quote 6ba1e6
+fish_color_redirection 56b6c2
+fish_color_end 56b6c2
+fish_color_error e06c75
+fish_color_operator 56b6c2
+fish_color_escape e5c07b
+
+# Backgrounds for selections and search
+fish_color_selection --background=282828
+fish_color_search_match --background=323232
+
+# Prompt Colors (if your prompt relies on default fish variables)
+fish_color_cwd 56b6c2
+fish_color_cwd_root e06c75
+fish_color_user e5c07b
+fish_color_host 6ba1e6
+fish_color_cancel e06c75
+
+# Pager Colors (Auto-completion menu)
+fish_pager_color_progress 808080
+fish_pager_color_prefix 56b6c2
+fish_pager_color_completion eeeeee
+fish_pager_color_description 808080
+fish_pager_color_selected_background --background=282828

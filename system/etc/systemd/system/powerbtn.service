@@ -1,0 +1,11 @@
+[Unit]
+Description=Power button 3s hold watcher
+After=systemd-logind.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/powerbtn-watch.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

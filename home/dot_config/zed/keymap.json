@@ -1,0 +1,115 @@
+// Zed keymap — mirrors the Neovim keybinds in ~/.config/nvim
+//
+// Vim mode is enabled in settings.json, so native vim motions, gd/gr/gy/gI,
+// K (hover), ctrl-w split commands and normal editing already work.
+// This file adds the custom keybinds from config/keymaps.lua and the
+// LazyVim-style leader keymaps, mapped to Zed's built-in actions.
+//
+// Not reproducible in Zed (no equivalent feature):
+//   - Flash jump (\, |), DAP debugging (<leader>d*), Trouble/quickfix ([q / ]q),
+//     Snacks profiler/scratch/sessions (<leader>dps, <leader>., <leader>q*),
+//     diagnostics filtered by severity (]e / [e / ]w / [w),
+//     inline AI actions (<leader>9*).
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      // ctrl-h/j/k/l — window (pane) navigation
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      // <C-s> — Save File (normal & insert)
+      "ctrl-s": "workspace::Save",
+      // <c-/> — Focus/Toggle Terminal (root dir)
+      "ctrl-/": "terminal_panel::Toggle",
+      "ctrl-_": "terminal_panel::Toggle"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && !menu",
+    "bindings": {
+      // <S-h> / <S-l> — prev / next buffer (tab)
+      "H": "pane::ActivatePrevItem",
+      "L": "pane::ActivateNextItem",
+      // [b / ]b — prev / next buffer
+      "[ b": "pane::ActivatePrevItem",
+      "] b": "pane::ActivateNextItem",
+      // <A-j> / <A-k> — move line down / up
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+      // ]d / [d — next / prev diagnostic; ]h / [h — next / prev git hunk
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPrevDiagnostic",
+      "] h": "editor::GoToHunk",
+      "[ h": "editor::GoToPrevHunk",
+      // gco / gcc — comment line (gcc; gco has no Zed equivalent)
+      "g c c": "editor::ToggleComments",
+      // <leader><space> — Find Files (root dir)
+      "space space": "file_finder::Toggle",
+      // <leader>/ — Grep (project)
+      "space /": "pane::DeploySearch",
+      // <leader>R — Replace in Files (project)
+      "space shift-r": ["pane::DeploySearch", { "replace_enabled": true }],
+      // <leader>: / <leader>a — Command History / Commands & Actions
+      "space :": "command_palette::Toggle",
+      "space a": "command_palette::Toggle",
+      // <leader>e / <leader>E — Toggle / Focus Explorer (project panel)
+      "space e": "project_panel::ToggleFocus",
+      // <leader>E (Focus Explorer) — Zed has no separate focus action
+      "space shift-e": "project_panel::ToggleFocus",
+      // <leader>xx — Find Diagnostics
+      "space x x": "diagnostics::Deploy",
+      // <leader>ca / <leader>cr / <leader>cf — Code Actions / Rename / Format
+      "space c a": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "space c f": "editor::Format",
+      // <leader>bd / <leader>bo — Close Buffer / Close Other Buffers
+      "space b d": "pane::CloseActiveItem",
+      "space b o": "pane::CloseInactiveItems",
+      // <leader>bb (Reload Buffer from Disk) — no Zed equivalent; Zed
+      // auto-reloads buffers that have no unsaved changes
+      // <leader>bc — Copy Buffer (relative) Path
+      "space b c": "workspace::CopyRelativePath",
+      // <leader>t / <leader>T — Terminal (root dir / cwd)
+      "space t": "terminal_panel::Toggle",
+      "space shift-t": "terminal_panel::Toggle",
+      // <leader>gs — Find Git Status (Zed git panel)
+      "space g s": "git_panel::Toggle",
+      // <leader>qq — Quit (close window)
+      "space q q": "workspace::CloseWindow",
+      // <leader><tab> — tab management
+      "space tab tab": "workspace::NewFile",
+      "space tab ]": "pane::ActivateNextItem",
+      "space tab [": "pane::ActivatePrevItem",
+      "space tab d": "pane::CloseActiveItem",
+      "space tab f": ["pane::ActivateItem", 0],
+      "space tab l": "pane::ActivateLastItem"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == visual && !menu",
+    "bindings": {
+      // <A-j> / <A-k> — move selection down / up
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+      // gc — toggle comments on selection (like LazyVim's gc)
+      "g c": "editor::ToggleComments",
+      // <leader>ca — Code Actions (visual)
+      "space c a": "editor::ToggleCodeActions",
+      // <leader>cf — Format selection/buffer
+      "space c f": "editor::Format",
+      // <leader>/ — project grep (Zed's DeploySearch can't prefill
+      // the selection; use the search bar's "search selection" support)
+      "space /": "pane::DeploySearch"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      // <A-j> / <A-k> — move line down / up while inserting
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp"
+    }
+  }
+]

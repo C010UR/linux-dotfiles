@@ -1,0 +1,4 @@
+# Flatpaks
+com.github.tchx84.Flatseal
+com.orcaslicer.OrcaSlicer
+org.libreoffice.LibreOffice

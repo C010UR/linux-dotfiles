@@ -1,0 +1,10 @@
+[Unit]
+Description=Restore Hyprland touchpad and auto-brightness state after sleep
+After=sleep.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hyprctl eval 'require("hyprland.vars").apply_persisted_state()'
+
+[Install]
+WantedBy=sleep.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target

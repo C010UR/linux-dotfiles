@@ -1,0 +1,46 @@
+#!/bin/bash
+ACTION="${1:-}"
+LOG=/tmp/graceful-shutdown.log
+log(){ echo "$(date +%T) $*" >>"$LOG"; }
+log "start action=${ACTION:-<none>}"
+
+get_signature() {
+  local uid="$1" p s
+  [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && { echo "$HYPRLAND_INSTANCE_SIGNATURE"; return; }
+  for p in /proc/[0-9]*; do
+    [ "$(stat -c %u "$p" 2>/dev/null)" = "$uid" ] || continue
+    s=$(tr '\0' '\n' < "$p/environ" 2>/dev/null | sed -n 's/^HYPRLAND_INSTANCE_SIGNATURE=//p' | head -1)
+    [ -n "$s" ] && { echo "$s"; return; }
+  done
+}
+
+close_windows() {
+  local user="$1" uid="$2" sig
+  sig=$(get_signature "$uid"); [ -z "$sig" ] && { log "no hyprland signature for $user"; return; }
+  log "closing windows for $user (sig=${sig:0:12}...)"
+  if [ "$(id -u)" = "0" ]; then
+    runuser -u "$user" -- env HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl -j clients 2>/dev/null | jq -r '.[].address' | while read -r addr; do
+      runuser -u "$user" -- env HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl dispatch closewindow "address:$addr" >/dev/null 2>&1
+    done
+  else
+    HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl -j clients 2>/dev/null | jq -r '.[].address' | while read -r addr; do
+      HYPRLAND_INSTANCE_SIGNATURE="$sig" hyprctl dispatch closewindow "address:$addr" >/dev/null 2>&1
+    done
+  fi
+}
+
+if [ "$(id -u)" = "0" ]; then
+  for uid in $(loginctl list-users --no-legend | awk '$1!=0{print $1}'); do
+    user=$(loginctl list-users --no-legend | awk -v u=$uid '$1==u{print $2}')
+    close_windows "$user" "$uid"
+  done
+else
+  close_windows "$(id -un)" "$(id -u)"
+fi
+
+if [ -n "$ACTION" ]; then
+  log "running: systemctl $ACTION"
+  systemctl "$ACTION"
+  rc=$?
+  log "systemctl $ACTION exited $rc"
+fi

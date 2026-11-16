@@ -1,0 +1,17 @@
+# AUR / foreign explicit packages (install with paru/yay)
+app2unit
+asus-control
+asus-ptp
+aws-session-manager-plugin
+google-chrome
+mydumper
+osu-lazer
+puddletag
+qdirstat
+qt6-m3shapes-git
+shell-color-scripts-git
+slack-desktop-wayland
+spotify
+teleport-connect
+twingate
+wluma

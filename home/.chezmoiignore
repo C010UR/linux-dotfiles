@@ -1,0 +1,74 @@
+# Never managed by chezmoi. Patterns are relative to $HOME.
+# Runtime state, caches, vendored code, and anything machine-local or secret.
+
+# --- runtime / generated state ---
+.config/fish/fish_variables
+.config/fish/fish_variables.*
+.config/fish/**/*.bak
+.config/systemd/user/*.wants
+.config/systemd/user/*.wants/**
+.config/hypr/scheme/current.conf
+.config/hypr/scripts/__pycache__/**
+.config/**/Cache/**
+.config/**/Code Cache/**
+.config/**/GPUCache/**
+.config/**/DawnCache/**
+.config/**/logs/**
+.config/**/*.log
+
+# --- secrets / credentials (kept out on purpose) ---
+.ssh
+.gnupg
+.git-credentials
+.pulse-cookie
+.config/gh
+.config/atuin
+.config/dconf
+.config/Proton Mail
+.config/Mullvad VPN
+.config/opencode/service.json
+
+# --- vendored / downloaded, not config ---
+.config/opencode/node_modules
+.config/opencode/node_modules/**
+.config/opencode/skills
+.config/opencode/skills/**
+.config/opencode/package.json
+.config/opencode/package-lock.json
+.config/opencode/bun.lock
+.config/nvim/.git
+.config/nvim/.git/**
+.config/nvim/tmp
+.config/nvim/tmp/**
+.config/micro/syntax
+.config/micro/plug
+
+# --- app state, not config ---
+.cache
+.local/share
+.local/state
+.config/google-chrome
+.config/google-chrome-for-testing
+.config/google-chrome-headless
+.config/google-chrome-for-testing-headless
+.config/chrome-nfsu2
+.config/discord
+.config/Slack
+.config/Code - OSS
+.config/Cursor
+.config/cursor
+.config/vesktop
+.config/Equicord
+.config/legcord
+.config/BetterDiscord
+.config/Vencord
+.config/heroic
+.config/kdeconnect
+.config/session
+.config/ghidra
+.config/JetBrains
+.config/zed/*.db
+.config/zed/*.db-*
+.config/zed/logs
+.config/spicetify/Backup
+.config/spicetify/Extracted

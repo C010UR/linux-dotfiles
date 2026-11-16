@@ -1,0 +1,10 @@
+[als.iio]
+path = "/sys/bus/iio/devices"
+# Thresholds use scaled values: raw * in_illuminance_scale (0.1 on this laptop).
+# e.g. raw 250 -> scaled 25 -> "normal". Arch Wiki values are scaled, not raw.
+thresholds = { 0 = "night", 3 = "dark", 6 = "dim", 12 = "normal", 28 = "bright", 40 = "outdoors" }
+
+[[output.backlight]]
+name = "eDP-1"
+path = "/sys/class/backlight/amdgpu_bl1"
+capturer = "none"

@@ -1,0 +1,77 @@
+version = 4
+
+[device]
+enabled = true
+
+[input]
+numberpad_lock = false
+stylus = false
+smart_gesture = true
+edge_left = "volume"
+edge_right = "brightness"
+edge_top = "seek"
+corner = "none"
+
+[gestures]
+edge_margin_mm = 4
+corner_mm = 15
+activate_mm = 2
+step_mm = 3
+tap_ms = 250
+tap_mm = 2
+invert_vertical = false
+volume_up = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+volume_down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+brightness_up = "brightnessctl set 5%+"
+brightness_down = "brightnessctl set 5%-"
+seek_forward = ""
+seek_back = ""
+launcher = "fuzzel"
+
+[asus]
+palm_tool = true
+palm_deflate = true
+tap_deflate = true
+deflate_l = 10
+deflate_r = 10
+deflate_b = 16
+deflate_t = 0
+edge_filter = false
+edge_margin_x = 0
+edge_margin_y = 0
+palm_filter = false
+palm_area_threshold = 0
+palm_pressure_threshold = 0
+
+[display]
+panel_power_savings = 0
+
+[display.refresh]
+follow_profile = true
+fixed = 120
+power_saver = 60
+balanced = 60
+performance = 120
+battery = 60
+
+[display.oled]
+refresh_minutes = 5
+reminder_hours = 0
+last_refresh = 0
+pixel_shift = true
+pixel_shift_minutes = 10
+pixel_shift_pixels = 2
+
+[cooling]
+follow_profile = true
+fan_mode = "auto"
+power_saver = "silent"
+balanced = "silent"
+performance = "overboost"
+
+[power]
+charge_limit = 100
+battery_aware = true
+cpu_boost = true
+trickle_charge = true
+amdgpu_dpm = true

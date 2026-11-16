@@ -1,0 +1,7 @@
+polkit.addRule(function(action, subject) {
+  if (subject.active && (action.id == "org.freedesktop.systemd1.reboot" ||
+      action.id == "org.freedesktop.systemd1.power-off" ||
+      action.id == "org.freedesktop.login1.reboot" ||
+      action.id == "org.freedesktop.login1.power-off"))
+    return polkit.Result.YES;
+});

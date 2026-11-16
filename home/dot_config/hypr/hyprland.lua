@@ -1,0 +1,27 @@
+require("hyprland.env")
+require("hyprland.hl_helpers")
+require("hyprland.general")
+require("hyprland.monitors")
+require("hyprland.input")
+require("hyprland.misc")
+require("hyprland.animations")
+require("hyprland.decoration")
+require("hyprland.group")
+require("hyprland.execs")
+require("hyprland.rules")
+require("hyprland.gestures")
+require("hyprland.keybinds")
+require("hyprland.vm_passthrough")
+
+-- Window-management modules (no theming, no shell).
+require("hyprland.window.compat")
+require("hyprland.window.rules")
+require("hyprland.window.floating-workspace")
+require("hyprland.window.window-tools")
+require("hyprland.window.dolphin")
+require("hyprland.window.ark")
+require("hyprland.tweaks")
+require("hyprland.window-binds")
+
+-- For Noctalia Color templates
+require("noctalia").apply_theme()
