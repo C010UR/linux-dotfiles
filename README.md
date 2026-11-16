@@ -119,6 +119,28 @@ Note that the old repo could not see `$HOME`-level files (`~/.gitconfig`,
 `~/.tmux.conf`, `~/.local/bin`, …) or most of `~/.config`; those are only in the
 new repo.
 
+## Troubleshooting
+
+**`signature ... is unknown trust` / `corrupted (invalid or corrupted package (PGP signature))`**
+
+This is a stale keyring on the install media, not real corruption. `bootstrap.sh`
+now runs `pacman-key --init`, populates `archlinux` + `cachyos`, and updates the
+keyring packages before any upgrade. If it still happens on an existing box:
+
+```bash
+sudo pacman-key --init
+sudo pacman-key --populate archlinux cachyos
+sudo pacman-key --refresh-keys
+sudo pacman -Syu
+```
+
+Answer `Y` to delete the "corrupted" cached packages; they will be re-downloaded.
+
+**`bootstrap.sh` refuses to run**
+
+It aborts inside the live ISO (`/run/archiso`). Install to disk, reboot into the
+installed system, then run it there — the live session is ephemeral.
+
 ## Roadmap: Nix
 
 `home/` is shaped so Home Manager can take over incrementally on any distro:

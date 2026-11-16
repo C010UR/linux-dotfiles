@@ -32,9 +32,35 @@ pkgs() { grep -vE '^[[:space:]]*(#|$)' "$1"; }
 command -v pacman >/dev/null || { echo "not an Arch-based system" >&2; exit 1; }
 (( EUID == 0 )) && { echo "run as your user, not root" >&2; exit 1; }
 
+# Refuse to run in the live ISO: it would write to the ephemeral overlay and
+# touch the live /etc instead of the installed system.
+if [[ -d /run/archiso || -e /etc/archiso ]]; then
+  cat >&2 <<'EOF'
+error: this looks like the live ISO (liveuser / archiso).
+
+Install CachyOS first, reboot into the installed disk, then run bootstrap.sh
+there. Nothing done here would survive a reboot.
+EOF
+  exit 1
+fi
+
+# ---------------------------------------------------------------- keyrings
+# A fresh ISO's keyring can be older than the repos, which shows up as
+# "signature ... is unknown trust" / "corrupted (PGP signature)" for
+# unrelated packages. Refresh before upgrading anything.
+say "Refreshing pacman keyrings"
+sudorun pacman-key --init || warn "pacman-key --init failed"
+sudorun pacman-key --populate archlinux || warn "could not populate archlinux keys"
+sudorun pacman-key --populate cachyos || warn "could not populate cachyos keys"
+keyrings=(archlinux-keyring)
+pacman -Q cachyos-keyring >/dev/null 2>&1 && keyrings+=(cachyos-keyring)
+sudorun pacman -Sy --needed --noconfirm "${keyrings[@]}" \
+  || warn "keyring packages failed to update — if this persists, run 'sudo pacman-key --refresh-keys'"
+sudorun pacman -Su --needed --noconfirm
+
 # ---------------------------------------------------------------- packages
 say "Installing native packages (pacman)"
-run sudo pacman -Syu --needed --noconfirm chezmoi
+sudorun pacman -S --needed --noconfirm chezmoi
 pkgs "$REPO/packages/native.txt" | run_stdin sudo pacman -S --needed --noconfirm -
 
 if [[ -s "$REPO/packages/aur.txt" ]]; then
