@@ -109,9 +109,9 @@ fi
 
 if [[ -s "$REPO/packages/flatpak.txt" ]]; then
   say "Installing flatpaks"
-  run flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+  sudorun flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
   while read -r app; do
-    run flatpak install -y --noninteractive flathub "$app" || warn "flatpak failed: $app"
+    sudorun flatpak install -y --noninteractive flathub "$app" || warn "flatpak failed: $app"
   done < <(pkgs "$REPO/packages/flatpak.txt")
 fi
 
