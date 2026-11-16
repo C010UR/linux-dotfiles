@@ -103,6 +103,22 @@ This machine: btrfs with subvolumes `@`, `@home`, `@root`, `@srv`, `@cache`,
 `limine-snapper-sync`. UUIDs are per-machine, so `fstab` and the kernel cmdline
 in `system/etc/default/limine` need reviewing on a reinstall.
 
+## Migrating from the old `~/.config` repo
+
+The previous setup was `~/.config` itself as a git repo with a whitelist
+`.gitignore`. It is left untouched; the new source of truth is `~/dotfiles`.
+Once you are happy with `chezmoi diff`, you can archive the old one:
+
+```bash
+cd ~/.config && git remote -v        # still points at the old remote
+# optional: keep history somewhere else, then
+# git remote remove origin
+```
+
+Note that the old repo could not see `$HOME`-level files (`~/.gitconfig`,
+`~/.tmux.conf`, `~/.local/bin`, …) or most of `~/.config`; those are only in the
+new repo.
+
 ## Roadmap: Nix
 
 `home/` is shaped so Home Manager can take over incrementally on any distro:

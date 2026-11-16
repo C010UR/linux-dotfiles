@@ -24,6 +24,8 @@ done
 say()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m!!\033[0m %s\n' "$*"; }
 run()  { if (( DRY_RUN )); then printf '   [dry] %s\n' "$*"; else "$@"; fi; }
+# like run(), but drains stdin so an upstream `pkgs` pipe never gets SIGPIPE
+run_stdin() { if (( DRY_RUN )); then cat >/dev/null; printf '   [dry] %s\n' "$*"; else "$@"; fi; }
 sudorun() { if (( DRY_RUN )); then printf '   [dry] sudo %s\n' "$*"; else sudo "$@"; fi; }
 pkgs() { grep -vE '^[[:space:]]*(#|$)' "$1"; }
 
@@ -32,8 +34,8 @@ command -v pacman >/dev/null || { echo "not an Arch-based system" >&2; exit 1; }
 
 # ---------------------------------------------------------------- packages
 say "Installing native packages (pacman)"
-run sudo pacman -Sy --needed --noconfirm chezmoi
-pkgs "$REPO/packages/native.txt" | run sudo pacman -S --needed --noconfirm -
+run sudo pacman -Syu --needed --noconfirm chezmoi
+pkgs "$REPO/packages/native.txt" | run_stdin sudo pacman -S --needed --noconfirm -
 
 if [[ -s "$REPO/packages/aur.txt" ]]; then
   if command -v paru >/dev/null; then AUR=paru
@@ -45,13 +47,13 @@ if [[ -s "$REPO/packages/aur.txt" ]]; then
   fi
   if [[ -n "$AUR" ]]; then
     say "Installing AUR packages ($AUR)"
-    pkgs "$REPO/packages/aur.txt" | run "$AUR" -S --needed --noconfirm -
+    pkgs "$REPO/packages/aur.txt" | run_stdin "$AUR" -S --needed --noconfirm -
   fi
 fi
 
 if [[ -s "$REPO/packages/flatpak.txt" ]]; then
   say "Installing flatpaks"
-  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+  run flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
   while read -r app; do
     run flatpak install -y --noninteractive flathub "$app" || warn "flatpak failed: $app"
   done < <(pkgs "$REPO/packages/flatpak.txt")
