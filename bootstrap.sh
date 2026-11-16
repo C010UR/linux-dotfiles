@@ -202,6 +202,10 @@ done
 if (( ! DRY_RUN )); then
   say "Rebuilding initramfs (mkinitcpio -P)"
   sudorun mkinitcpio -P || warn "mkinitcpio failed — check system/etc/mkinitcpio.conf"
+  if command -v limine-update >/dev/null; then
+    say "Regenerating limine entries"
+    sudorun limine-update || warn "limine-update failed"
+  fi
 fi
 
 # ------------------------------------------------------------------ dotfiles

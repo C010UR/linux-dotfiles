@@ -101,6 +101,7 @@ Captured on purpose:
 | Thing | Why |
 |---|---|
 | `/etc/fstab`, `/etc/locale.gen`, `/etc/passwd`, `/etc/shadow` | generated / machine-specific |
+| `/etc/default/limine`, `/etc/kernel/cmdline` | contains the machine's `root=UUID=`; managed via the `limine-entry-tool.d` drop-in for extra flags only |
 | `/etc/NetworkManager/system-connections` | contains WiFi/VPN secrets |
 | `.ssh`, `.gnupg`, `.git-credentials`, `*.token` | secrets — keep out of git |
 | `.config/opencode/service.json` | contains a token/password |
