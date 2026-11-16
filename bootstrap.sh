@@ -209,8 +209,14 @@ done
 
 # initramfs + bootloader only matter if those files changed
 if (( ! DRY_RUN )); then
-  say "Rebuilding initramfs (mkinitcpio -P)"
-  sudorun mkinitcpio -P || warn "mkinitcpio failed — check system/etc/mkinitcpio.conf"
+  say "Rebuilding initramfs"
+  # Use the real binary: CachyOS's /usr/local/bin/mkinitcpio wrapper prompts on a
+  # tty to run limine-mkinitcpio, which hangs unattended. We run limine ourselves.
+  if [[ -x /usr/bin/mkinitcpio ]]; then
+    sudorun /usr/bin/mkinitcpio -P || warn "mkinitcpio failed — check system/etc/mkinitcpio.conf"
+  else
+    sudorun mkinitcpio -P || warn "mkinitcpio failed — check system/etc/mkinitcpio.conf"
+  fi
   if command -v limine-update >/dev/null; then
     say "Regenerating limine entries"
     sudorun limine-update || warn "limine-update failed"
