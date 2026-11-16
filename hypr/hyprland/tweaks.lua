@@ -14,6 +14,8 @@ hl.config({
     -- A click on a window under a fullscreen one focuses it instead of doing
     -- nothing.
     on_focus_under_fullscreen = 1,
+    -- Closing the last window on a special workspace closes the workspace.
+    close_special_on_empty = true,
   },
 
   cursor = {

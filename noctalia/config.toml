@@ -29,8 +29,29 @@ end = [
   "session",
 ]
 
+[widget.tray]
+colorize_icons = false
+icon_type = "desktop"
+drawer = true
+
 [widget.network]
 show_label = false
+peek = true
+
+[widget.bluetooth]
+peek = true
+
+[widget.volume]
+peek = true
+
+[widget.brightness]
+peek = true
+
+[widget.battery]
+peek = true
+
+[widget.keyboard_layout]
+peek = true
 
 [widget.workspaces]
 show_labels = true
@@ -46,7 +67,7 @@ source = "wallpaper"
 
 [theme.templates]
 enable_builtin_templates = true
-builtin_ids = ["btop", "gtk3", "gtk4", "hyprland", "qt"]
+builtin_ids = ["gtk3", "gtk4", "hyprland", "qt", "kcolorscheme"]
 
 [theme.templates.user.hypr-scheme]
 input_path = "$XDG_CONFIG_HOME/noctalia/templates/hypr-scheme.conf"

@@ -172,6 +172,20 @@ hl.cbind("SUPER + S", hl.dsp.exec_cmd("noctalia msg panel-toggle control-center"
   order = 20,
 })
 
+-- Clicker
+hl.cbind("SUPER + F6", hl.dsp.exec_cmd("noctalia msg plugin c010ur/clicker:service all toggle"), {
+  desc = "Toggle Clicker",
+  category = "shell",
+  icon = "ads_click",
+  order = 31,
+})
+hl.cbind("SUPER + SHIFT + F6", hl.dsp.exec_cmd("noctalia msg panel-toggle c010ur/clicker:panel"), {
+  desc = "Clicker Options",
+  category = "shell",
+  icon = "touch_app",
+  order = 32,
+})
+
 -- ── Move window to workspace ──────────────────────────────────────────────────
 
 -- Move window to workspace 1–10
@@ -476,6 +490,14 @@ hl.cbind("SUPER + SHIFT + S", hl.dsp.exec_cmd("noctalia msg screenshot-region"),
   icon = "screenshot_region",
   locked = true,
   order = 20,
+})
+
+hl.cbind("SUPER + SHIFT + W", hl.dsp.exec_cmd("noctalia msg screenshot-window"), {
+  desc = "Screenshot (Window)",
+  category = "screenshot_recording",
+  icon = "screenshot_window",
+  locked = true,
+  order = 30,
 })
 
 -- ── Volume ────────────────────────────────────────────────────────────────────

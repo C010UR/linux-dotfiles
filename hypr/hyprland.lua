@@ -18,6 +18,8 @@ require("hyprland.window.compat")
 require("hyprland.window.rules")
 require("hyprland.window.floating-workspace")
 require("hyprland.window.window-tools")
+require("hyprland.window.dolphin")
+require("hyprland.window.ark")
 require("hyprland.tweaks")
 require("hyprland.window-binds")
 

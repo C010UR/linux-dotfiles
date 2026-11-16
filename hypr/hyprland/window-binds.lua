@@ -6,8 +6,16 @@
 
 local floating = require("hyprland.window.floating-workspace")
 local tools = require("hyprland.window.window-tools")
+local dolphin = require("hyprland.window.dolphin")
 
 local scripts = os.getenv("HOME") .. "/.config/hypr/scripts/"
+
+hl.cbind("SUPER + E", dolphin.toggle, {
+  desc = "Toggle Dolphin Scratchpad",
+  category = "app_launcher",
+  icon = "folder",
+  order = 15,
+})
 
 hl.cbind("SUPER + G", function()
   floating.toggle()

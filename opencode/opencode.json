@@ -91,14 +91,6 @@
       },
       "enabled": true
     },
-    "chrome-devtools": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "chrome-devtools-mcp@latest"
-      ]
-    },
     "cloudflare-api": {
       "type": "remote",
       "url": "https://mcp.cloudflare.com/mcp"
@@ -113,6 +105,17 @@
         "environment": {
           "OPENCODE_BROWSER_RUNTIME": "auto-update"
         }
+      },
+      "playwright": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@playwright/mcp@latest",
+          "--browser",
+          "chrome",
+          "--isolated"
+        ]
       }
     }
   },
