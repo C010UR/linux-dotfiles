@@ -23,10 +23,16 @@ done
 
 say()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m!!\033[0m %s\n' "$*"; }
-run()  { if (( DRY_RUN )); then printf '   [dry] %s\n' "$*"; else "$@"; fi; }
-# like run(), but drains stdin so an upstream `pkgs` pipe never gets SIGPIPE
-run_stdin() { if (( DRY_RUN )); then cat >/dev/null; printf '   [dry] %s\n' "$*"; else "$@"; fi; }
-sudorun() { if (( DRY_RUN )); then printf '   [dry] sudo %s\n' "$*"; else sudo "$@"; fi; }
+showcmd() {
+  local n=$#
+  if (( n > 6 )); then
+    printf '%s… (+%d more)' "$(printf '%s ' "${@:1:6}")" "$((n - 6))"
+  else
+    printf '%s' "$*"
+  fi
+}
+run()  { if (( DRY_RUN )); then printf '   [dry] %s\n' "$(showcmd "$@")"; else "$@"; fi; }
+sudorun() { if (( DRY_RUN )); then printf '   [dry] sudo %s\n' "$(showcmd "$@")"; else sudo "$@"; fi; }
 pkgs() { grep -vE '^[[:space:]]*(#|$)' "$1"; }
 
 # --------------------------------------------------------------- device DMI
@@ -71,19 +77,20 @@ fi
 # "signature ... is unknown trust" / "corrupted (PGP signature)" for
 # unrelated packages. Refresh before upgrading anything.
 say "Refreshing pacman keyrings"
+keyrings=(archlinux-keyring)
+pacman -Si cachyos-keyring >/dev/null 2>&1 && keyrings+=(cachyos-keyring)
+sudorun pacman -Sy --needed --noconfirm "${keyrings[@]}" \
+  || warn "keyring packages failed to update — if this persists, run 'sudo pacman-key --refresh-keys'"
 sudorun pacman-key --init || warn "pacman-key --init failed"
 sudorun pacman-key --populate archlinux || warn "could not populate archlinux keys"
 sudorun pacman-key --populate cachyos || warn "could not populate cachyos keys"
-keyrings=(archlinux-keyring)
-pacman -Q cachyos-keyring >/dev/null 2>&1 && keyrings+=(cachyos-keyring)
-sudorun pacman -Sy --needed --noconfirm "${keyrings[@]}" \
-  || warn "keyring packages failed to update — if this persists, run 'sudo pacman-key --refresh-keys'"
 sudorun pacman -Su --needed --noconfirm
 
 # ---------------------------------------------------------------- packages
-say "Installing native packages (pacman)"
+mapfile -t NATIVE < <(pkgs "$REPO/packages/native.txt")
+say "Installing native packages (pacman, ${#NATIVE[@]})"
 sudorun pacman -S --needed --noconfirm chezmoi
-pkgs "$REPO/packages/native.txt" | run_stdin sudo pacman -S --needed --noconfirm -
+sudorun pacman -S --needed --noconfirm "${NATIVE[@]}"
 
 if [[ -s "$REPO/packages/aur.txt" ]]; then
   if command -v paru >/dev/null; then AUR=paru
@@ -94,8 +101,9 @@ if [[ -s "$REPO/packages/aur.txt" ]]; then
     AUR=""
   fi
   if [[ -n "$AUR" ]]; then
-    say "Installing AUR packages ($AUR)"
-    pkgs "$REPO/packages/aur.txt" | run_stdin "$AUR" -S --needed --noconfirm -
+    mapfile -t AURLIST < <(pkgs "$REPO/packages/aur.txt")
+    say "Installing AUR packages ($AUR, ${#AURLIST[@]})"
+    run "$AUR" -S --needed --noconfirm "${AURLIST[@]}"
   fi
 fi
 
@@ -147,7 +155,8 @@ for profile in "${matched_profiles[@]}"; do
   say "Applying device profile: $name"
 
   if [[ -s "$profile/packages.txt" ]]; then
-    pkgs "$profile/packages.txt" | run_stdin sudo pacman -S --needed --noconfirm -
+    mapfile -t PROFPKGS < <(pkgs "$profile/packages.txt")
+    sudorun pacman -S --needed --noconfirm "${PROFPKGS[@]}"
   fi
 
   if [[ -s "$profile/local.txt" ]]; then
