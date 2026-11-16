@@ -67,6 +67,18 @@ grep -vE '^\s*(#|$)' packages/native.txt | sudo pacman -S --needed -
 grep -vE '^\s*(#|$)' packages/aur.txt    | paru -S --needed -
 ```
 
+### Local packages
+
+`packages/local.txt` lists packages built with `makepkg` from a source checkout
+because they are not in any repo — currently `asus-ptp` (DKMS touchpad driver)
+and `asus-control` (daemon/panel) from
+`https://github.com/C010UR/asus-control.git`.
+
+`bootstrap.sh` clones the repo to `~/Projects/asus` (override with `LOCAL_DIR`
+and `LOCAL_REPO`), then runs `makepkg -si` for each directory in the listed
+order. Build deps come from the PKGBUILDs (`dkms`, `clang`, `lld`, `llvm`,
+`sparse`, `cargo`, `pkgconf`).
+
 ## System files
 
 `system/` mirrors the absolute path (`system/etc/greetd/config.toml` →

@@ -26,6 +26,7 @@ cachyos-kernel-manager
 cachyos-packageinstaller
 cachyos-rate-mirrors
 cachyos-settings
+chezmoi
 chwd
 cliphist
 cloc

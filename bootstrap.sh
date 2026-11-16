@@ -85,6 +85,32 @@ if [[ -s "$REPO/packages/flatpak.txt" ]]; then
   done < <(pkgs "$REPO/packages/flatpak.txt")
 fi
 
+# ----------------------------------------------------------- local packages
+# Packages built from source (makepkg), e.g. this laptop's asus driver/daemon.
+LOCAL_DIR="${LOCAL_DIR:-$HOME/Projects/asus}"
+LOCAL_REPO="${LOCAL_REPO:-https://github.com/C010UR/asus-control.git}"
+if [[ -s "$REPO/packages/local.txt" ]]; then
+  say "Building local packages from $LOCAL_DIR"
+  if [[ ! -d "$LOCAL_DIR" ]]; then
+    run git clone "$LOCAL_REPO" "$LOCAL_DIR"
+  elif [[ ! -d "$LOCAL_DIR/.git" ]]; then
+    warn "$LOCAL_DIR exists but is not a git checkout — using it as-is"
+  fi
+  while read -r p; do
+    [[ -z "$p" ]] && continue
+    if [[ -d "$LOCAL_DIR/$p" ]]; then
+      if (( DRY_RUN )); then
+        printf '   [dry] (cd %s/%s && makepkg -si --noconfirm --needed)\n' "$LOCAL_DIR" "$p"
+      else
+        ( cd "$LOCAL_DIR/$p" && makepkg -si --noconfirm --needed ) \
+          || warn "build failed: $p (check makedepends)"
+      fi
+    else
+      warn "local package dir missing: $LOCAL_DIR/$p"
+    fi
+  done < <(pkgs "$REPO/packages/local.txt")
+fi
+
 # ------------------------------------------------------------ system files
 say "System config (/etc, /usr/local/sbin) from system/"
 if (( ! DRY_RUN && ! ASSUME_YES )); then

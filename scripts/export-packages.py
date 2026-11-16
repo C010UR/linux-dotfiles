@@ -88,9 +88,20 @@ def allowlisted(pkg):
     return any(fnmatch.fnmatch(pkg, pat) for pat in KEEP)
 
 
+def read_local():
+    """Packages listed in packages/local.txt (built from source, not in a repo)."""
+    path = f"{REPO}/packages/local.txt"
+    if not os.path.exists(path):
+        return []
+    with open(path) as f:
+        return [line.strip() for line in f
+                if line.strip() and not line.lstrip().startswith("#")]
+
+
 def main():
     native = sorted(out("pacman", "-Qqen").split())
-    foreign = sorted(out("pacman", "-Qqem").split())
+    local = read_local()
+    foreign = [p for p in sorted(out("pacman", "-Qqem").split()) if p not in local]
     flatpak = sorted(
         line for line in
         out("flatpak", "list", "--app", "--columns=application").splitlines()
@@ -122,6 +133,13 @@ def main():
           "# Section: applications & tools\n",
           apps + ["", "# Section: system, drivers, firmware, kernels, metapackages"] + system)
     write("aur.txt", "# AUR / foreign explicit packages (install with paru/yay)\n", foreign)
+    if local:
+        write("local.txt",
+              "# Local packages built from source with makepkg — not in any repo.\n"
+              "# Source repo: https://github.com/C010UR/asus-control.git  (override: LOCAL_REPO)\n"
+              "# Checkout:    ~/Projects/asus                            (override: LOCAL_DIR)\n"
+              "# Order matters: the DKMS driver (asus-ptp) before the daemon/panel (asus-control).\n",
+              local)
     write("flatpak.txt", "# Flatpaks\n", flatpak)
     write("excluded.txt",
           "# Not installed explicitly. Libraries pulled in by parents, leftovers,\n"

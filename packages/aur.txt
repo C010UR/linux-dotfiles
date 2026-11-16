@@ -1,7 +1,5 @@
 # AUR / foreign explicit packages (install with paru/yay)
 app2unit
-asus-control
-asus-ptp
 aws-session-manager-plugin
 google-chrome
 mydumper
