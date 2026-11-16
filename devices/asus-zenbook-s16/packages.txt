@@ -1,2 +1,10 @@
 # Repo packages only needed on this model.
 asusctl
+
+# bootloader + snapshot stack for this machine (limine, snapper)
+limine
+limine-mkinitcpio-hook
+limine-snapper-sync
+snapper
+cachyos-snapper-support
+btrfs-assistant

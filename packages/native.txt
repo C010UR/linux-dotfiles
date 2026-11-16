@@ -16,7 +16,6 @@ bind
 blueman
 bluez-utils
 btop
-btrfs-assistant
 btrfs-progs
 bun
 cachyos-hello
@@ -103,9 +102,6 @@ less
 libinput-tools
 libva-utils
 libvirt
-limine
-limine-mkinitcpio-hook
-limine-snapper-sync
 logrotate
 lsb-release
 lsscsi
@@ -184,7 +180,6 @@ seahorse
 sg3_utils
 shellcheck
 smartmontools
-snapper
 sparse
 starship
 steam
@@ -250,7 +245,6 @@ cachyos-gaming-meta
 cachyos-keyring
 cachyos-micro-settings
 cachyos-mirrorlist
-cachyos-snapper-support
 cachyos-v3-mirrorlist
 cachyos-v4-mirrorlist
 cachyos-wallpapers

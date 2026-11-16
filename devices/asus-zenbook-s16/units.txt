@@ -1,2 +1,6 @@
 # Units to enable only on this model (asusd.service is static/D-Bus activated).
 asus-ptpd.service
+# This machine uses limine + snapper with btrfs snapshots.
+snapper-cleanup.timer
+snapper-timeline.timer
+limine-snapper-sync.service

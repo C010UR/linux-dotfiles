@@ -9,7 +9,6 @@ docker.service
 fstrim.timer
 getty@.service
 greetd.service
-limine-snapper-sync.service
 mullvad-daemon.service
 mullvad-early-boot-blocking.service
 NetworkManager-dispatcher.service
@@ -18,8 +17,6 @@ NetworkManager-wait-online.service
 powerbtn.service
 power-profiles-daemon.service
 proton.VPN.service
-snapper-cleanup.timer
-snapper-timeline.timer
 systemd-resolved-monitor.socket
 systemd-resolved.service
 systemd-resolved-varlink.socket
