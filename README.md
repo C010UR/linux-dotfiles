@@ -88,13 +88,11 @@ with `cp -a system/. /` and enables the units in `units/`.
 Captured on purpose:
 
 - greetd + noctalia greeter
-- asusd (`/etc/asusd/asusd.ron`), asus-ptp touchpad/refresh daemon
-- power button / graceful shutdown stack (`powerbtn.service`, logind drop-in,
-  polkit rule, `/usr/local/sbin` scripts)
 - custom udev rules (external mouse wakeup), `btusb` autosuspend
-- `mkinitcpio.conf`, `/etc/default/limine` (kernel cmdline), limine sync
-- `pacman.conf`, locale, vconsole, hostname, plymouth, ufw, libvirt network,
+- `mkinitcpio.conf`, `pacman.conf`, locale, vconsole, plymouth, libvirt network,
   faillock
+- `ufw.conf` plus `ufw/user.rules` + `user6.rules` (the allow rules, otherwise a
+  fresh machine enables UFW default-deny with nothing open — including SSH)
 
 **Not** captured, on purpose:
 
@@ -163,13 +161,23 @@ VMs (nothing ASUS-specific is touched there).
 ```
 devices/asus-zenbook-s16/
 ├── match          # lowercased globs against "$sys_vendor $product_name $board_name"
-├── packages.txt   # repo packages only on this model (asusctl)
+├── packages.txt   # repo packages only on this model (asusctl, limine, snapper, …)
 ├── local.txt      # makepkg packages (asus-ptp, asus-control)
 ├── repo           # git URL to clone for the local build
 ├── dir            # checkout location (~/Projects/asus)
-├── units.txt      # units to enable (asus-ptpd.service)
-└── system/        # /etc files copied only on match (asusd.ron, asus-ptp/config.toml)
+├── units.txt      # units to enable (asus-ptpd, powerbtn, snapper timers, limine)
+└── system/        # /etc files copied only on match
+    ├── hostname
+    ├── asusd/, asus-ptp/
+    ├── limine-*/  (kernel cmdline drop-in, snapshot sync)
+    ├── systemd/system/powerbtn.service + logind drop-in
+    ├── polkit/rules.d/50-allow-shutdown.rules
+    └── usr/local/sbin/ (graceful-shutdown, powerbtn-watch.py)
 ```
+
+Bootloader (limine), snapshotting (snapper), ASUS drivers and the custom
+power-button stack all live here — none of it is safe to apply on a machine that
+doesn't match.
 
 Every non-comment line in `match` must match the DMI string; e.g. for this
 laptop: `*asus*` and `*um5606wa*`. No match → the whole profile is skipped.

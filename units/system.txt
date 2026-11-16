@@ -14,7 +14,6 @@ mullvad-early-boot-blocking.service
 NetworkManager-dispatcher.service
 NetworkManager.service
 NetworkManager-wait-online.service
-powerbtn.service
 power-profiles-daemon.service
 proton.VPN.service
 systemd-resolved-monitor.socket

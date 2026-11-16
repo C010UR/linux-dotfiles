@@ -4,3 +4,4 @@ asus-ptpd.service
 snapper-cleanup.timer
 snapper-timeline.timer
 limine-snapper-sync.service
+powerbtn.service
